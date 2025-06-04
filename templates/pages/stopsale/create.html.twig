@@ -4,9 +4,9 @@
 
 {% block body %}
     <create-edit-stop-sale-page
-            :select-list='{{ selectList|json_encode|raw }}'
-            :category-id={{ stopSaleCategoryId }}
-            :stop-sale-name="'{{ stopSaleName }}'"
+            :select-list="{{ selectList }}"
+            :category-id="{{ stopSaleCategoryId }}"
+            :stop-sale-name="{{ stopSaleName|json_encode|raw }}"
             :user-country-iso="'IC'"></create-edit-stop-sale-page>
 {% endblock %}
 
