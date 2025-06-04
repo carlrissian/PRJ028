@@ -31,6 +31,12 @@
                                         required
                                     />
 
+                                    <input
+                                        type="hidden"
+                                        name="stopSaleTypeId"
+                                        v-model="stopSale.stopSaleTypeId"
+                                    />
+
                                     <div class="row">
                                         <!-- Init date -->
                                         <erp-date-picker-static-filter
@@ -87,26 +93,6 @@
                                         />
                                         <!--  -->
 
-                                        <!-- Stop Sale Type -->
-                                        <single-select-picker
-                                            v-if="false" @onChangeSelectPicker="canSubmit = true"
-                                            @updatedSelectPicker="stopSale.stopSaleTypeId = $event"
-                                            name="stopSaleTypeId"
-                                            id="stopSaleTypeId"
-                                            :label="this.txt.fields.stopSaleType"
-                                            :required="true"
-                                            :value="stopSale.stopSaleTypeId"
-                                            v-bind:style="[this.canBeEditCreated !== true ? styleObjectNo : styleObject]"
-                                        >
-                                            <option
-                                                v-for="item in this.selectList.stopSaleTypeList"
-                                                :key="item.id"
-                                                :value="item.id"
-                                            >
-                                                {{ item.name }}
-                                            </option>
-                                        </single-select-picker>
-                                        <!--  -->
                                     </div>
 
                                     <!-- Pick Up -->
@@ -347,8 +333,8 @@ export default {
     created() {
         this.txt = txtTrans;
         this.constants = constants;
-    
-        this.stopSale.stopSaleTypeId = parseInt(this.constants.STOPSALETYPE_TOTAL, 10);
+
+        this.stopSale.stopSaleTypeId = 1;
 },
     mounted() {
         this.canBeEditCreated = this.selectList.canBeEditCreated;
