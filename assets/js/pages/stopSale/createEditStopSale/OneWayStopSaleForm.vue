@@ -537,16 +537,18 @@ export default {
                 this.showNotification("error", this.txt.form.cannotBeEditCreated);
             }
 
-            if (this.stopSale.carGroupsId.length == 0 && this.stopSale.acrissId.length == 0) {
-                validated = false;
-                this.showNotification("warn", this.txt.form.selectAGroupOrAcriss);
-                document.querySelector("#acrissId").focus();
-            }
+            if (!this.stopSale.endDate) {
+                if (this.stopSale.carGroupsId.length == 0 && this.stopSale.acrissId.length == 0) {
+                    validated = false;
+                    this.showNotification("warn", this.txt.form.selectAGroupOrAcriss);
+                    document.querySelector("#acrissId").focus();
+                }
 
-            if (this.stopSale.branchPickUpId.length == 0) {
-                validated = false;
-                this.showNotification("warn", this.txt.form.selectABranch);
-                document.querySelector("#branchPickUpId").focus();
+                if (this.stopSale.branchPickUpId.length == 0) {
+                    validated = false;
+                    this.showNotification("warn", this.txt.form.selectABranch);
+                    document.querySelector("#branchPickUpId").focus();
+                }
             }
 
             if (this.stopSale.recurrencesId.length == 7) {
