@@ -125,18 +125,19 @@
                                     <div class="row">
                                         <!-- Connected vehicle -->
                                         <single-select-picker
-                                            @onChangeSelectPicker="canSubmit = true"
-                                            @updatedSelectPicker="stopSale.connectedVehicle = $event"
                                             name="connectedVehicle"
                                             id="connectedVehicle"
                                             divClass="form-group col-md-2"
-                                            :placeholder="txt.form.selectAnOption"
                                             :label="txt.fields.connectedVehicle"
-                                            :options="selectList.connectedVehicleList"
+                                            :placeholder="txt.form.selectAnOption"
                                             :value="stopSale.connectedVehicle"
-                                            disabled
-                                            v-bind:style="[canBeEditCreated !== true ? styleObjectNo : styleObject]"
-                                        />
+                                            :style="!canBeEditCreated ? styleObjectNo : styleObject"
+                                            @onChangeSelectPicker="canSubmit = true"
+                                            @updatedSelectPicker="stopSale.connectedVehicle = $event"
+                                        >
+                                            <option :value="true">{{ txt.form.yes }}</option>
+                                            <option :value="false">{{ txt.form.no }}</option>
+                                        </single-select-picker>
                                         <!--  -->
 
                                         <!-- Partners -->
