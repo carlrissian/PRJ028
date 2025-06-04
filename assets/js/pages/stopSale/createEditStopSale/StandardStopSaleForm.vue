@@ -31,23 +31,13 @@
                                         required
                                     />
 
+                                    <input
+                                        type="hidden"
+                                        name="stopSaleTypeId"
+                                        v-model="stopSale.stopSaleTypeId"
+                                    />
+
                                     <div class="row">
-                                        <!-- Stop Sale Type -->
-                                        <single-select-picker
-                                            @onChangeSelectPicker="canSubmit = true"
-                                            @updatedSelectPicker="stopSale.stopSaleTypeId = $event"
-                                            name="stopSaleTypeId"
-                                            id="stopSaleTypeId"
-                                            divClass="form-group col-md-2"
-                                            :placeholder="txt.form.selectAnOption"
-                                            :label="txt.fields.stopSaleType"
-                                            :options="selectList.stopSaleTypeList"
-                                            :value="stopSale.stopSaleTypeId"
-                                            required
-                                            :disabled="editMode"
-                                            v-bind:style="[canBeEditCreated !== true ? styleObjectNo : styleObject]"
-                                        />
-                                        <!--  -->
 
                                         <!-- Car groups -->
                                         <multiple-select-picker
@@ -467,6 +457,7 @@ export default {
             // this.stopSale.startTime = moment("00:00", "HH:mm").format("HH:mm");
             // this.stopSale.endTime = moment("23:59", "HH:mm").format("HH:mm");
             this.stopSale.initDate = moment(new Date(), "DD/MM/YYYY").format("DD/MM/YYYY");
+            this.stopSale.stopSaleTypeId = 1;
         }
     },
     methods: {

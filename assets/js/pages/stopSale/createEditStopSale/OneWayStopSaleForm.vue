@@ -31,6 +31,12 @@
                                         required
                                     />
 
+                                    <input
+                                        type="hidden"
+                                        name="stopSaleTypeId"
+                                        v-model="stopSale.stopSaleTypeId"
+                                    />
+
                                     <div class="row">
                                         <!-- Init date -->
                                         <erp-date-picker-static-filter
@@ -87,26 +93,6 @@
                                         />
                                         <!--  -->
 
-                                        <!-- Stop Sale Type -->
-                                        <single-select-picker
-                                            v-if="false" @onChangeSelectPicker="canSubmit = true"
-                                            @updatedSelectPicker="stopSale.stopSaleTypeId = $event"
-                                            name="stopSaleTypeId"
-                                            id="stopSaleTypeId"
-                                            :label="this.txt.fields.stopSaleType"
-                                            :required="true"
-                                            :value="stopSale.stopSaleTypeId"
-                                            v-bind:style="[this.canBeEditCreated !== true ? styleObjectNo : styleObject]"
-                                        >
-                                            <option
-                                                v-for="item in this.selectList.stopSaleTypeList"
-                                                :key="item.id"
-                                                :value="item.id"
-                                            >
-                                                {{ item.name }}
-                                            </option>
-                                        </single-select-picker>
-                                        <!--  -->
                                     </div>
 
                                     <!-- Pick Up -->
@@ -330,7 +316,6 @@ export default {
             regionList: [],
             areaList: [],
             branchList: [],
-            stopSaleTypeList: [],
             daysList: [],
             connectedVehicleList: [],
 
@@ -347,8 +332,8 @@ export default {
     created() {
         this.txt = txtTrans;
         this.constants = constants;
-    
-        this.stopSale.stopSaleTypeId = parseInt(this.constants.STOPSALETYPE_TOTAL, 10);
+
+        this.stopSale.stopSaleTypeId = 1;
 },
     mounted() {
         this.canBeEditCreated = this.selectList.canBeEditCreated;
@@ -357,7 +342,6 @@ export default {
         this.regionList = this.selectList.regionList;
         this.areaList = this.selectList.areaList;
         this.branchList = this.selectList.branchList;
-        this.stopSaleTypeList = this.selectList.stopSaleTypeList;
         this.daysList = this.selectList.daysList;
         this.connectedVehicleList = this.selectList.connectedVehicleList;
         this.stopSaleStatusList = this.selectList.stopSaleStatusList;
@@ -394,7 +378,6 @@ export default {
             $("#areaDropOffId").selectpicker("refresh");
             $("#branchPickUpId").selectpicker("refresh");
             $("#branchDropOffId").selectpicker("refresh");
-            $("#stopSaleTypeId").selectpicker("refresh");
             $("#connectedVehicle").selectpicker("refresh");
         });
     },
@@ -411,9 +394,6 @@ export default {
                 actionsBox: true,
             };
 
-            // stopSaleTypeId
-            let stopSaleTypeId = $("#stopSaleTypeId");
-            stopSaleTypeId.selectpicker(config);
             // connectedVehicle
             let connectedVehicle = $("#connectedVehicle");
             connectedVehicle.selectpicker(config);
