@@ -50,7 +50,11 @@
                                             :value="stopSale.initDate"
                                             :required="true"
                                             :disabled="editMode ? stopSale.initDate < new Date() : false"
-                                            v-bind:style="[this.canBeEditCreated === true ? styleObjectNo : styleObject]"
+                                            v-bind:style="[
+                                                this.canBeEditCreated === true || disableCarGroupAcriss
+                                                    ? styleObjectNo
+                                                    : styleObject
+                                            ]"
                                         />
                                         <!--  -->
 
@@ -76,7 +80,11 @@
                                             :label="txt.fields.carGroups"
                                             :data-for-ajax="carGroupList"
                                             :value="stopSale.carGroupsId"
-                                            v-bind:style="[this.canBeEditCreated === true ? styleObjectNo : styleObject]"
+                                            v-bind:style="[
+                                                this.canBeEditCreated === true || disableCarGroupAcriss
+                                                    ? styleObjectNo
+                                                    : styleObject
+                                            ]"
                                         />
                                         <!--  -->
 
@@ -89,7 +97,11 @@
                                             :label="txt.fields.acriss"
                                             :data-for-ajax="acrissList"
                                             :value="stopSale.acrissId"
-                                            v-bind:style="[this.canBeEditCreated === true ? styleObjectNo : styleObject]"
+                                            v-bind:style="[
+                                                this.canBeEditCreated === true || disableCarGroupAcriss
+                                                    ? styleObjectNo
+                                                    : styleObject
+                                            ]"
                                         />
                                         <!--  -->
 
@@ -132,7 +144,11 @@
                                             :label="txt.fields.originBranch"
                                             :data-for-ajax="branchList"
                                             :value="stopSale.branchPickUpId"
-                                            v-bind:style="[this.canBeEditCreated === true ? styleObjectNo : styleObject]"
+                                            v-bind:style="[
+                                                this.canBeEditCreated === true || disableBranchPickUp
+                                                    ? styleObjectNo
+                                                    : styleObject
+                                            ]"
                                         />
                                         <!--  -->
                                     </div>
@@ -381,6 +397,21 @@ export default {
             $("#connectedVehicle").selectpicker("refresh");
         });
     },
+    computed: {
+        disableCarGroupAcriss() {
+            return (
+                this.stopSale.endDate &&
+                this.stopSale.carGroupsId.length === 0 &&
+                this.stopSale.acrissId.length === 0
+            );
+        },
+        disableBranchPickUp() {
+            return (
+                this.stopSale.endDate &&
+                this.stopSale.branchPickUpId.length === 0
+            );
+        },
+    },
     methods: {
         showNotification(type = "", text = "") {
             this.$notify({
@@ -537,13 +568,17 @@ export default {
                 this.showNotification("error", this.txt.form.cannotBeEditCreated);
             }
 
-            if (this.stopSale.carGroupsId.length == 0 && this.stopSale.acrissId.length == 0) {
+            if (
+                !this.disableCarGroupAcriss &&
+                this.stopSale.carGroupsId.length == 0 &&
+                this.stopSale.acrissId.length == 0
+            ) {
                 validated = false;
                 this.showNotification("warn", this.txt.form.selectAGroupOrAcriss);
                 document.querySelector("#acrissId").focus();
             }
 
-            if (this.stopSale.branchPickUpId.length == 0) {
+            if (!this.disableBranchPickUp && this.stopSale.branchPickUpId.length == 0) {
                 validated = false;
                 this.showNotification("warn", this.txt.form.selectABranch);
                 document.querySelector("#branchPickUpId").focus();
@@ -555,6 +590,15 @@ export default {
             }
 
             if (validated) {
+                if (this.disableCarGroupAcriss) {
+                    this.stopSale.carGroupsId = [];
+                    this.stopSale.acrissId = [];
+                }
+
+                if (this.disableBranchPickUp) {
+                    this.stopSale.branchPickUpId = [];
+                }
+
                 let formData = new FormData();
                 formData.set("stopSale", JSON.stringify(this.stopSale));
 
