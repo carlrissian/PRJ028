@@ -316,7 +316,6 @@ export default {
             regionList: [],
             areaList: [],
             branchList: [],
-            stopSaleTypeList: [],
             daysList: [],
             connectedVehicleList: [],
 
@@ -343,7 +342,6 @@ export default {
         this.regionList = this.selectList.regionList;
         this.areaList = this.selectList.areaList;
         this.branchList = this.selectList.branchList;
-        this.stopSaleTypeList = this.selectList.stopSaleTypeList;
         this.daysList = this.selectList.daysList;
         this.connectedVehicleList = this.selectList.connectedVehicleList;
         this.stopSaleStatusList = this.selectList.stopSaleStatusList;
@@ -380,7 +378,6 @@ export default {
             $("#areaDropOffId").selectpicker("refresh");
             $("#branchPickUpId").selectpicker("refresh");
             $("#branchDropOffId").selectpicker("refresh");
-            $("#stopSaleTypeId").selectpicker("refresh");
             $("#connectedVehicle").selectpicker("refresh");
         });
     },
@@ -397,9 +394,6 @@ export default {
                 actionsBox: true,
             };
 
-            // stopSaleTypeId
-            let stopSaleTypeId = $("#stopSaleTypeId");
-            stopSaleTypeId.selectpicker(config);
             // connectedVehicle
             let connectedVehicle = $("#connectedVehicle");
             connectedVehicle.selectpicker(config);
