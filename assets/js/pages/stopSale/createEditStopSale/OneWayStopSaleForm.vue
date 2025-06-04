@@ -359,7 +359,7 @@ export default {
             this.title = this.txt.titles.createOneWay;
             this.submitButton = this.txt.form.create;
             this.submitButtonClass = "la-plus";
-            this.stopSale.departmentId = this.constants.department.distribution;
+            this.stopSale.departmentId = constants.department.distribution;
             this.stopSale.categoryId = constants.category.oneway;
             this.stopSale.startTime = moment(new Date(), "HH:mm").format("HH:mm");
             this.stopSale.endTime = moment(new Date(), "HH:mm")
@@ -402,10 +402,10 @@ export default {
             this.stopSale.id = this.stopSaleData?.id;
             this.stopSale.departmentId = this.stopSaleData?.department?.id
                 ? this.stopSaleData.department.id
-                : this.constants.department.distribution;
+                : constants.department.distribution;
             this.stopSale.categoryId = this.stopSaleData?.category?.id
                 ? this.stopSaleData.category.id
-                : this.constants.category.oneway;
+                : constants.category.oneway;
             this.stopSale.initDate = this.stopSaleData?.initDate;
             this.stopSale.endDate = this.stopSaleData?.endDate;
             if (this.stopSaleData.acriss != null)
@@ -537,16 +537,24 @@ export default {
                 this.showNotification("error", this.txt.form.cannotBeEditCreated);
             }
 
-            if (this.stopSale.carGroupsId.length == 0 && this.stopSale.acrissId.length == 0) {
-                validated = false;
-                this.showNotification("warn", this.txt.form.selectAGroupOrAcriss);
-                document.querySelector("#acrissId").focus();
-            }
+            if (!this.stopSale.endDate) {
+                if (
+                    this.stopSale.carGroupsId.length === 0 &&
+                    this.stopSale.acrissId.length === 0
+                ) {
+                    validated = false;
+                    this.showNotification(
+                        "warn",
+                        this.txt.form.selectAGroupOrAcriss
+                    );
+                    document.querySelector("#acrissId").focus();
+                }
 
-            if (this.stopSale.branchPickUpId.length == 0) {
-                validated = false;
-                this.showNotification("warn", this.txt.form.selectABranch);
-                document.querySelector("#branchPickUpId").focus();
+                if (this.stopSale.branchPickUpId.length === 0) {
+                    validated = false;
+                    this.showNotification("warn", this.txt.form.selectABranch);
+                    document.querySelector("#branchPickUpId").focus();
+                }
             }
 
             if (this.stopSale.recurrencesId.length == 7) {
