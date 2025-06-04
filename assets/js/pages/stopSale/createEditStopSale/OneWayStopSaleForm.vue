@@ -314,7 +314,7 @@ export default {
                 regionPickUpId: [],
                 regionDropOffId: [],
                 areaPickUpId: [],
-                areaPiDropOffId: [],
+                areaDropOffId: [],
                 branchPickUpId: [],
                 branchDropOffId: [],
                 stopSaleTypeId: null,
