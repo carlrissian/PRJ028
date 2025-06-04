@@ -1,0 +1,29 @@
+routes.downloadTemplate:
+  path: /download-template
+  controller: App\Controller\Route\DownloadExcelTemplateRouteController
+  options:
+    expose: true
+
+routes.create.excel:
+  path: /create/excel
+  controller: App\Controller\Route\CreateRouteController
+  methods: GET
+  options:
+    expose: true
+
+routes.filter:
+  path: /filter
+  controller: App\Controller\Route\FilterRouteController
+  options:
+    expose: true
+
+routes.list:
+  path: /list
+  controller: App\Controller\Route\ListRouteController
+
+routes.uploadCSV:
+  path: /upload
+  controller: App\Controller\Route\ProcessFileRouteController
+  methods: POST
+  options:
+    expose: true

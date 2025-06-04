@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: prj028-pre-logistics
+  namespace: __KubernetesNamespace__
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - pre-logistics.recordgo.cloud
+      secretName: tls-secret-csi
+  rules:
+    - host: pre-logistics.recordgo.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prj028-pre-logistics
+                port:
+                  number: 8028

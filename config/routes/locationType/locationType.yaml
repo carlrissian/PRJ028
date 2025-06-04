@@ -1,0 +1,6 @@
+location.type.selectList:
+  path: /selectlist
+  controller: App\Controller\LocationType\SelectListController
+  methods: GET
+  options:
+    expose: true

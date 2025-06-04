@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prj028-dev-logistics
+  namespace: __KubernetesNamespace__
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: prj028-dev-logistics
+  template:
+    metadata:
+      labels:
+        app: prj028-dev-logistics
+    spec:
+      tolerations:
+        - key: "system-reserved"
+          operator: "Exists"
+          effect: "NoSchedule"
+        - key: "kube-system-only"
+          operator: "Exists"
+          effect: "NoSchedule"
+      containers:
+        - name: prj028-dev-logistics-nginx
+          image: nginx:alpine
+          imagePullPolicy: Always
+          workingDir: /var/www
+          ports:
+            - containerPort: 80
+            - containerPort: 443
+          volumeMounts:
+            - name: prj028-dev-logistics
+              mountPath: /var/www
+            - name: prj028-dev-logistics-nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+        - name: prj028-dev-logistics
+          image: recordgo.azurecr.io/prj028-dev-logistics-app:__Build.BuildId__
+          imagePullPolicy: Always
+          env:
+            - name: PHP_IDE_CONFIG
+              value: serverName=erpXdebug
+            - name: XDEBUG_CONFIG
+              value: remote_host=host.docker.internal
+          workingDir: /var/www
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: prj028-dev-logistics-app-local-ini
+              mountPath: /usr/local/etc/php/conf.d/local.ini
+              subPath: local.ini
+      initContainers:
+        - name: setup-www
+          command:
+            - "/bin/sh"
+            - "-c"
+            - "cp -r ./RecordGo /var/app/ && cp -r ./bin /var/app/ && cp -r ./public /var/app/ && cp -r ./templates /var/app/ && cp -r ./assets /var/app/ && cp -r ./config /var/app/ && cp -r ./src /var/app/ && cp -r ./var /var/app/"
+          image: recordgo.azurecr.io/prj028-dev-logistics-app:__Build.BuildId__
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: prj028-dev-logistics
+              mountPath: /var/app/
+      restartPolicy: Always
+      volumes:
+        - name: prj028-dev-logistics
+          persistentVolumeClaim:
+            claimName: prj028-dev-logistics-shared-claim
+        - name: prj028-dev-logistics-nginx-conf
+          configMap:
+            name: prj028-dev-logistics-nginx-conf
+        - name: prj028-dev-logistics-app-local-ini
+          configMap:
+            name: prj028-dev-logistics-app-local-ini

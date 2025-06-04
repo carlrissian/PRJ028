@@ -1,0 +1,174 @@
+{% block title %}RECORD GO
+{% endblock %}
+
+
+{% block body %}
+	<template>
+		<table class="table table-bordered" data-height="750" style="padding: 20px;text-align: center">
+			<thead>
+				<tr style="background-color: #cdcdcd;">
+					<th class="thOne">Nº Movimiento
+						{{ movement.movementTypeName }}</th>
+					<th class="thTwo">Localización origen</th>
+					<th>Localización destino</th>
+					<th>Fecha de salida</th>
+					<th>Fecha de llegada prevista</th>
+					{% if (constantsManager.TRANSPORTTYPE_DRIVER == movementType) %}
+						<th>Km de salida</th>
+					{% endif %}
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+						<span>{{ movement.id }}</span>
+					</td>
+					<td>
+						<span>
+							{% if movement.originLocation %}
+								{{ movement.originLocation }}
+							{% elseif movement.externalOriginLocation %}
+								{{ movement.externalOriginLocation }}
+							{% elseif movement.manualOriginLocation %}
+								{{ movement.manualOriginLocation.country }}
+								/
+								{{ movement.manualOriginLocation.state }}
+							{% else %}
+								N/A
+							{% endif %}
+						</span>
+					</td>
+					<td>
+						<span>
+							{% if movement.destinationLocation %}
+								{{ movement.destinationLocation }}
+							{% elseif movement.externalDestinationLocation %}
+								{{ movement.externalDestinationLocation }}
+							{% elseif movement.manualDestinationLocation %}
+								{{ movement.manualDestinationLocation.country }}
+								/
+								{{ movement.manualDestinationLocation.state }}
+							{% else %}
+								N/A
+							{% endif %}
+						</span>
+					</td>
+					<td>
+						<span>{{ movement.actualLoadDate }}</span>
+					</td>
+					<td>
+						<span>{{ movement.expectedUnloadDate }}</span>
+					</td>
+					{% if (constantsManager.TRANSPORTTYPE_DRIVER == movementType) %}
+						<td>
+							<span>{{ movement.vehicle.kilometersActual }}</span>
+						</td>
+					{% endif %}
+				</tr>
+			</tbody>
+		</table>
+
+		<table class="table table-bordered" data-height="750" style="padding: 20px;text-align: center">
+			<thead>
+				<tr style="background-color: #cdcdcd;">
+					{% if (movement.supplierName) %}
+						<th>Proveedor</th>
+					{% endif %}
+
+					{% if (constantsManager.TRANSPORTTYPE_DRIVER == movementType) %}
+						<th>Nombre</th>
+						<th>Apellidos</th>
+						<th>Dni</th>
+						<th>Matrícula</th>
+						<th>Marca</th>
+						<th>Modelo</th>
+					{% endif %}
+				</tr>
+			</thead>
+
+			<tbody>
+				<tr>
+					{% if (movement.supplierName) %}
+						<td>
+							<span>{{ movement.supplierName}}</span>
+						</td>
+					{% endif %}
+
+					{% if (constantsManager.TRANSPORTTYPE_DRIVER == movementType) %}
+						<td>
+							<span>{{ movement.driverName }}</span>
+						</td>
+						<td>
+							<span>{{ movement.driverLastName }}</span>
+						</td>
+						<td>
+							<span>{{ movement.driverDni }}</span>
+						</td>
+						<td>
+							<span>{{ movement.vehicle.licensePlate }}</span>
+						</td>
+						<td>
+							<span>{{ movement.vehicle.brandName }}</span>
+						</td>
+						<td>
+							<span>{{ movement.vehicle.modelName }}</span>
+						</td>
+					{% endif %}
+				</tr>
+			</tbody>
+
+		</table>
+		{% if (constantsManager.TRANSPORTTYPE_OPERATION == movementType and movement.vehicle) %}
+
+			{% for vehicle in movement.vehicle %}
+				<div>
+					<strong style="padding-left: 10px;">Bastidor:</strong>
+					{{ vehicle.vin |nl2br }}
+					<strong style="padding-left: 10px;">Matrícula:</strong>
+					{{ vehicle.licensePlate |nl2br }}
+					<strong style="padding-left: 10px;">Marca:</strong>
+					{{ vehicle.brandName |nl2br }}
+					<strong style="padding-left: 10px;">Modelo:</strong>
+					{{ vehicle.modelName |nl2br }}
+				</div>
+			{% endfor %}
+		{% endif %}
+
+		{% if (constantsManager.TRANSPORTTYPE_DRIVER == movementType) %}
+			<table width="550" style="margin-left: 20px;height: 80px;border:2px solid black;">
+				<tr>
+					<td>ESQUEMA</td>
+				</tr>
+			</table>
+		{% endif %}
+		<table width="550" style="text-align: center;border: 1px solid black;margin-left: 20px;margin-top: 30px;">
+			<thead>
+				<tr style="background-color: #cdcdcd;">
+					<th style="height:30px;">Notas</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="height:150px;">
+						<span>{{ movement.notes }}</span>
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+		<table width="550" style="margin-left: 20px;">
+			<thead>
+				<tr style="text-align: left;text-decoration: underline;">
+					<th style="text-align: left;width: 450px;">Firma Empleado</th>
+					<th style="text-align: left;">Firma Conductor</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr style="height: 150px">
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</template>
+{% endblock body %}

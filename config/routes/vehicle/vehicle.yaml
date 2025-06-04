@@ -1,0 +1,72 @@
+vehicle.anticipations.list:
+  path: /anticipations/list
+  controller: App\Controller\Vehicle\ListAnticipationsController
+  options:
+    expose: true
+
+vehicle.consult:
+  path: /consult
+  controller: App\Controller\Vehicle\ConsultController
+
+vehicle.details:
+  path: /details/{licensePlate}
+  controller: App\Controller\Vehicle\DetailsController
+  options:
+    expose: true
+
+vehicle.downloadExcel:
+  path: /excel
+  controller: App\Controller\Vehicle\DownloadExcelVehicleListController
+  options:
+    expose: true
+
+vehicle.exist:
+  path: /exist
+  controller: App\Controller\Vehicle\SearchController
+  methods: GET
+  options:
+    expose: true
+
+vehicle.filter:
+  path: /filter
+  controller: App\Controller\Vehicle\FilterVehicleController
+  options:
+    expose: true
+
+vehicle.getSelectors:
+  path: /getFilters
+  controller: App\Controller\Vehicle\VehicleController::getSelectors
+  methods: GET
+  options:
+    expose: true
+
+vehicle.history.details:
+  path: /history/{vehicleId}/document/{documentId}
+  controller: App\Controller\Vehicle\VehicleController::showHistoryStatusDocumentInfo
+  methods: GET
+  options:
+    expose: true
+
+vehicle.history.filter:
+  path: /history/filter
+  methods: GET
+  controller: App\Controller\Vehicle\FilterVehicleHistoryController
+  options:
+    expose: true
+
+vehicle.insurance.list:
+  path: /insurance/list
+  controller: App\Controller\Vehicle\ListVehicleInsuranceController
+  options:
+    expose: true
+
+vehicle.list:
+  path: /list
+  controller: App\Controller\Vehicle\ListController
+
+vehicle.motorizationType:
+  path: /motorizationType
+  methods: GET
+  controller: App\Controller\Vehicle\VehicleController::getMotorizationType
+  options:
+    expose: true

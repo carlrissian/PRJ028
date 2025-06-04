@@ -1,0 +1,6 @@
+movement.status.selectList:
+  path: /selectlist
+  controller: App\Controller\MovementStatus\SelectListController
+  methods: GET
+  options:
+    expose: true

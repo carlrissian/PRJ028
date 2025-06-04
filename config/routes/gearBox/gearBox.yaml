@@ -1,0 +1,6 @@
+gearBox.selectList:
+  path: /selectlist
+  controller: App\Controller\GearBox\SelectListController
+  methods: GET
+  options:
+    expose: true

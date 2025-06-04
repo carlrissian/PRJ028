@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Gestión de rutas vía excel' | trans }}{% endblock %}
+
+{% block body %}
+    <excel-route-page :token="'{{ csrf_token('authenticate') }}'" />
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            titles: {
+                downloadTemplate: '{{ 'Descargar Plantilla' | trans }}',
+                uploadExcel: '{{ 'Subir Excel' | trans }}',
+            },
+            fields: {
+            },
+            form: {
+                download: '{{ 'Descargar' | trans }}',
+                createdRoutes: '{{ 'Rutas creadas' | trans }}',
+                updatedRoutes: '{{ 'Rutas actualizadas' | trans }}',
+                deletedRoutes: '{{ 'Rutas eliminadas' | trans }}',
+            },
+        };
+    </script>
+{% endblock javascripts %}

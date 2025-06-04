@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ("Listado de stopSale" | trans) }}{% endblock %}
+
+{% block body %}
+    <list-stop-sale-page
+            :select-list="{{ selectList }}"
+            :stop-sale-category-id="{{ stopSaleCategoryId }}"
+            :stop-sale-name="'{{ stopSaleName | trans }}'">
+    </list-stop-sale-page>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            titles: {
+                historyStopSale: '{{ 'Histórico StopSale' | trans }}',
+            },
+            fields: {
+                id: '{{ 'ID#' | trans }}',
+                department: '{{ 'Departamento' | trans }}',
+                stopSaleType:'{{'Tipo' | trans }}',
+                initDate:'{{ 'F. Ini' | trans }}',
+                endDate:'{{ 'F. Fin' | trans }}',
+                recurrence:'{{'Recurrencia' | trans }}',
+                days:'{{'Dias' | trans }}',
+                regions:'{{'Regiones' | trans }}',
+                areas:'{{'Áreas' | trans }}',
+                branch:'{{'Delegación' | trans }}',
+                branches:'{{'Delegaciones' | trans }}',
+                partner: '{{ 'Partner' | trans }}',
+                partners: '{{ 'Partners' | trans }}',
+                sellCode: '{{ 'Sell Code' | trans }}',
+                sellCodes: '{{ 'Sell Codes' | trans }}',
+                product: '{{ 'Producto' | trans }}',
+                products: '{{ 'Productos' | trans }}',
+                connectedVehicle:'{{'Vehículo conectado' | trans }}',
+                carGroup: '{{ 'Grupo' | trans }}',
+                carGroups: '{{ 'Grupos' | trans }}',
+                acriss: '{{ 'ACRISS' | trans }}',
+                startTime:'{{'Hora inicio' | trans }}',
+                endTime:'{{'Hora Fin' | trans }}',
+                minDaysRent:'{{'Dias desde' | trans }}',
+                maxDaysRent:'{{'Dias hasta' | trans }}',
+                creationUser:'{{'Usuario creación' | trans }}',
+                creationDate:'{{'F. creación' | trans }}',
+                cancellationDate: '{{ 'Fecha anulación' | trans }}',
+                cancellationUser: '{{ 'Anulado por:' | trans }}',
+                active:'{{'Activo' | trans }}',
+
+                // OneWay
+                countryPickUp:'{{ 'Pais origen' | trans }}',
+                regionPickUp:'{{ 'Región origen' | trans }}',
+                areaPickUp:'{{ 'Área origen' | trans }}',
+                branchPickUp:'{{ 'Delegación origen' | trans }}',
+                countryDropOff:'{{ 'Pais destino' | trans }}',
+                regionDropOff:'{{ 'Región destino' | trans }}',
+                areaDropOff:'{{ 'Área destino' | trans }}',
+                branchDropOff:'{{ 'Delegación destino' | trans }}',
+
+                // Filters
+                creationDateFrom:'{{'Fecha creación desde' | trans }}',
+                creationDateTo:'{{'Fecha creación hasta' | trans }}',
+                status:'{{'Estado' | trans }}',
+            },
+            form: {
+                actions:'{{ 'Acciones' | trans }}',
+                yes:'{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+                all: '{{ 'Todos' | trans }}',
+                history: '{{ 'Histórico' | trans }}',
+                edit: '{{ 'Editar' | trans }}',
+                close: '{{ 'Cerrar' | trans }}',
+                cancel: '{{ 'Anular' | trans }}',
+                cancelStopSaleQuestion:'{{ '¿Esta seguro que desea anular este Stop Sale?' | trans }}',
+                stopSaleCancelledSuccessNotification: '{{ 'Stop Sale anulado correctamente.' | trans }}',
+                errorCancelingStopSaleNotification: '{{ 'Disculpe, se ha producido un error al intentar anular el Stop Sale.' | trans }}',
+            },
+            txtForm: {
+                stopSaleInitDate:'{{ 'Fecha de inicio' | trans }}',
+                stopSaleEndDate:'{{ 'Fecha de fin' | trans }}',
+                countries:'{{ 'Pais' | trans }}',
+                regions:'{{ 'Región' | trans }}',
+                areas:'{{ 'Área' | trans }}',
+                branchs:'{{ 'Delegacion' | trans }}',
+                locations:'{{ 'Localizacion' | trans }}',
+                carGroups:'{{ 'Grupos' | trans }}',
+                connectedVehicle:'{{'Vehículo conectado' | trans }}',
+                stopSaleActive:'{{'Activo' | trans }}',
+                creationDateFrom:'{{'Fecha creación desde' | trans }}',
+                creationDateTo:'{{'Fecha creación hasta' | trans }}',
+                stopSaleType:'{{'Tipo Stop Sale' | trans }}',
+                days:'{{'Dias' | trans }}',
+                recurrence:'{{'Recurrencia' | trans }}',
+                ssMinDaysRent:'{{'Dias desde' | trans }}',
+                ssMaxDaysRent:'{{'Dias hasta' | trans }}',
+                stopSaleCreationUser:'{{'Usuario' | trans }}',
+                stopSaleCreation:'{{'Fecha creación' | trans }}',
+                partners:'{{'Partners' | trans }}',
+                acriss:'{{'Acriss' | trans }}',
+                startTime:'{{'Hora inicio' | trans }}',
+                startEnd:'{{'Hora Fin' | trans }}',
+                countryPick:'{{ 'Pais origen' | trans }}',
+                regionPick:'{{ 'Region origen' | trans }}',
+                areaPick:'{{ 'Área origen' | trans }}',
+                branchPick:'{{ 'Delegacion origen' | trans }}',
+                countryDrop:'{{ 'Pais destino' | trans }}',
+                regionDrop:'{{ 'Region destino' | trans }}',
+                areaDrop:'{{ 'Área destino' | trans }}',
+                branchDrop:'{{ 'Delegacion destino' | trans }}',
+                historyStandar:'{{ 'Histórico  Standar' | trans }}',
+                historyOneWay:'{{ 'Histórico oneWay' | trans }}',
+                cancelStandar:'{{ '¿Esta seguro que desea Anular Stop Sale Standar?' | trans }}',
+                cancelOneWay:'{{ '¿Esta seguro que desea Anular Stop Sale OneWay?' | trans }}',
+                cancel: '{{ 'Anular' | trans }}',
+                stopSaleStatus: '{{'Estado' | trans }}',
+                yes:'{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+                all: '{{ 'Todos' | trans }}',
+                id: '{{ 'Id' | trans }}',
+                department: '{{ 'Departamento' | trans }}',
+                partner: '{{ 'Partner' | trans }}',
+                sellCode: '{{ 'Sell Code' | trans }}',
+                historyStopSale: '{{ 'Histórico StopSale' | trans }}',
+            }
+        };
+
+        let constants = {
+            category: {
+                standard: {{ constantsManager.STOPSALECAT_STANDAR }},
+                oneway: {{ constantsManager.STOPSALECAT_ONEWAY }},
+            },
+            type: {
+                checkin_checkout: {{ constantsManager.STOPSALETYPE_PARCIAL_CHECKOUT_CHECKIN }},
+            }
+        };
+    </script>
+{% endblock javascripts %}

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Asociar'|trans }}{% endblock %}
+
+{% block body %}
+    <associate-fleet-classification-page />
+{% endblock %}
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            txtAssociate: {
+                acrissParent: '{{ 'ACRISS superior ' | trans }}',
+                acrissChild: '{{ 'ACRISS inferior' | trans }}',
+                associate: '{{ 'Asociar' | trans }}',
+                cancelAssociate: '{{ 'Cancelar asociación' | trans }}',
+                actions: '{{ 'Acciones' | trans }}',
+            },
+            txtAssociateModal: {
+                associate: '{{ 'Asociar' | trans }}',
+                name: '{{ 'Nombre' | trans }}',
+                acrissParent: '{{ 'ACRISS superior' | trans }}',
+                acrissChilds: '{{ 'ACRISS inferior' | trans }}',
+                acrissToAssociate: '{{ 'ACRISS para asociar' | trans }}',
+                selectAcrissToDissasociate: '{{ 'Selecciona los ACRISS a asociar' }}',
+
+                searchAcrissToAssociate: '{{ 'Buscando ACRISS para asociar' | trans }}',
+                cantFindAcrissToAssociate: '{{ 'No se han encontrado ACRISS para asociar' | trans }}',
+                successAssociate:  '{{ 'Se ha asociado correctamente los ACRISS seleccionados' | trans }}',
+                errorAssociate:   '{{ 'Error al asociar los ACRISS seleccionados' | trans }}',
+            },
+            txtCancelAssociateModal: {
+                disassociateAcriss: '{{ 'Cancelar asociación ACRISS' | trans }}',
+                acriss: '{{ 'ACRISS' | trans }}',
+                cancelAssociate: '{{ 'Cancelar asociación' | trans }}',
+                selectAcrissToDissasociate: '{{ 'Selecciona los ACRISS a desasociar' }}',
+                successDisssociate:  '{{ 'Se ha desasociado correctamente los ACRISS seleccionados' | trans }}',
+                errorDisassociate:   '{{ 'Error al desasociar los ACRISS seleccionados' | trans }}',
+            },
+        };
+    </script>
+{% endblock javascripts %}

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'Listado Grupo Comercial' |trans }}
+{% endblock %}
+
+{% block body %}
+	<commercial-group-list-page/>
+{% endblock %}
+{% block javascripts %}
+	<script>
+		let txtTrans = {
+            titles: {
+                createCommercialGroup: '{{ 'Crear Grupo comercial' | trans }}',
+                deleteCommercialGroup: '{{ 'Eliminar grupo comercial' | trans }}',
+            },
+            fields: {
+                // Commercial group
+                commercialGroup: '{{ 'Grupo comercial' | trans }}',
+                acriss: '{{ 'ACRISS' | trans }}',
+                status: '{{ 'Estado' | trans }}',
+            },
+            form: {
+                selectAnOption: '{{ 'Seleccione una opción' | trans }}',
+                actions: '{{ 'Acciones' | trans }}',
+                activated: '{{ 'Activado' | trans }}',
+                deactivated: '{{ 'Desactivado' | trans }}',
+                viewDetails:'{{ 'Ver detalles' | trans }}',
+                delete:'{{ 'Eliminar' | trans }}',
+                close:'{{ 'Cerrar' | trans }}',
+                cancel:'{{ 'Cancelar' | trans }}',
+                deleteCommercialGroup: '{{ '¿Está seguro de que desea eliminar este grupo comercial?' | trans }}',
+                commercialGroupDeletedSuccessNotification: '{{ 'Grupo comercial eliminado correctamente.' | trans }}',
+                errorDeletingCommercialGroupNotification: '{{ 'Se produjo un error al intentar eliminar el grupo comercial.' | trans }}',
+            },
+        };
+	</script>
+{% endblock javascripts %}

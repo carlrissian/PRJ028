@@ -1,0 +1,6 @@
+motorizationType.selectList:
+  path: /selectlist
+  controller: App\Controller\MotorizationType\SelectListController
+  methods: GET
+  options:
+    expose: true

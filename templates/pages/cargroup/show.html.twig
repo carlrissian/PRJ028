@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'CarGroup'|trans }}{% endblock %}
+
+{% block body %}
+    <show-car-group-page :car-group="{{ carGroup }}" />
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            txtCarGroup: {
+                showCarGroup: '{{ 'Ver detalle Grupo Flota' | trans }}',
+                group: '{{ 'Grupo' | trans }}',
+                carGroup: '{{ 'Grupo flota' | trans }}',
+                acriss: '{{ 'ACRISS' | trans }}',
+                status: '{{ 'Estado' | trans }}',
+                updateUser: '{{ 'Usuario modificación' | trans }}',
+                updateDate: '{{ 'Fecha modificación' | trans }}',
+                edit: '{{ 'Editar' | trans }}',
+                name: '{{ 'Nombre' | trans }}'
+            }
+        };
+    </script>
+{% endblock javascripts %}

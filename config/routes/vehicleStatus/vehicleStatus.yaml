@@ -1,0 +1,6 @@
+vehicle.status.selectList:
+  path: /selectlist
+  controller: App\Controller\VehicleStatus\SelectListController
+  methods: GET
+  options:
+    expose: true

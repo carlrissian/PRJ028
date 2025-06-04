@@ -1,0 +1,6 @@
+businessUnitArticle.selectList:
+  path: /selectlist
+  controller: App\Controller\BusinessUnitArticle\SelectListController
+  methods: GET
+  options:
+    expose: true

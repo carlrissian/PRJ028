@@ -1,0 +1,13 @@
+state.filter:
+  path: /filter
+  controller: App\Controller\State\FilterController
+  methods: GET
+  options:
+    expose: true
+
+state.select.list:
+  path: /selectlist
+  controller: App\Controller\State\SelectListController
+  methods: GET
+  options:
+    expose: true

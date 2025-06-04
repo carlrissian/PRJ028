@@ -1,0 +1,62 @@
+commercialgroup.create:
+    path: /create
+    controller: App\Controller\CommercialGroup\CommercialGroupController::create
+    methods: GET
+    options:
+        expose: true
+
+commercialgroup.delete:
+    path: /delete
+    controller: App\Controller\CommercialGroup\CommercialGroupController::delete
+    methods: POST
+    options:
+        expose: true
+
+commercialgroup.edit:
+    path: /edit/{id}
+    controller: App\Controller\CommercialGroup\CommercialGroupController::edit
+    methods: GET
+    options:
+        expose: true
+
+commercialgroup.filter:
+    path: /filter
+    controller: App\Controller\CommercialGroup\CommercialGroupController::filter
+    methods: GET
+    options:
+        expose: true
+
+commercialgroup.list:
+    path: /list
+    controller: App\Controller\CommercialGroup\ListCommercialGroupController
+    methods: GET
+    options:
+        expose: true
+
+commercialgroup.details:
+    path: /details/{id}
+    controller: App\Controller\CommercialGroup\ShowCommercialGroupController
+    methods: GET
+    options:
+        expose: true
+
+commercialGroup.selectList:
+  path: /selectlist
+  controller: App\Controller\CommercialGroup\SelectListCommercialGroupController
+  methods: GET
+  options:
+    expose: true
+
+commercialgroup.store:
+    path: /store
+    controller: App\Controller\CommercialGroup\StoreCommercialGroupController
+    methods: [POST]
+    options:
+        expose: true
+
+commercialgroup.update:
+    path: /update
+    controller: App\Controller\CommercialGroup\CommercialGroupController::update
+    methods: [POST]
+    options:
+        expose: true

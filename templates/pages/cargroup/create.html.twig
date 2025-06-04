@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'CarGroup'|trans }}{% endblock %}
+
+{% block body %}
+    <car-group-page :select-list="{{ selectList }}" />
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            txtCarGroup: {
+                commercialGroup: '{{ 'Grupo Comercial ' | trans }}',
+                carClass: '{{ 'CarClass' | trans }}',
+                group: '{{ 'Grupo' | trans }}',
+                acriss: '{{ 'Acriss' | trans }}',
+                status: '{{ 'Estado' | trans }}',
+                vigor: '{{ 'Vigor' | trans }}',
+                user: '{{ 'Usuario' | trans }}',
+                createDate: '{{ 'Fecha creación' | trans }}',
+                addButton: '{{ 'Añadir' | trans }}',
+                actions: '{{ 'Acciones' | trans }}',
+                selectAnOption: '{{ 'Seleccione una opción' | trans }}',
+                editTitle: '{{ 'Editar grupo' | trans }}',
+                addTitle: '{{ 'Añadir grupo' | trans }}',
+                edit: '{{ 'Editar' | trans }}',
+                add: '{{ 'Añadir' | trans }}',
+                create: '{{ 'Crear' | trans }}',
+                name: '{{ 'Nombre' | trans }}'
+
+            },
+            txtDeleteModal: {
+                deleteGroup: '{{ 'Eliminar Grupo' | trans }}',
+                questionDeleteGroup: '{{ '¿Esta seguro que desea eliminar este grupo?' | trans }}',
+                delete: '{{ 'Eliminar' | trans }}',
+
+            }
+        };
+    </script>
+{% endblock javascripts %}

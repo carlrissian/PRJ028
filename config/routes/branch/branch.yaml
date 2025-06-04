@@ -1,0 +1,6 @@
+branch.selectList:
+  path: /selectlist
+  controller: App\Controller\Branch\SelectListController
+  methods: GET
+  options:
+    expose: true

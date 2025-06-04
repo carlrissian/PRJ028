@@ -1,0 +1,6 @@
+brand.selectList:
+  path: /selectlist
+  controller: App\Controller\Brand\SelectListController
+  methods: GET
+  options:
+    expose: true

@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'Grupo comercial'|trans }}
+{% endblock %}
+
+{% block body %}
+	<edit-commercial-group-page :data="{{ data }}"/>
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		let txtTrans = {
+            titles: {
+                editCommercialGroup: '{{ 'Editar grupo comercial' | trans }}',
+            },
+            fields: {
+                // Commercial group
+                commercialGroup: '{{ 'Grupo comercial' | trans }}',
+                acriss: '{{ 'Acriss' | trans }}',
+                status: '{{ 'Estado' | trans }}',
+
+                // Commercial group translations
+                name: '{{ 'Nombre' | trans }}',
+                translations: '{{ 'Traducciones' | trans}}',
+                language: '{{ 'Idioma' | trans}}',
+                byDefault: '{{ 'Por defecto: ' | trans }}',
+            },
+            form: {
+                selectAnOption: '{{ 'Seleccione una opción' | trans }}',
+                update: '{{ 'Actualizar' | trans }}',
+                delete:'{{ 'Eliminar' | trans }}',
+                close:'{{ 'Cerrar' | trans }}',
+                cancel:'{{ 'Cancelar' | trans }}',
+                yes:'{{ 'Si' | trans }}',
+                no:'{{ 'No' | trans }}',
+                activated: '{{ 'Activado' | trans }}',
+                deactivated: '{{ 'Desactivado' | trans }}',
+                addLanguage: '{{ 'Añadir idioma' | trans }}',
+                selectLanguageToAdd: '{{ 'Por favor, selecione antes un idioma para añadir una traducción' | trans }}',
+                languageAlreadyExists: '{{ 'El idioma ya se encuentra en la lista de traducciones' | trans }}',
+                notTranslations: '{{ 'No existen traducciones para este grupo comercial' | trans }}',
+                nameAlreadyExists: '{{ 'Ya existe un grupo comercial con el nombre insertado' | trans }}',
+                commercialGroupUpdatedSuccessNotification: '{{ 'Grupo comercial actualizado correctamente' | trans }}',
+                errorUpdatingCommercialGroupNotification: '{{ 'Se ha producido un error al intentar actualizar el grupo comercial' | trans }}',
+            },
+        };
+	</script>
+{% endblock javascripts %}

@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Listado Grupo Flota' |trans }}{% endblock %}
+
+{% block body %}
+    <list-car-group-page />
+{% endblock %}
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            txtList: {
+                carGroup: '{{ 'Grupo flota' | trans }}',
+                acriss: '{{ 'ACRISS' | trans }}',
+                carClass: '{{ 'CarClass' | trans }}',
+                type: '{{ 'Tipo' | trans }}',
+                gearBox: '{{ 'Caja cambios' | trans }}',
+                motorizationType: '{{ 'Tipo motorización' | trans }}',
+                actions: '{{ 'Acciones' | trans }}',
+                activate: '{{ 'Activado' | trans }}',
+                deactivate: '{{ 'Desactivado' | trans }}',
+                status: ' {{ 'Estado' | trans }}',
+                createCarGroup: '{{ 'Crear Grupo flota' | trans }}',
+            },
+            txtFilter: {
+                activate: '{{ 'Activado' | trans }}',
+                deactivate: '{{ 'Desactivado' | trans }}',
+                carGroup: '{{ 'Grupo flota' | trans }}',
+                acriss: '{{ 'ACRISS' | trans }}',
+                status: '{{ 'Estado' | trans }}',
+                titleSelect: '{{ 'Selecciona una opción' | trans }}',
+            },
+        };
+    </script>
+{% endblock javascripts %}

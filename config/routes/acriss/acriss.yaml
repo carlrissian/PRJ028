@@ -1,0 +1,113 @@
+acriss.checkIfExists:
+  path: /check/exists
+  controller: App\Controller\Acriss\CheckIfExistsController
+  methods: GET
+  options:
+    expose: true
+
+acriss.checkIfHasChilds:
+  path: /check/has-childs
+  controller: App\Controller\Acriss\CheckIfHasChildsController
+  methods: GET
+  options:
+    expose: true
+
+acriss.create:
+  path: /create
+  controller: App\Controller\Acriss\CreateAcrissController
+  methods: GET
+  options:
+    expose: true
+
+acriss.edit:
+  path: /edit/{id}
+  controller: App\Controller\Acriss\EditAcrissController
+  methods: GET
+  options:
+    expose: true
+
+acriss.filter:
+  path: /filter
+  controller: App\Controller\Acriss\FilterAcrissController
+  methods: GET
+  options:
+    expose: true
+
+acriss.list:
+  path: /list
+  controller: App\Controller\Acriss\ListAcrissController
+  methods: GET
+  options:
+    expose: true
+
+acriss.show:
+  path: /show/{id}
+  controller: App\Controller\Acriss\ShowAcrissController
+  methods: GET
+  options:
+    expose: true
+
+acriss.store:
+  path: /store
+  controller: App\Controller\Acriss\StoreAcrissController
+  methods: POST
+  options:
+    expose: true
+
+acriss.update:
+  path: /update/{id}
+  controller: App\Controller\Acriss\UpdateAcrissController
+  methods: POST
+  options:
+    expose: true
+
+acriss.update.status:
+  path: /update/status
+  controller: App\Controller\Acriss\UpdateStatusAcrissController
+  methods: POST
+  options:
+    expose: true
+
+# PENDIENTE DE REVISIÓN
+
+acriss.associate.filter:
+  path: /associate/filter
+  controller: App\Controller\Acriss\AcrissController::associateFilter
+  methods: GET
+  options:
+    expose: true
+
+getGroupByClassId:
+  path: /get-groups
+  controller: App\Controller\Acriss\AcrissController::getGroups
+  methods: GET
+  options:
+    expose: true
+
+acriss.associate.get:
+  path: /get/associate
+  controller: App\Controller\Acriss\AcrissController::getAcrissToAssociate
+  methods: GET
+  options:
+    expose: true
+
+acriss.associate.set:
+  path: /set/associate
+  controller: App\Controller\Acriss\AcrissController::setAcrissToAssociate
+  methods: POST
+  options:
+    expose: true
+
+acriss.disassociate.set:
+  path: /set/disassociate
+  controller: App\Controller\Acriss\AcrissController::setAcrissToDisassociate
+  methods: POST
+  options:
+    expose: true
+
+acriss.check.booking:
+  path: /check/booking
+  controller: App\Controller\Acriss\AcrissController::checkAcrissIsOnBooking
+  methods: GET
+  options:
+    expose: true

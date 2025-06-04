@@ -1,0 +1,62 @@
+cargroup.create:
+  path: /create
+  controller: App\Controller\CarGroup\CarGroupController::create
+  methods: GET
+  options:
+    expose: true
+
+cargroup.edit:
+  path: /edit/{id}
+  controller: App\Controller\CarGroup\EditCarGroupController::edit
+  methods: GET
+  options:
+    expose: true
+
+cargroup.filter:
+  path: /filter
+  controller: App\Controller\CarGroup\FilterCarGroupController
+  methods: GET
+  options:
+    expose: true
+
+cargroup.list:
+  path: /list
+  controller: App\Controller\CarGroup\ListCarGroupController
+  methods: GET
+  options:
+    expose: true
+
+cargroup.selectList:
+  path: /selectlist
+  controller: App\Controller\CarGroup\SelectListController
+  methods: GET
+  options:
+    expose: true
+
+cargroup.show:
+  path: /show/{id}
+  controller: App\Controller\CarGroup\ShowCarGroupController::show
+  methods: GET
+  options:
+    expose: true
+
+cargroup.store:
+  path: /store
+  controller: App\Controller\CarGroup\CarGroupController::store
+  methods: POST
+  options:
+    expose: true
+
+cargroup.update:
+  path: /update
+  controller: App\Controller\CarGroup\CarGroupController::update
+  methods: POST
+  options:
+    expose: true
+
+cargroup.update.status:
+  path: /set-status
+  controller: App\Controller\CarGroup\UpdateStatusCarGroupController::updateStatus
+  methods: POST
+  options:
+    expose: true

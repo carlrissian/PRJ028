@@ -1,0 +1,265 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ("Create Movement" | trans ) }}{% endblock %}
+
+{% block body %}
+    <movement-create-page
+        :select-list="{{ selectList }}"
+        :movement-type-id="{{ movementTypeId }}"
+        :movement-type-name="'{{ movementTypeName }}'"
+    ></movement-create-page>
+{% endblock body %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            titles: {
+                vehicleSearch: '{{ 'Buscar vehículo' | trans }}',
+                vehicleData: '{{ 'Datos del vehículo' | trans }}',
+                createMovement: '{{ 'Crear movimiento' | trans }}',
+                internalMovement: '{{ 'Movimiento interno' | trans }}',
+                ordinaryMovement: '{{ 'Movimiento ordinario' | trans }}',
+                notOrdinaryMovement: '{{ 'Movimiento no ordinario' | trans }}',
+                driverData: '{{ 'Datos del conductor' | trans }}',
+                driverSearch: '{{ 'Buscar conductor' | trans }}',
+                driversList: '{{ 'Listado de conductores' | trans }}',
+                driverSelected: '{{ 'Conductor seleccionado' | trans }}',
+                newDriver: '{{ 'Nuevo conductor' | trans }}',
+                newOriginLocation: '{{ 'Nueva localización origen' | trans }}',
+                newDestinationLocation: '{{ 'Nueva localización destino' | trans }}',
+                previewMovement: '{{ 'Previsualizar movimiento' | trans }}',
+                movementData: '{{ 'Datos del movimiento' | trans }}',
+                filters: '{{ 'Filtros' | trans }}',
+                assignedVehicles: '{{ 'Vehiculos asignados al movimiento nº' | trans }}',
+            },
+            fields: {
+                // Search / Vehicle data
+                licensePlate: '{{ 'Matrícula' | trans }}',
+                licensePlatePH: '{{ '1234ABC' | trans }}',
+                vin: '{{ 'Bastidor' | trans }}',
+                vinPH: '{{ '123456789ABCDEFG' | trans }}',
+                carClass: '{{ 'Carclass' | trans }}',
+                carGroup: '{{ 'Grupo' | trans }}',
+                acriss: '{{ 'Acriss' | trans }}',
+                actualKms: '{{ 'Kilómetros actuales' | trans }}',
+                brand: '{{ 'Marca' | trans }}',
+                model: '{{ 'Modelo' | trans }}',
+                trim: '{{ 'Acabado' | trans }}',
+                status: '{{ 'Estado' | trans }}',
+                rentingEndDate: '{{ 'Fecha fin alquiler' | trans }}',
+                country: '{{ 'Pais' | trans }}',
+                region: '{{ 'Región' | trans }}',
+                state: '{{ 'Provincia' | trans }}',
+                area: '{{ 'Área' | trans }}',
+                branch: '{{ 'Delegación' | trans }}',
+                location: '{{ 'Localización' | trans }}',
+
+                // Movement
+                driverType: '{{ 'Tipo de conductor' | trans }}',
+                locationType: '{{ 'Tipo de localización' | trans }}',
+                originBranch: '{{ 'Delegación origen' | trans }}',
+                destinationBranch: '{{ 'Delegación destino' | trans }}',
+                originLocation: '{{ 'Localización origen' | trans }}',
+                destinationLocation: '{{ 'Localización destino' | trans }}',
+                originExternalProvider: '{{ 'Proveedor localización externa origen' | trans }}',
+                destinationExternalProvider: '{{ 'Proveedor localización externa destino' | trans }}',
+                originExternalLocation: '{{ 'Localización externa origen' | trans }}',
+                destinationExternalLocation: '{{ 'Localización externa destino' | trans }}',
+                expectedDepartureDate: '{{ 'Fecha de salida prevista' | trans }}',
+                expectedArrivalDate: '{{ 'Fecha de llegada prevista' | trans }}',
+                authDepartment: '{{ 'Autorizado por' | trans }}',
+                transportMethod: '{{ 'Método de transporte' | trans }}',
+                units:'{{ 'Unidades' | trans }}',
+                notes: '{{ 'Notas' | trans }}',
+
+                // Driver
+                name: '{{ 'Nombre' | trans }}',
+                lastName: '{{ 'Apellidos' | trans }}',
+                idNumber: '{{ 'Documento de identidad' | trans }}',
+                driverLicense: '{{ 'Nº de permiso de conducir' | trans }}',
+                issueDate: '{{ 'Fecha de emisión' | trans }}',
+                expirationDate: '{{ 'Fecha de expiración' | trans }}',
+                city: '{{ 'Ciudad' | trans }}',
+                country: '{{ 'País' | trans }}',
+                postalCode: '{{ 'Código postal' | trans }}',
+                address: '{{ 'Dirección' | trans }}',
+
+                // Movement type -> Ordinary/Not ordinary
+                provider: '{{ 'Proveedor' | trans }}',
+                businessUnit: '{{ 'Unidad de negocio' | trans }}',
+                businessUnitArticle: '{{ 'Artículo unidad de negocio' | trans }}',
+                amount: '{{ 'Importe' | trans }}',
+                movementAmount: '{{ 'Importe movimiento' | trans }}',
+                automaticAmount: '{{ 'Importe automático' | trans }}',
+
+                // Vehicle filters
+                vehicleType: '{{ 'Tipo de vehículo' | trans }}',
+                connectedVehicle: '{{ 'Vehículo conectado' | trans }}',
+                kilometersFrom: '{{ 'Kilometros desde' | trans }}',
+                kilometersTo: '{{ 'Kilometros hasta' | trans }}',
+                rentingEndDateFrom: '{{ 'Fecha fin de alquiler desde' | trans }}',
+                rentingEndDateTo: '{{ 'Fecha fin de alquiler hasta' | trans }}',
+                saleMethod: '{{ 'Método de venta' | trans }}',
+                checkInDueDateFrom: '{{ 'Fecha fin de contrato desde' | trans }}',
+                vehicleStatus: '{{ 'Estado del vehículo' | trans }}',
+
+
+                // Campos genéricos
+                internal: '{{ 'Interno' | trans }}',
+                options: '{{ 'Opciones' | trans }}',
+            },
+            form: {
+                search:'{{ 'Buscar' | trans }}',
+                selectAnOption: '{{ 'Seleccione una opción' | trans }}',
+                pleaseFillFields: '{{ 'Por favor, rellene al menos un campo antes de realizar la búsqueda' | trans }}',
+                vehicleNotFound: '{{ 'No se ha encontrado ningún vehículo que coincida con los datos facilitados' | trans }}',
+                driverNotFound: '{{ 'No se ha encontrado ningún conductor que coincida con los datos facilitados' | trans }}',
+                errorOnSearch: '{{ 'Disculpe, se ha producido un error durante la búsqueda' | trans }}',
+                selectDriver: '{{ 'Seleccionar este conductor' | trans }}',
+                newDriver: '{{ 'Nuevo conductor' | trans }}',
+                createLocation: '{{ 'Crear localización' | trans }}',
+                filters: '{{ 'Filtros' | trans }}',
+                continue: '{{ 'Continuar' | trans }}',
+                change: '{{ 'Cambiar' | trans }}',
+                create: '{{ 'Crear' | trans }}',
+                cancel: '{{ 'Cancelar' | trans }}',
+                close: '{{ 'Cerrar' | trans }}',
+                preview: '{{ 'Previsualizar' | trans }}',
+                yes: '{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+                noLocationsLocationType: '{{ 'No existen localizaciones que tengan asignado el tipo de localización seleccionado' | trans }}',
+                noModelsBrand: '{{ 'No existen modelos de vehículos de la/s marca/s seleccionada/s' | trans }}',
+                noLocationsBranch: '{{ 'No existen localizaciones que tengan asignada la delegación seleccionada' | trans }}',
+                noExternalLocations: '{{ 'No existen localizaciones externas que tengan asignado el proveedor seleccionado' | trans }}',
+                noDriverSelectedOrFilled: '{{ 'Por favor, seleccione un conductor de la lista o complete los campos para crear uno nuevo' | trans }}',
+                createMovement: '{{ '¿Está segur@ de que quiere crear este movimiento?' | trans }}',
+                makeSureFillUpFields: '{{ 'Asegúrese de haber completado los campos correctamente' | trans }}',
+                errorCreatingMovementNotification: '{{ 'Disculpe, se ha producido un error durante la creación del movimiento. ' | trans }}',
+                movementCreatedSuccessNotification: '{{ 'Movimiento creado correctamente' | trans }}',
+                providerNeed: '{{ 'Es necesario que seleccione un proveedor antes de crear un conductor' | trans }}',
+                transportDriverCreatedErroNotification: '{{ 'Disculpe, se ha producido un error durante la creación del conductor del traslado' | trans }}',
+                transportDriverCreatedSuccessNotification: '{{ 'Conductor del traslado creado correctamente' | trans }}',
+                submitTransportDriver: '{{ 'Guardar conductor' | trans }}',
+                locationMustHaveBranch: '{{ 'Tenga en cuenta que, para obtener un coste automático, tanto la localización origen como la de destino han de tener asignado una delegación. Para comprobarlo, vaya a la sección' | trans }}',
+                locationList: '{{ 'listado de localizaciones' | trans }}',
+                notSameAmounts: '{{ 'No coincide el importe manual con el importe automático' | trans }}',
+                generateAutomaticCost: '{{ 'Generar coste automático' | trans }}',
+                deleteAutomaticCost: '{{ 'Eliminar coste automático' | trans }}',
+                deleteVehicleUnits: '{{ 'Eliminar unidades' | trans }}',
+                automaticCostNeedFields: '{{ 'Para obtener un importe automático es necesario rellenar los siguientes campos:' | trans }}',
+                automaticCostCreateRouteQuestion: '{{ 'No existe importe para esa ruta. ¿Desea crear una ruta?' | trans }}',
+                automaticCostFinishCreateRouteQuestion: '{{ '¿Ha terminado de crear la ruta?' | trans }}',
+                msgErrorProcessData: '{{ 'Ha habido un error al procesar los datos' | trans }}',
+            },
+        };
+        
+        let constants = {
+           // DriverType
+            driverType: {
+                employee: {{ movementConstants.MOVEMENT_DRIVER_TYPE_EMPLOYEE }},
+                provider: {{ movementConstants.MOVEMENT_DRIVER_TYPE_PROVIDER }},
+            },
+            // Category
+            category: {
+                ordinary: {{ constantsManager.TRANSPORTCAT_ORDINARY }},
+                notOrdinary: {{ constantsManager.TRANSPORTCAT_NOT_ORDINARY }},
+                internal: {{ constantsManager.TRANSPORTCAT_INTERNAL }},
+            },
+            // MovementType
+            movementType: {
+                driver: {{ constantsManager.TRANSPORTTYPE_DRIVER }},
+                carrier: {{ constantsManager.TRANSPORTTYPE_CARRIER }},
+                operation: {{ constantsManager.TRANSPORTTYPE_OPERATION }},
+            },
+            // MovementStatus
+            movementStatus: {
+                pending: {{ constantsManager.TRANSPORTSTATUS_PENDING }},
+                progress: {{ constantsManager.TRANSPORTSTATUS_IN_PROGRESS }},
+                finalized: {{ constantsManager.TRANSPORTSTATUS_FINISHED }},
+                cancelled: {{ constantsManager.TRANSPORTSTATUS_CANCELLED }},
+            },
+            // locationType
+            locationType: {
+                campaOA: {{ constantsManager.LOCATIONTYPE_CAMPAOA }},
+            },
+            // External locations
+            // TODO renombrar esto a externalLocations
+            locations: {
+                location: {
+                    id: '{{ locationConstants.EXTERNAL_LOCATION }}',
+                    name: '{{ locationConstants.EXTERNAL_LOCATION | trans }}',
+                },
+                not_location: {
+                    id: '{{ locationConstants.EXTERNAL_LOCATION_NOT_LOCATION }}',
+                    name: '{{ locationConstants.EXTERNAL_LOCATION_NOT_LOCATION | trans }}',
+                }
+            },
+            // BusinessUnit
+            businessUnit:{
+                center: '{{ constantsManager.BUSINESSUNIT_CENTER }}',
+                car: '{{ constantsManager.BUSINESSUNIT_CAR }}',
+                van: '{{ constantsManager.BUSINESSUNIT_VAN }}',
+                moto: '{{ constantsManager.BUSINESSUNIT_MOTO }}',
+                vob2c: '{{ constantsManager.BUSINESSUNIT_VO_B2C }}',
+                vob2b: '{{ constantsManager.BUSINESSUNIT_VO_B2B }}',
+            },
+            // BusinessUnitArticle
+            businessUnitArticle: {
+                transport: {
+                    buyback: '{{ constantsManager.BUSINESSUNITARTICLE_TRANSPORT_BUYBACK }}',
+                    b2b: '{{ constantsManager.BUSINESSUNITARTICLE_TRANSPORT_B2B }}',
+                    distribution: '{{ constantsManager.BUSINESSUNITARTICLE_TRANSPORT_DISTRIBUTION }}',
+                    b2c: '{{ constantsManager.BUSINESSUNITARTICLE_TRANSPORT_B2C }}',
+                    infleet: '{{ constantsManager.BUSINESSUNITARTICLE_TRANSPORT_INFLEET }}',
+                },
+                operation: {
+                    transport: '{{ constantsManager.BUSINESSUNITARTICLE_OPS_TRANSPORT }}',
+                },
+            },
+            // TransportMethod
+            transportMethod: {
+                maritime: {{ constantsManager.TRANSPORTMETHOD_MARITIME }},
+                road: {{ constantsManager.TRANSPORTMETHOD_ROAD }},
+            },
+            // SaleMethod
+            saleMethod: {
+                risk: {{ constantsManager.PURCHASEMETHOD_RISK }},
+                buyback: {{ constantsManager.PURCHASEMETHOD_BUYBACK }},
+                renting: {{ constantsManager.PURCHASEMETHOD_RENTING }},
+            },
+            // VehicleType
+            vehicleType: {
+                CAR: {{ constantsManager.CARTYPE_CAR }},
+                VAN: {{ constantsManager.CARTYPE_VAN }},
+                MOTO: {{ constantsManager.CARTYPE_MOTO }},
+            },
+
+            COUNT_MAX_COST: 4,
+            UNITS_EN: 'units',
+            STORE_ITEMS: 'form/items',
+            STORE_DELETE: 'form/delete',
+        };
+
+        function getSaleMethodOfBusinessUnitArticle(businessUnitArticle) {
+            const options = {
+                [constants.businessUnitArticle.transport.buyback]: constants.saleMethod.buyback,
+                [constants.businessUnitArticle.transport.b2b]: constants.saleMethod.risk,
+                [constants.businessUnitArticle.transport.distribution]: null,
+                [constants.businessUnitArticle.transport.b2c]: constants.saleMethod.risk,
+                [constants.businessUnitArticle.transport.infleet]: null,
+            };            
+            return options[businessUnitArticle];
+        }
+        function getFilterOfBusinessUnit(businessUnit) {
+            const options = {
+                [constants.businessUnit.center]: null,
+                [constants.businessUnit.car]: constants.vehicleType.CAR,
+                [constants.businessUnit.van]: constants.vehicleType.VAN,
+                [constants.businessUnit.moto]: constants.vehicleType.MOTO,
+                [constants.businessUnit.vob2c]: constants.saleMethod.risk,
+                [constants.businessUnit.vob2b]: constants.saleMethod.risk,
+            };            
+            return options[businessUnit];
+        }
+    </script>
+{% endblock javascripts %}

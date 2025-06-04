@@ -1,0 +1,18 @@
+commercialgroup.translations.translation.delete:
+  path: /translations/translation/delete
+  controller: App\Controller\CommercialGroupTranslations\DeleteTranslationController
+  methods: POST
+  options:
+    expose: true
+commercialgroup.translations.translation.store:
+  path: /translations/translation/store
+  controller: App\Controller\CommercialGroupTranslations\StoreTranslationController
+  methods: POST
+  options:
+    expose: true
+commercialgroup.translations.translation.update:
+  path: /translations/translation/update
+  controller: App\Controller\CommercialGroupTranslations\UpdateTranslationController
+  methods: POST
+  options:
+    expose: true

@@ -1,0 +1,83 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+
+services:
+    Symfony\Component\Ldap\Ldap:
+        arguments: ['@Symfony\Component\Ldap\Adapter\ExtLdap\Adapter']
+    Symfony\Component\Ldap\Adapter\ExtLdap\Adapter:
+        arguments:
+            - host: "afrodita.gologin.net"
+              port: 389
+              options:
+                  protocol_version: 3
+                  referrals: false
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: "../src/*"
+        exclude: "../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php,Helpers.php}"
+
+    Distribution\:
+        resource: "../RecordGo/ERP/Distribution/*"
+
+    Shared\:
+        resource: "../RecordGo/ERP/Shared/*"
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: "../src/Controller"
+        tags: ["controller.service_arguments"]
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepository: '@Distribution\AcrissBranchTranslations\Infrastructure\AcrissBranchTranslationsRepositorySap'
+    Distribution\AcrissImageLine\Domain\AcrissImageLineRepository: '@Distribution\AcrissImageLine\Infrastructure\AcrissImageLineRepositorySap'
+    Distribution\AcrissTranslations\Domain\AcrissTranslationsRepository: '@Distribution\AcrissTranslations\Infrastructure\AcrissTranslationsRepositorySap'
+    Distribution\AcrissType\Domain\AcrissTypeRepository: '@Distribution\AcrissType\Infrastructure\AcrissTypeRepositorySap'
+    Distribution\Area\Domain\AreaRepository: '@Distribution\Area\Infrastructure\AreaRepositorySap'
+    Distribution\Branch\Domain\BranchRepository: '@Distribution\Branch\Infrastructure\BranchRepositorySap'
+    Distribution\Brand\Domain\BrandRepository: '@Distribution\Brand\Infrastructure\BrandRepositorySap'
+    Distribution\BusinessUnit\Domain\BusinessUnitRepository: '@Distribution\BusinessUnit\Infrastructure\BusinessUnitRepositorySap'
+    Distribution\BusinessUnitArticle\Domain\BusinessUnitArticleRepository: '@Distribution\BusinessUnitArticle\Infrastructure\BusinessUnitArticleRepositorySap'
+    Distribution\CarBodyType\Domain\CarBodyTypeRepository: '@Distribution\CarBodyType\Infrastructure\CarBodyTypeRepositorySap'
+    Distribution\CarClass\Domain\CarClassRepository: '@Distribution\CarClass\Infrastructure\CarClassRepositoryFake'
+    Distribution\CommercialGroup\Domain\CommercialGroupRepository: '@Distribution\CommercialGroup\Infrastructure\CommercialGroupRepositorySap'
+    Distribution\CommercialGroupTranslations\Domain\CommercialGroupTranslationsRepository: '@Distribution\CommercialGroupTranslations\Infrastructure\CommercialGroupTranslationsRepositoryFake'
+    Distribution\Country\Domain\CountryRepository: '@Distribution\Country\Infrastructure\CountryRepositorySap'
+    Distribution\GearBox\Domain\GearBoxRepository: '@Distribution\GearBox\Infrastructure\GearBoxRepositorySap'
+    Distribution\Language\Domain\LanguageRepository: '@Distribution\Language\Infrastructure\LanguageRepositorySap'
+    Distribution\Location\Domain\LocationRepository: '@Distribution\Location\Infrastructure\LocationRepositorySap'
+    Distribution\LocationType\Domain\LocationTypeRepository: '@Distribution\LocationType\Infrastructure\LocationTypeRepositorySap'
+    Distribution\Model\Domain\ModelRepository: '@Distribution\Model\Infrastructure\ModelRepositorySap'
+    Distribution\MotorizationType\Domain\MotorizationTypeRepository: '@Distribution\MotorizationType\Infrastructure\MotorizationTypeRepositorySap'
+    Distribution\Movement\Domain\MovementRepository: '@Distribution\Movement\Infrastructure\MovementRepositorySap'
+    Distribution\MovementCategory\Domain\MovementCategoryRepository: '@Distribution\MovementCategory\Infrastructure\MovementCategoryRepositorySap'
+    Distribution\MovementStatus\Domain\MovementStatusRepository: '@Distribution\MovementStatus\Infrastructure\MovementStatusRepositorySap'
+    Distribution\ParameterSetting\Domain\ParameterSettingRepository: '@Distribution\ParameterSetting\Infrastructure\ParameterSettingRepositorySap'
+    Distribution\ParameterSettingType\Domain\ParameterSettingTypeRepository: '@Distribution\ParameterSettingType\Infrastructure\ParameterSettingTypeRepositorySap'
+    Distribution\Partner\Domain\PartnerRepository: '@Distribution\Partner\Infrastructure\PartnerRepositorySap'
+    Distribution\Planning\Domain\PlanningRepository: '@Distribution\Planning\Infrastructure\PlanningRepositoryFake'
+    Distribution\PurchaseMethod\Domain\PurchaseMethodRepository: '@Distribution\PurchaseMethod\Infrastructure\PurchaseMethodRepositorySap'
+    Distribution\PurchaseType\Domain\PurchaseTypeRepository: '@Distribution\PurchaseType\Infrastructure\PurchaseTypeRepositorySap'
+    Distribution\Region\Domain\RegionRepository: '@Distribution\Region\Infrastructure\RegionRepositoryFake'
+    Distribution\Route\Domain\RouteRepository: '@Distribution\Route\Infrastructure\RouteRepositorySap'
+    Distribution\SaleMethod\Domain\SaleMethodRepository: '@Distribution\SaleMethod\Infrastructure\SaleMethodRepositorySap'
+    Distribution\Supplier\Domain\SupplierRepository: '@Distribution\Supplier\Infrastructure\SupplierRepositorySap'
+    Distribution\TransportDriver\Domain\TransportDriverRepository: '@Distribution\TransportDriver\Infrastructure\TransportDriverRepositorySap'
+    Distribution\TransportMethod\Domain\TransportMethodRepository: '@Distribution\TransportMethod\Infrastructure\TransportMethodRepositorySap'
+    Distribution\Trim\Domain\TrimRepository: '@Distribution\Trim\Infrastructure\TrimRepositorySap'
+    Distribution\TypeOfSale\Domain\TypeOfSaleRepository: '@Distribution\TypeOfSale\Infrastructure\TypeOfSaleRepositoryFake'
+    Distribution\Vehicle\Domain\VehicleRepository: '@Distribution\Vehicle\Infrastructure\VehicleRepositorySap'
+    Distribution\VehicleStatus\Domain\VehicleStatusRepository: '@Distribution\VehicleStatus\Infrastructure\VehicleStatusRepositorySap'
+    Distribution\VehicleType\Domain\VehicleTypeRepository: '@Distribution\VehicleType\Infrastructure\VehicleTypeRepositorySap'

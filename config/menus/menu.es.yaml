@@ -1,0 +1,173 @@
+-
+  name: 'Distribución'
+  type: 'title'
+
+
+-
+  name: 'Traslados'
+  icon: 'la la-shipping-fast'
+  type: 'submenu'
+  submenu:
+      - name: 'Movimientos por conductor'
+        icon: 'la la-car-side'
+        type: 'submenu'
+        submenu:
+            - name: "Crear"
+              route: [ 'movement.create', { movementType: 'driver'}, true, []]
+              icon: 'la la-plus'
+              type: "element"
+            - name: 'Listar'
+              route: [ 'movement.list', { movementType: 'driver'}, true, []]
+              icon: 'la la-list'
+              type: 'element'
+      - name: 'Movimientos por transportista'
+        icon: 'la la-truck'
+        type: 'submenu'
+        submenu:
+            - name: 'Crear'
+              route: [ 'movement.create', { movementType: 'carrier'}, true, []]
+              icon: 'la la-plus'
+              type: 'element'
+            - name: 'Listar'
+              route: [ 'movement.list', { movementType: 'carrier'}, true, []]
+              icon: 'la la-list'
+              type: 'element'
+      - name: 'Movimientos por operaciones'
+        icon: 'la la-truck'
+        type: 'submenu'
+        submenu:
+            - name: "Crear"
+              route: [ 'movement.create', { movementType: 'operation'}, true, []]
+              icon: 'la la-plus'
+              type: "element"
+            - name: 'Listar'
+              route: [ 'movement.list', { movementType: 'operation'}, true, []]
+              icon: 'la la-list'
+              type: 'element'
+      -
+        name: 'Rutas'
+        route: [ 'routes.list',[ ], true ]
+        icon: 'la la-road'
+        type: 'element'
+
+-
+  name: 'Vehículos'
+  icon: 'la la-car'
+  type: 'submenu'
+  submenu:
+      -
+        name: 'Consultar'
+        route: [['vehicle.consult'],[], true]
+        icon: 'la la-search'
+        type: 'element'
+      -
+        name: 'Listar'
+        route: ['vehicle.list',[], true]
+        icon: 'la la-list'
+        type: 'element'
+
+-
+  name: 'Stop Sale'
+  icon: 'la la-ban'
+  type: 'submenu'
+  submenu:
+    -
+      name: 'Standard'
+      icon: 'la la-angle-double-right'
+      type: 'submenu'
+      submenu:
+        -
+          name: 'Crear'
+          route: [ 'stopsale.create', { stopSaleCategory: 'standard'}, true, []]
+          icon: 'la la-plus'
+          type: 'element'
+        -
+          name: 'Listar'
+          route: [ 'stopsale.list', { stopSaleCategory: 'standard'}, true, []]
+          icon: 'la la-list'
+          type: 'element'
+    -
+      name: 'One Way'
+      icon: 'la la-angle-double-right'
+      type: 'submenu'
+      submenu:
+        -
+          name: 'Crear'
+          route: [ 'stopsale.create', { stopSaleCategory: 'oneway'}, true, []]
+          icon: 'la la-plus'
+          type: 'element'
+        -
+          name: 'Listar'
+          route: [ 'stopsale.list', { stopSaleCategory: 'oneway'}, true, []]
+          icon: 'la la-list'
+          type: 'element'
+
+-
+  name: 'Configuración parámetros'
+  icon: 'las la-sliders-h'
+  type: 'submenu'
+  submenu:
+      -
+        name: 'Crear'
+        route: ['parameterSettings.create',[], true]
+        icon: 'la la-plus'
+        type: 'element'
+      -
+        name: 'Listar'
+        route: ['parameterSettings.list',[], true]
+        icon: 'la la-list'
+        type: 'element'
+
+-
+  name: 'Localizaciones'
+  route: ['location.list',[], true]
+  icon: 'las la-map-marker-alt'
+  type: 'element'
+
+-
+  name: 'Actualización datos'
+  route: ['updateData.index',[], true]
+  icon: 'la la-upload'
+  type: 'element'
+
+-
+  name: 'Acriss / Grupo / Grupo Comercial'
+  icon: 'la la-angle-double-right'
+  type: 'submenu'
+  submenu:
+    - name: 'Acriss'
+      route: [ 'acriss.list',[ ], true ]
+      icon: 'las la-atom'
+      type: 'element'
+
+    - name: 'Grupo Flota'
+      route: ['cargroup.list',[], true]
+      icon: 'la la-car-alt'
+      type: 'element'
+
+    - name: 'Grupo Comercial'
+      route: ['commercialgroup.list',[], true]
+      icon: 'la la-coins'
+      type: 'element'
+    # TODO V2
+    # - name: 'Asociar'
+    #   route: [ 'fleetclassification.associate.list',[ ], true ]
+    #   icon: 'la la-angle-double-right'
+    #   type: 'element'
+
+-
+  name: 'Planificación & Distribución'
+  icon: 'las la-clipboard'
+  type: 'submenu'
+  submenu:
+    -
+      name: 'Calendar draft acumulado anual'
+      route: [ 'planning.list',[], true ]
+      icon: 'la la-calendar'
+      type: 'element'
+
+-
+  name: 'Proveedores'
+  route: ['supplier.list',[], true]
+  icon: 'las la-truck-loading'
+  type: 'element'

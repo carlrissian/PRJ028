@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Actualización de datos de vehículos' | trans }}{% endblock %}
+{% block body %}
+    <update-data-page :token="'{{ csrf_token('authenticate') }}'" />
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        const translations = {
+            titles: {
+                downloadTemplate: '{{ 'Descargar Plantilla' | trans }}',
+                uploadExcel: '{{ 'Subir Excel' | trans }}',
+            },
+            fields: {
+            },
+            form: {
+                download: '{{ 'Descargar' | trans }}',
+                showMessages: '{{ 'Mostrar mensajes' | trans }}',
+                downloadMessages: '{{ 'Descargar mensajes' | trans }}',
+                
+                errorsFoundInExcel: '{{ 'Se han encontrado los siguientes errores en el archivo excel' | trans }}',
+                updatedVehicles: '{{ 'Vehículos actualizados' | trans }}',
+                notUpdatedVehicles: '{{ 'Vehículos no actualizados' | trans }}',
+                errorUpdateDataNotification: '{{ 'Se ha producido un error durante la actualización de datos de vehículos' | trans }}',
+                updateDataSuccessNotification: '{{ 'Actualización de datos de vehículos realizada correctamente' | trans }}',
+            },
+        };
+    </script>
+{% endblock javascripts %}

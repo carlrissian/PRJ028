@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Grupo comercial'|trans }}{% endblock %}
+
+{% block body %}
+    <show-commercial-group-page :commercial-group="{{ commercialGroup }}" />
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		let txtTrans = {
+            titles: {
+                commercialGroupDetails: '{{ 'Detalles de grupo comercial' | trans }}',
+            },
+            fields: {
+                // Commercial group
+                commercialGroup: '{{ 'Grupo comercial' | trans }}',
+                acriss: '{{ 'Acriss' | trans }}',
+                status: '{{ 'Estado' | trans }}',
+
+                // Commercial group translations
+                name: '{{ 'Nombre' | trans }}',
+                translations: '{{ 'Traducciones' | trans}}',
+                byDefault: '{{ 'Por defecto' | trans }}',
+            },
+            form: {
+                selectAnOption: '{{ 'Seleccione una opción' | trans }}',
+                edit: '{{ 'Editar' | trans }}',
+                delete:'{{ 'Eliminar' | trans }}',
+                close:'{{ 'Cerrar' | trans }}',
+                cancel:'{{ 'Cancelar' | trans }}',
+                activated: '{{ 'Activado' | trans }}',
+                deactivated: '{{ 'Desactivado' | trans }}',
+                notTranslations: '{{ 'No existen traducciones para este Grupo comercial' | trans }}',
+            },
+        };
+	</script>
+{% endblock javascripts %}

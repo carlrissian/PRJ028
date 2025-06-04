@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ("List Vehicle" | trans ) }}{% endblock %}
+
+{% block body %}
+    <vehicle-list-page/>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            fields: {
+                licensePlate: '{{ 'Matrícula' | trans }}',
+                vin: '{{ 'Bastidor' | trans }}',
+                brand: '{{ 'Marca' | trans }}',
+                model: '{{ 'Modelo' | trans }}',
+                trim: '{{ 'Acabado' | trans }}',
+                acriss: '{{ 'Acriss' | trans }}',
+                carGroup: '{{ 'Grupo' | trans }}',
+                carClass: '{{ 'CarClass' | trans }}',
+                commercialGroup: '{{ 'Grupo comercial' | trans }}',
+                country: '{{ 'País' | trans }}',
+                region: '{{ 'Región' | trans }}',
+                area: '{{ 'Area' | trans }}',
+                branch: '{{ 'Delegación' | trans }}',
+                location: '{{ 'Localización' | trans }}',
+                status: '{{ 'Estado' | trans }}',
+                actualKms: '{{ 'Kilometros actuales' | trans }}',
+                provider: '{{ 'Proveedor' | trans }}',
+                purchaseMethod: '{{ 'Método de compra' | trans }}',
+                purchaseType: '{{ 'Tipo de compra' | trans }}',
+                motorizationType: '{{ 'Tipo motorización' | trans }}',
+                gearBox: '{{ 'Caja de cambios' | trans }}',
+                vehicleType: '{{ 'Tipo de vehículo' | trans }}',
+                connectedVehicle: '{{ 'Vehículo conectado' | trans }}',
+                firstRegistrationDate: '{{ 'Fecha alta' | trans }}',
+                registrationDate: '{{ 'Fecha matriculación' | trans }}',
+                deliveryDate: '{{ 'Fecha recepción' | trans }}',
+                returnDate: '{{ 'Fecha devolución' | trans }}',
+                firstRentDate: '{{ 'Fecha inicio alquiler' | trans }}',
+                rentingEndDate: '{{ 'Fecha fin alquiler' | trans }}',
+                byeByeDate: '{{ 'Fecha byebye' | trans }}',
+                initBlockageDate: '{{ 'Fecha inicio bloqueo' | trans }}',
+                endBlockageDate: '{{ 'Fecha fin bloqueo' | trans }}',
+                movementNumber: '{{ 'Número movimiento' | trans }}',
+                orderNumber: '{{ 'Número pedido' | trans }}',
+                transportInvoiceNumber: '{{ 'Número factura transporte' | trans }}',
+                logistic: '{{ 'Proveedor transporte' | trans }}',
+                assumedCostBy: '{{ 'Coste transporte asumido por' | trans }}',
+                actualLoadingDate: '{{ 'Fecha carga real' | trans }}',
+                actualUnloadDate: '{{ 'Fecha descarga real' | trans }}',
+                saleMethod: '{{ 'Método venta' | trans }}',
+                salesCustomer: '{{ 'Cliente venta' | trans }}',
+                conditioned: '{{ 'Acondicionado' | trans }}',
+                rentalAgreementPickUpDate: '{{ 'Fecha recogida contrato'  | trans }}',
+                rentalAgreementDropOffDate: '{{ 'Fecha devolución contrato' | trans }}',
+
+                // Filter
+                kmFrom: '{{ 'Kilómetros desde' | trans }}',
+                kmTo: '{{ 'Kilómetros hasta' | trans }}',
+                deliveryDateFrom: '{{ 'Fecha recepción desde' | trans }}',
+                deliveryDateTo: '{{ 'Fecha recepción hasta' | trans }}',
+                firstRentDateFrom: '{{ 'Fecha inicio alquiler desde' | trans }}',
+                firstRentDateTo: '{{ 'Fecha inicio alquiler hasta' | trans }}',
+                rentingEndDateFrom: '{{ 'Fecha fin alquiler desde' | trans }}',
+                rentingEndDateTo: '{{ 'Fecha fin alquiler hasta' | trans }}',
+                byeByeDateFrom: '{{ 'Fecha byebye desde' | trans }}',
+                byeByeDateTo: '{{ 'Fecha byebye hasta' | trans }}',
+                returnDateFrom: '{{ 'Fecha devolución desde' | trans }}',
+                returnDateTo: '{{ 'Fecha devolución hasta' | trans }}',
+                firstRegistrationDateFrom: '{{ 'Fecha alta desde' | trans }}',
+                firstRegistrationDateTo: '{{ 'Fecha alta hasta' | trans }}',
+                registrationDateFrom: '{{ 'Fecha matriculación desde' | trans }}',
+                registrationDateTo: '{{ 'Fecha matriculación hasta' | trans }}',
+                startBlockageDateFrom: '{{ 'Fecha inicio bloqueo desde' | trans }}',
+                startBlockageDateTo: '{{ 'Fecha inicio bloqueo hasta' | trans }}',
+                endBlockageDateFrom: '{{ 'Fecha fin bloqueo desde' | trans }}',
+                endBlockageDateTo: '{{ 'Fecha fin bloqueo hasta' | trans }}',
+                actualLoadingDateFrom: '{{ 'Fecha carga real desde' | trans }}',
+                actualLoadingDateTo: '{{ 'Fecha carga real hasta' | trans }}',
+                actualUnloadDateFrom: '{{ 'Fecha descarga real desde' | trans }}',
+                actualUnloadDateTo: '{{ 'Fecha descarga real hasta' | trans }}',
+                cols: '{{ 'Columnas' | trans }}',
+
+            },
+            form: {
+                actions: '{{ 'Acciones' | trans }}',
+                viewVehicleDetails: '{{ 'Ver detalles del vehículo' | trans }}',
+                mustSelectColumn:'{{ 'Debe seleccionar una columna como mínimo.' | trans }}',
+                exportExcel: '{{ 'Exportar excel' | trans }}',
+                yes: '{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+            },
+        };
+    </script>
+{% endblock javascripts %}
+
+

@@ -1,0 +1,45 @@
+supplier.list:
+  path: /list
+  controller: App\Controller\Supplier\SupplierController::index
+
+supplier.filter:
+  path: /filter
+  controller: App\Controller\Supplier\SupplierController::filter
+  options:
+    expose: true
+
+supplier.selectList:
+  path: /selectlist
+  controller: App\Controller\Supplier\SelectListController
+  options:
+    expose: true
+
+supplier.selectors:
+  path: /selectors
+  controller: App\Controller\Supplier\SupplierController::getSelector
+  options:
+    expose: true
+
+supplier.contact:
+  path: /list-contact
+  controller: App\Controller\Supplier\SupplierController::getContacts
+  options:
+    expose: true
+
+supplier.contact.store:
+  path: /contact/store
+  controller: App\Controller\Supplier\SupplierController::storeProvider
+  options:
+    expose: true
+
+supplier.contact.update:
+  path: /contact/update
+  controller: App\Controller\Supplier\SupplierController::updateProvider
+  options:
+    expose: true
+
+supplier.contact.deleted:
+  path: /contact/delete
+  controller: App\Controller\Supplier\SupplierController::deleteProvider
+  options:
+    expose: true

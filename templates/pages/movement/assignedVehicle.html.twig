@@ -1,0 +1,157 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ("Movement Assigned Vehicle List" | trans ) }}{% endblock %}
+
+{% block body %}
+    <movement-vehicle-management-page
+        :movement="{{ movement }}"
+    ></movement-vehicle-management-page>
+{% endblock body %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            titles: {
+                downloadTemplate: '{{ 'Descargar plantilla' | trans }}',
+                assignedVehiclesTo:'{{ 'Vehiculos asignados al movimiento nº' | trans }}',
+                assignVehiclesExcel: '{{ 'Asignar vehículos por Excel' | trans }}',
+                editLoadDates: '{{ 'Editar fechas de carga' | trans }}',
+                editUnloadDates: '{{ 'Editar fechas de descarga' | trans }}',
+                deleteVehicles: '{{ 'Eliminar vehículos' | trans }}',
+                validateMovement: '{{ 'Validar movimiento' | trans }}',
+                loadValidation: '{{ 'VALIDAR CARGA' | trans }}',
+                unloadValidation: '{{ 'VALIDAR DESCARGA' | trans }}',
+            },
+            fields: {
+                licensePlate: '{{ 'Matrícula' | trans }}',
+                vin: '{{ 'Bastidor' | trans }}',
+                brand: '{{ 'Marca' | trans }}',
+                model: '{{ 'Modelo' | trans }}',
+                carGroup:'{{ 'Grupo' | trans }}',
+                branch:'{{ 'Delegación' | trans }}',
+                kilometers: '{{ 'Kilometros' | trans }}',
+                rentingEndDate: '{{ 'Fecha fin alquiler' | trans }}',
+                saleMethod:'{{ 'Método de venta' | trans }}',
+                connectedVehicle:'{{ 'Vehículo conectado' | trans }}',
+                vehicleStatus:'{{ 'Estado del vehículo' | trans }}',
+                checkInDueDate:'{{ 'Fecha fin contrato prevista' | trans }}',
+                actualLoadDate: '{{ 'Fecha real carga ' | trans }}',
+                actualUnloadDate:'{{ 'Fecha real descarga' | trans }}',
+                initBlockDate:'{{ 'Fecha inicio bloqueo' | trans }}',
+                endBlockDate:'{{ 'Fecha fin bloqueo' | trans }}',
+                maintenanceExpectedEndDate:'{{ 'Fecha prevista salida taller' | trans }}',
+
+                assignedLicensePlate:'{{ 'Matrículas asignadas' | trans }}',
+                loadedLicensePlate:'{{ 'Matrículas cargadas' | trans }}',
+                unloadedLicensePlate:'{{ 'Matrículas descargadas' | trans }}',
+            },
+            form: {
+                assignVehicles: '{{ 'Asignar vehículos' | trans }}',
+                assignVehiclesExcel: '{{ 'Asignar vehículos por Excel' | trans }}',
+                assignedVehicles: '{{ 'Vehículos asignados' | trans }}',
+                notAssignedVehicles: '{{ 'Vehículos no asignados' | trans }}',
+                editActualLoadDate:'{{ 'Editar fecha real de carga' | trans }}',
+                deleteVehicles:'{{ 'Eliminar vehículos' | trans }}',
+                validateVehicles:'{{ 'Validar vehículos' | trans }}',
+                selectedVehicles: '{{ 'vehículos seleccionados' | trans }}',
+                editDates: '{{ 'Editar fechas' | trans }}',
+                uploadExcel:'{{ 'Subir Excel' | trans }}',
+                download:'{{ 'Descargar' | trans }}',
+                delete:'{{ 'Eliminar'| trans }}',
+                reason: '{{ 'Motivo' | trans }}',
+                yes: '{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+                selectedTotal:'{{ 'Total seleccionados: ' | trans }}',
+                loadedTotal:'{{ 'Total cargados' | trans }}',
+                unloadedTotal:'{{ 'Total descargados' | trans }}',
+                of:'{{ 'de' | trans }}',
+                completeField:'{{ 'Es necesario completar el campo ' | trans }}',
+
+                deleteVehiclesQuestion:'{{ '¿Está segur@ que desea eliminar estos vehículos?: '| trans }}',
+                warnCannotEditWithoutValidate: '{{ 'Algunos de los vehículos seleccionados no tienen fechas de carga y/o descarga validadas' }}',
+                warnCannotAssignMoreVehicles: '{{ 'No se puede asignar más vehículos al movimiento porque se ha alcanzado el límite de transporte de vehículos por carretera (10 unidades)' }}',
+                errorExistingLoadUnladDateVehicle: '{{ 'Existen fechas de carga y/o descarga para: ' }}',
+                errorUpdateLoadDateVehicle: '{{ 'Fecha de carga posterior a fecha de descarga para: ' }}',
+                errorUpdateUnloadDateVehicle: '{{ 'Fecha de descarga anterior a fecha de carga para: ' }}',
+                errorUpdatingDatesNotification: '{{ 'Disculpe, se ha producido un error durante la actualización de fechas' }}',
+                loadDatesUpdatedSuccessNotification: '{{ 'Fechas de carga actualizadas correctamente' }}',
+                unloadDatesUpdatedSuccessNotification: '{{ 'Fechas de descarga actualizadas correctamente' }}',
+                errorDeletingVehicleLinesNotification: '{{ 'Disculpe, se ha producido un error durante la eliminación de vehículos' }}',
+                vehicleLinesDeletedSuccessNotification: '{{ 'Vehículos eliminados correctamente' }}',
+                errorAssignVehiclesNotification: '{{ 'Disculpe, se ha producido un error durante la asignación de vehículos' }}',
+                AssignVehiclesSuccessNotification: '{{ 'Asignación de vehículos realizada correctamente' }}',
+                movementFinalizedOrCancelled:'{{ 'No se puede gestionar los vehículos del movimiento porque ha finalizado o se ha cancelado' | trans }}',
+                movementIsDriver:'{{ 'El movimiento es de tipo conductor, no se puede gestionar más vehículos' | trans }}',
+
+                pleaseSelectADate:'{{ 'Por favor, seleccione una fecha antes de validar' | trans }}',
+                pleaseSelectAVehicle:'{{ 'Por favor, seleccione al menos un vehículo para validar' | trans }}',
+                errorMovementFields:'{{ 'El movimiento no tiene rellenados los siguientes campos obligatorios:' | trans }}',
+                errorAssignedVehicles:'{{ 'No hay vehículos asignados al movmiento.' | trans }}',
+                cannotUnloadWithoutLoad:'{{ 'No se permite la validación de descarga sin realizar antes la validación de carga' | trans }}',
+                cannotUnloadIfUnloadDateIsLess:'{{ 'No se permite la validación de descarga si la fecha de descarga seleccionada es menor a la fecha de carga' | trans }}',
+                cannotUnloadDifferentDates:'{{ 'No se permite la validación de descarga de varios vehículos con fechas de carga distintas si la fecha de descarga seleccionada es anterior a la fecha de carga más reciente de los vehículos seleccionados' | trans }}',
+                movementValidatedSuccessNotification:'{{ 'Movimiento validado correctamente' | trans }}',
+                errorValidatingMovementNotification:'{{ 'Disculpe, se ha producido un error durante la validación del movimiento' | trans }}',
+            },
+        };
+
+        let constants = {
+            // Category
+            category: {
+                ordinary: {{ constantsManager.TRANSPORTCAT_ORDINARY }},
+                notOrdinary: {{ constantsManager.TRANSPORTCAT_NOT_ORDINARY }},
+                internal: {{ constantsManager.TRANSPORTCAT_INTERNAL }},
+            },
+            // MovementTypr
+            movementType: {
+                driver: {{ constantsManager.TRANSPORTTYPE_DRIVER }},
+                carrier: {{ constantsManager.TRANSPORTTYPE_CARRIER }},
+                operation: {{ constantsManager.TRANSPORTTYPE_OPERATION }},
+            },
+            // MovementStatus
+            movementStatus: {
+                pending: {{ constantsManager.TRANSPORTSTATUS_PENDING }},
+                progress: {{ constantsManager.TRANSPORTSTATUS_IN_PROGRESS }},
+                finalized: {{ constantsManager.TRANSPORTSTATUS_FINISHED }},
+                cancelled: {{ constantsManager.TRANSPORTSTATUS_CANCELLED }},
+            },
+            // External locations
+            // TODO renombrar esto a externalLocations
+            locations: {
+                location: {
+                    id: '{{ locationConstants.EXTERNAL_LOCATION }}',
+                    name: '{{ locationConstants.EXTERNAL_LOCATION | trans }}'
+                },
+                not_location: {
+                    id: '{{ locationConstants.EXTERNAL_LOCATION_NOT_LOCATION }}',
+                    name: '{{ locationConstants.EXTERNAL_LOCATION_NOT_LOCATION | trans }}'
+                }
+            },
+            // BusinessUnit
+            businessUnit:{
+                center: '{{ constantsManager.BUSINESSUNIT_CENTER }}',
+                car: '{{ constantsManager.BUSINESSUNIT_CAR }}',
+                van: '{{ constantsManager.BUSINESSUNIT_VAN }}',
+                moto: '{{ constantsManager.BUSINESSUNIT_MOTO }}',
+                vob2c: '{{ constantsManager.BUSINESSUNIT_VO_B2C }}',
+                vob2b: '{{ constantsManager.BUSINESSUNIT_VO_B2B }}',
+            },
+            // TransportMethod
+            transportMethod: {
+                maritime: {{ constantsManager.TRANSPORTMETHOD_MARITIME }},
+                road: {{ constantsManager.TRANSPORTMETHOD_ROAD }},
+            },
+            transportMethodRoadMaxVehicles: 10,
+
+            COUNT_MAX_COST: 4,
+            MAX_SET_TIME: 1000,
+            UNITS_EN: 'units',
+            STORE_ITEMS: 'form/items',
+            STORE_DELETE: 'form/delete',
+
+        };
+
+    </script>
+
+
+{% endblock javascripts %}

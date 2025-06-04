@@ -1,0 +1,6 @@
+carClass.selectList:
+  path: /selectlist
+  controller: App\Controller\CarClass\SelectListController
+  methods: GET
+  options:
+    expose: true

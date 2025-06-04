@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'Listado configuración'|trans }}
+{% endblock %}
+
+{% block body %}
+    <parameter-setting-list-page/>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            titles: {
+                create: '{{ 'Crear' | trans }}',
+            },
+            fields: {
+                // Listado
+                id: '{{ 'ID#' | trans }}',
+                region: '{{ 'Región' | trans }}',
+                area: '{{ 'Área' | trans }}',
+                branch: '{{ 'Delegación' | trans }}',
+                parameterType: '{{ 'Tipo parámetro' | trans }}',
+                startDate: '{{ 'Fecha inicio' | trans }}',
+                endDate: '{{ 'Fecha fin' | trans }}',
+                startTime: '{{ 'Hora inicio' | trans }}',
+                endTime: '{{ 'Hora fin' | trans }}',
+                parameterGroup: '{{ 'Grupo parámetro' | trans }}',
+                parameterAcriss: '{{ 'ACRISS parámetro' | trans }}',
+                parameter: '{{ 'Parámetro' | trans }}',
+                substitutionGroup: '{{ 'Grupo sustituido' | trans }}',
+                substitutionAcriss: '{{ 'ACRISS sustituido' | trans }}',
+                partner: '{{ 'Partner' | trans }}',
+                connectedVehicle:'{{'Vehículo conectado' | trans }}',
+                country: '{{ 'País' | trans }}',
+                creationUser: '{{ 'Usuario creación' | trans }}',
+                creationDate: '{{ 'Fecha creación' | trans }}',
+                status: '{{ 'Estado' | trans }}',
+
+                // Filtros
+                creationDateFrom:'{{'Fecha creación desde' | trans }}',
+                creationDateTo:'{{'Fecha creación hasta' | trans }}',
+                creationTimeFrom:'{{'Hora creación desde' | trans }}',
+                creationTimeTo:'{{'Hora creación hasta' | trans }}',
+            },
+            form: {
+                yes:'{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+                all: '{{ 'Todos' | trans }}',
+                actions:'{{ 'Acciones' | trans }}',
+                deleteParameterSetting: '¿Eliminar configuración?',
+                thisChangeCannotBeRevert: 'Esta acción no se puede deshacer.',
+                delete: 'Eliminar',
+                cancel: 'Cancelar',
+                parameterSettingDeletedSuccessNotification: 'Configuración eliminada con éxito.',
+                errorDeletingParameterSetting: 'Error al eliminar la configuración.',
+            }
+        };
+    </script>
+{% endblock %}

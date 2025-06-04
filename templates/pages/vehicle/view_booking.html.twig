@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reserva{% endblock %}
+
+{% block body %}
+    <vehicle-booking
+        :booking="{{ booking }}"
+    > </vehicle-booking>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            txtForm: {
+                title: '{{ 'Mostrar reserva' | trans }}',
+                bookingStatus: '{{ 'Estado del contrato' | trans }}',
+                bookingNumber: '{{ 'Id reserva' | trans }}',
+                brokerBookingNumber: '{{ 'Id reserva broker' | trans }}',
+                titleInformation: '{{ 'Información' | trans }}',
+                startRental: '{{ 'Inicio del alquiler' | trans }}',
+                endRental: '{{ 'Fin del alquiler' | trans }}',
+                titleVehicle: '{{ 'Vehículo asignado' | trans }}',
+                carClass: '{{ 'Carclass' | trans }}',
+                acriss: '{{ 'Acriss' | trans }}',
+                model: '{{ 'Modelo' | trans }}',
+                notes: '{{ 'Notas' | trans }}',
+                summaryTitle1: '{{ 'Complementos incluidos en la reserva' | trans }}',
+                summaryTitle4: '{{ 'Total de la reserva' | trans }}',
+                summaryLine1: '{{ 'Ítem' | trans }}',
+                summaryLine2: '{{ 'Complementos, accesorios y suplementos' | trans }}',
+                summaryLine3: '{{ 'Cargos' | trans }}',
+                summaryLine5: '{{ 'Subtotal' | trans }}',
+                summaryCol1: '{{ 'Ud' | trans }}',
+                summaryCol2: '{{ 'TAX Aplicado %' | trans }}',
+                summaryCol3: '{{ 'Importe con TAX' | trans }}',
+                summaryCol4: '{{ 'Descuento %' | trans }}',
+                summaryCol5: '{{ 'Importe Uni' | trans }}',
+                summaryCol6: '{{ 'Importe TOTAL' | trans }}',
+                yes:'{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+                all: '{{ 'Todos' | trans }}',
+            }
+        };
+    </script>
+{% endblock %}

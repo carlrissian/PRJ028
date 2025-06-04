@@ -1,0 +1,6 @@
+model.selectList:
+  path: /selectlist
+  controller: App\Controller\Model\SelectListController
+  methods: GET
+  options:
+    expose: true

@@ -1,0 +1,26 @@
+acriss.translations.branch.filter:
+  path: /translations/branch/filter
+  controller: App\Controller\AcrissBranchTranslations\FilterBranchController
+  methods: POST
+  options:
+    expose: true
+acriss.translations.branch.delete:
+  path: /translations/branch/delete
+  controller: App\Controller\AcrissBranchTranslations\DeleteBranchController
+  methods: POST
+  options:
+    expose: true
+
+acriss.translations.branch.store:
+  path: /translations/branch/store
+  controller: App\Controller\AcrissBranchTranslations\StoreBranchController
+  methods: POST
+  options:
+    expose: true
+
+acriss.translations.branch.update:
+  path: /translations/branch/update
+  controller: App\Controller\AcrissBranchTranslations\UpdateBranchController
+  methods: POST
+  options:
+    expose: true

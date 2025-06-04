@@ -1,0 +1,6 @@
+rentalAgreement.listByVehicle:
+  path: /list/by-vehicle
+  controller: App\Controller\RentalAgreement\ListByVehicleController
+  methods: GET
+  options:
+    expose: true

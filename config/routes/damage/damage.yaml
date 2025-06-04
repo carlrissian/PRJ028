@@ -1,0 +1,6 @@
+damage.filter:
+  path: /filter
+  controller: App\Controller\Damage\FilterController
+  methods: GET
+  options:
+    expose: true

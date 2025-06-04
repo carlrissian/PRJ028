@@ -1,0 +1,13 @@
+transportDriver.filter:
+  path: /filter
+  controller: App\Controller\TransportDriver\FilterController
+  methods: [GET]
+  options:
+    expose: true
+
+transportDriver.store:
+  path: /store
+  controller: App\Controller\TransportDriver\StoreController
+  methods: [POST]
+  options:
+    expose: true

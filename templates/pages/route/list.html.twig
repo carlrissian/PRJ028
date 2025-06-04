@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'Listado rutas' | trans }}
+{% endblock %}
+
+{% block body %}
+	<routes-list-page :select-list="{{ selectList }}"/>
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		let txtTrans = {
+titles: {},
+fields: {
+transportMethod: '{{ 'Método de transporte' | trans }}',
+provider: '{{ 'Proveedor' | trans }}',
+originBranch: '{{ 'Delegación origen' | trans }}',
+destinationBranch: '{{ 'Delegación destino' | trans }}',
+kilometers: '{{ 'Kilómetros' | trans }}',
+kmAmount: '{{ 'Importe kilómetros' | trans }}',
+fullTruckLoadAmount: '{{ 'Importe carga completa' | trans }}',
+vehicleAmount1: '{{ 'Importe por 1 vehículo' | trans }}',
+vehicleAmount2: '{{ 'Importe por 2 vehículos' | trans }}',
+vehicleAmount3: '{{ 'Importe por 3 vehículos' | trans }}',
+vehicleAmount4: '{{ 'Importe por 4 vehículos' | trans }}',
+vehicleAmount5: '{{ 'Importe por 5 vehículos' | trans }}',
+vehicleAmount6: '{{ 'Importe por 6 vehículos' | trans }}',
+vehicleAmount7: '{{ 'Importe por 7 vehículos' | trans }}',
+vehicleAmount8: '{{ 'Importe por 8 vehículos' | trans }}',
+vehicleAmount9: '{{ 'Importe por 9 vehículos' | trans }}',
+vehicleAmount10: '{{ 'Importe por 10 vehículos' | trans }}',
+suvLoadAmount: '{{ 'Importe por todoterreno' | trans }}',
+vanLoadAmount: '{{ 'Importe por furgón' | trans }}'
+},
+form: {
+createRoute: '{{ 'Crear rutas' | trans }}',
+download: '{{ 'Descargar' | trans }}'
+}
+};
+	</script>
+{% endblock javascripts %}

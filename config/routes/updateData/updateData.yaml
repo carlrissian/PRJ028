@@ -1,0 +1,18 @@
+updateData.index:
+  path: /
+  controller: App\Controller\UpdateData\IndexController
+  methods: GET
+
+updateData.downloadTemplate:
+  path: /download-template
+  controller: App\Controller\UpdateData\DownloadExcelTemplateController
+  methods: GET
+  options:
+    expose: true
+
+updateData.uploadFile:
+  path: /upload
+  controller: App\Controller\UpdateData\ProcessFileController
+  methods: POST
+  options:
+    expose: true

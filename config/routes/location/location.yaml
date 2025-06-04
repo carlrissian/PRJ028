@@ -1,0 +1,33 @@
+location.details:
+  path: /details/{id}
+  controller: App\Controller\Location\LocationController::details
+  methods: [GET]
+  options:
+    expose: true
+
+location.filter.internal:
+  path: /filter/internal
+  controller: App\Controller\Location\LocationController::internalFilter
+  methods: GET
+  options:
+    expose: true
+
+location.filter.external:
+  path: /filter/external
+  controller: App\Controller\Location\LocationController::externalFilter
+  methods: GET
+  options:
+    expose: true
+
+location.list:
+  path: /list
+  controller: App\Controller\Location\LocationController::list
+  options:
+    expose: true
+
+location.selectList:
+  path: /selectlist
+  controller: App\Controller\Location\SelectListController
+  methods: GET
+  options:
+    expose: true

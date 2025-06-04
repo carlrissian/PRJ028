@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Documento{% endblock %}
+
+{% block body %}
+   <vehicle-status-change-document :change-status-doc-type="{{ changeStatusDocType }}" />
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let translations =
+            {
+                title: '{{ 'Documento cambio de estado' | trans }}',
+            };
+
+    </script>
+{% endblock %}

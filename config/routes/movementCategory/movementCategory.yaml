@@ -1,0 +1,6 @@
+movement.category.selectList:
+  path: /selectlist
+  controller: App\Controller\MovementCategory\SelectListController
+  methods: GET
+  options:
+    expose: true

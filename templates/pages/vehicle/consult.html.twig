@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Consultar vehículo{% endblock %}
+
+{% block body %}
+	<vehicle-search-page/>
+{% endblock %}
+
+{% block javascripts %}
+	<script>
+		let txtTrans = {
+            titles: {
+                vehicleSearch: '{{ 'Buscar vehículo' | trans }}',
+            },
+            fields: {
+                vin: '{{ 'Bastidor' | trans }}',
+                vinPH: '{{ '123456789ABCDEFG' | trans }}',
+                licensePlate: '{{ 'Matrícula' | trans }}',
+                licensePlatePH: '{{ '1234ABC' | trans }}',
+            },
+            form: {
+                search:'{{ 'Buscar' | trans }}',
+                pleaseFillFields: '{{ 'Por favor, rellene al menos un campo antes de realizar la búsqueda.' | trans }}',
+                vehicleNotFound: '{{ 'No se ha encontrado ningún vehículo que coincida con los datos facilitados.' | trans }}',
+                errorOnSearch: '{{ 'Disculpe, se ha producido un error durante la búsqueda' | trans }}',
+            },
+        };
+	</script>
+{% endblock javascripts %}

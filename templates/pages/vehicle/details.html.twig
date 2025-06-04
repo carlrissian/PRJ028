@@ -1,0 +1,242 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Detalles de vehículo{% endblock %}
+
+{% block body %}
+    <vehicle-details-page :vehicle="{{ vehicle }}" />
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            titles: {
+                vehicleFile: '{{ 'Ficha de vehículo' | trans }}',
+            },
+            tabs: {
+                generalInfo: '{{ 'Info. general' | trans }}',
+                images: '{{ 'Imágenes' | trans }}',
+                damages: '{{ 'Daños' | trans }}',
+                anticipations: '{{ 'Previsiones' | trans }}',
+                insurance: '{{ 'Seguro' | trans }}',
+                history: '{{ 'Histórico' | trans }}',
+                rentalAgreementes: '{{ 'Contratos' | trans }}',
+                annexes: '{{ 'Anexos de contrato' | trans }}',
+            },
+            fields: {
+                // Vehicle
+                modelCode: '{{ 'Model code' | trans }}',
+                provider: '{{ 'Proveedor de compra' | trans }}',
+                licensePlate: '{{ 'Matrícula' | trans }}',
+                vin: '{{ 'Bastidor' | trans }}',
+                brand: '{{ 'Marca' | trans }}',
+                model: '{{ 'Modelo' | trans }}',
+                trim: '{{ 'Acabado' | trans }}',
+                carClass: '{{ 'Carclass' | trans }}',
+                carGroup: '{{ 'Grupo' | trans }}',
+                acriss: '{{ 'Acriss' | trans }}',
+                vehicleType: '{{ 'Tipo vehículo' | trans }}',
+                connectedVehicle: '{{ '¿Vehículo conectado?' | trans }}',
+                motorizationType: '{{ 'Tipo motorización' | trans }}',
+                tankCapacity: '{{ 'Combustible / Capacidad depósito (L)' | trans }}',
+                batteryCapacity: '{{ 'Batería (%) / Capacidad batería (kWh)' | trans }}',
+                gearBox: '{{ 'Caja de cambios' | trans }}',
+                co2: '{{ 'CO2' | trans }}',
+                country: '{{ 'País' | trans }}',
+                region: '{{ 'Región' | trans }}',
+                area: '{{ 'Área' | trans }}',
+                branch: '{{ 'Delegación' | trans }}',
+                branchIATA: '{{ 'Código delegación' | trans }}',
+                location: '{{ 'Localización' | trans }}',
+                salesMethod: '{{ 'Método de venta' | trans }}',
+                returnDate: '{{ 'Fecha devolución' | trans }}',
+                rentingEndDate: '{{ 'Fecha fin alquiler' | trans }}',
+                contractEndDate: '{{ 'Fecha fin contrato' | trans }}',
+                deliveryDate: '{{ 'Fecha recepción' | trans }}',
+                byeByeDate: '{{ 'Fecha byebye' | trans }}',
+                status: '{{ 'Estado' | trans }}',
+                blocking: '{{ 'Bloqueo' | trans }}',
+                kilometers: '{{ 'Kilometros' | trans }}',
+                kilometersLimit: '{{ 'Límite kilometros' | trans }}',
+                fuel: '{{ 'Combustible actual' | trans }}',
+                battery: '{{ 'Batería actual (%)' | trans }}',
+                exteriorHeight: '{{ 'Alto exterior' | trans }}',
+                exteriorWidth: '{{ 'Ancho exterior' | trans }}',
+                exteriorLength: '{{ 'Largo exterior' | trans }}',
+                interiorHeight: '{{ 'Alto interior' | trans }}',
+                interiorWidth: '{{ 'Ancho interior' | trans }}',
+                interiorLength: '{{ 'Largo interior' | trans }}',
+                numberOfSeats: '{{ 'Número asientos' | trans }}',
+                numOfDoors: '{{ 'Número puertas' | trans }}',
+                volume: '{{ 'Volumen de carga' | trans }}',
+                trunkCapacity: '{{ 'Capacidad maletero' | trans }}',
+                color: '{{ 'Color' | trans }}',
+
+                // Damages
+                inside: '{{ 'Interior' | trans }}',
+                outside: '{{ 'Exterior' | trans }}',
+                code: '{{ 'Código' | trans }}',
+                name: '{{ 'Nombre' | trans }}',
+                zone: '{{ 'Zona' | trans }}',
+                subzone: '{{ 'Subzona' | trans }}',
+                associatedRA: '{{ 'Contrato asociado' | trans }}',
+                reapired: '{{ '¿Reparado?' | trans }}',
+                reparationDate: '{{ 'Fecha de reparación' | trans }}',
+                repairOrder: '{{ 'Orden de reparación' | trans }}',
+
+
+                // History list
+                originStatus: '{{ 'Estado origen' | trans }}',
+                endStatus: '{{ 'Estado fin' | trans }}',
+                statusChangeDate: '{{ 'Fecha cambio de estado' | trans }}',
+                statusChangeDateFrom: '{{ 'Fecha cambio de estado desde' | trans }}',
+                statusChangeDateTo: '{{ 'Fecha cambio de estado hasta' | trans }}',
+                statusChangeUser: '{{ 'Usuario cambio de estado' | trans }}',
+                actions: '{{ 'Acciones' | trans }}',
+                
+
+                // FIXME
+                // History details
+                contractId: '{{ 'ID contrato' | trans }}',
+                contractSignatureDate: '{{ 'Fecha inicio contrato' | trans }}',
+                dropOffDate: '{{ 'Fecha devolución' | trans }}',
+                bookedAcriss: '{{ 'Acriss reservado' | trans }}',
+                bookedGroup: '{{ 'Grupo reservado' | trans }}',
+                acrissHired: '{{ 'Acriss contratado' | trans }}',
+                groupHired: '{{ 'Grupo contratado' | trans }}',
+                deliveredGroup: '{{ 'Grupo de entrega' | trans }}',
+                pickUpBranch: '{{ 'Delegación origen' | trans }}',
+                dropOffBranch: '{{ 'Delegación destino' | trans }}',
+                startKilometers: '{{ 'kilómetros salida' | trans }}',
+                kmsPolicy: '{{ 'Tarifa de kilometraje' | trans }}',
+                borderCrossing: '{{ 'Cruce fronteras' | trans }}',
+                salesLines: '{{ 'Línea de documento' | trans }}',
+                kmsPolicyLimit: '{{ 'Km ilimitados' | trans  }}',
+                expectedUnLoadDate: '{{ 'Fecha descarga prevista' | trans }}',
+                originIATACodeLocation: '{{ 'Localización origen' | trans }}',
+                destinationIATACodeLocation: '{{ 'Localización destino' | trans }}',
+                vehicleMaintenaceExpectedEndDate: '{{ 'Fecha prevista salida taller' | trans }}',
+                saleBlockDate: '{{ 'Fecha fin alquiler' | trans }}',
+                saleDate: '{{ 'Fecha fin disponibilidad' | trans }}',
+
+
+                // Anticipations
+                movementId: '{{ 'ID movimiento' | trans }}',
+                originLocation: '{{ 'Localización origen' | trans }}',
+                destinationLocation: '{{ 'Localización destino' | trans }}',
+                expectedLoadDate: '{{ 'Fecha carga prevista' | trans }}',
+                expectedUnloadDate: '{{ 'Fecha descarga prevista' | trans }}',
+                businessUnitArticle: '{{ 'Unidad de negocio-artículo' | trans }}',
+
+                // Insurance
+                policyCompany: '{{ 'Nombre aseguradora' | trans }}',
+                policyBroker: '{{ 'Correduría de seguros' | trans }}',
+                policyNumber: '{{ 'Nº / Registro de póliza' | trans }}',
+                policyType: '{{ 'Tipo de seguro' | trans }}',
+                activationDate: '{{ 'Fecha de activación' | trans }}',
+                finishDate: '{{ 'Fecha de baja' | trans }}',
+                policyStatus: '{{ 'Estado de la póliza' | trans }}',
+
+                // Annexe
+                annexe: '{{ 'Anexo' | trans }}',
+                booking: '{{ 'Reserva asociada' | trans }}',
+                bookingStatus: '{{ 'Estado de la reserva' | trans }}',
+                creationDate: '{{ 'Fecha de creación' | trans }}',
+                associatedRentalAgreement: '{{ 'Contrato asociado' | trans }}',
+                rentalAgreementStatus: '{{ 'Estado del contrato' | trans }}',
+                checkInDate: '{{ 'Fecha de registro' | trans }}',
+                pickUpDate: '{{ 'Fecha de recogida' | trans }}',
+                dropOffDate: '{{ 'Fecha de entraga' | trans }}',
+
+
+
+                // (?)
+                infleet: '{{ 'Infleet' | trans }}',
+                defleet: '{{ 'Defleet' | trans }}',
+                insurance: '{{ 'Seguros' | trans }}',
+                maintenance: '{{ 'Mantenimiento' | trans }}',
+                mostrador: '{{ 'Mostrador' | trans }}',
+                campa: '{{ 'Campa' | trans }}',
+            },
+            form: {
+                begin:'{{ 'Inicio' | trans }}',
+                end:'{{ 'Fin' | trans }}',
+                reason:'{{ 'Motivo' | trans }}',
+                yes:'{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+                all: '{{ 'Todos' | trans }}',
+                of: '{{ 'de' | trans }}',
+                viewDetails: '{{ 'Ver detalles' | trans }}',
+                selectAnOption: '{{ 'Seleccione una opción' | trans }}',
+                noVehicleImagesAvailable: '{{ 'No hay imágenes del vehículo disponibles' | trans }}',
+                noVehicleInsurancesAvailable: '{{ 'No existen pólizas asociadas a este vehículo' | trans }}',
+            },
+        };
+        
+        let constants = {
+            vehicleType: {
+                CAR: '{{ constantsManager.CARTYPE_CAR }}',
+                VAN: '{{ constantsManager.CARTYPE_VAN }}',
+                MOTO: '{{ constantsManager.CARTYPE_MOTO }}',
+            },
+            motorizationType: {
+                unespecifiedPowerAir: {{ constantsManager.MOTORTYPE_UF_POWE_WITH_AIR }},
+                unespecifiedPowerNoAir: {{ constantsManager.MOTORTYPE_UF_POWE_WITHOUT_AIR }},
+                dieselAir: {{ constantsManager.MOTORTYPE_DIESEL_AIR }},
+                dieselNoAir: {{ constantsManager.MOTORTYPE_DIESEL_NO_AIR }},
+                hybrid: {{ constantsManager.MOTORTYPE_HYBRID }},
+                hybridPlugin: {{ constantsManager.MOTORTYPE_HYBRID_PLUGIN }},
+                electricE: {{ constantsManager.MOTORTYPE_ELECTRIC_E }},
+                electricC: {{ constantsManager.MOTORTYPE_ELECTRIC_C }},
+                lpgAir: {{ constantsManager.MOTORTYPE_LPG_AIR }},
+                lpgNoAir: {{ constantsManager.MOTORTYPE_LPG_NO_AIR }},
+                hydrogenAir: {{ constantsManager.MOTORTYPE_HYDROGEN_AIR }},
+                hydrogenNoAir: {{ constantsManager.MOTORTYPE_HYDROGEN_NO_AIR }},
+                multiFuelAir: {{ constantsManager.MOTORTYPE_MF_POWER_AIR }},
+                multiFuelNoAir: {{ constantsManager.MOTORTYPE_MF_POWER_NO_AIR }},
+                petrolAir: {{ constantsManager.MOTORTYPE_PETROL_AIR }},
+                petrolNoAir: {{ constantsManager.MOTORTYPE_PETROL_NO_AIR }},
+                ethanolAir: {{ constantsManager.MOTORTYPE_ETHANOL_AIR }},
+                ethanolNoAir: {{ constantsManager.MOTORTYPE_ETHANOL_NO_AIR }},
+            },
+            damageMediaUrl: {
+                CAR: {
+                    IMG_CAR_EXTERIOR: '{{ '/img/damage_web/vehicle/vehiculo_exterior_dibujo.png' }}',
+
+                    IMG_CAR_INTERIOR_5_SEATS: '{{ '/img/damage_web/vehicle/interior_5_plazas_dibujo.png' }}',
+                    IMG_CAR_INTERIOR_7_SEATS: '{{ '/img/damage_web/vehicle/interior_7_plazas_dibujo.png' }}',
+                    IMG_CAR_INTERIOR_9_SEATS: '{{ '/img/damage_web/vehicle/interior_9_plazas_dibujo.png' }}',
+
+                    SVG_CAR_EXTERIOR_ZONE: '{{ asset('/img/damage_web/vehicle/svg/vehiculo_exterior_zonas.svg') }}',
+                    SVG_CAR_EXTERIOR_SUBZONE: '{{ '/img/damage_web/vehicle/svg/vehiculo_exterior_subzonas.svg' }}',
+
+                    SVG_CAR_INTERIOR_ZONE: '{{ '/img/damage_web/vehicle/svg/interior_zonas.svg' }}',
+
+                    SVG_CAR_INTERIOR_5_SUBZONE: '{{ '/img/damage_web/vehicle/svg/interior_5_plazas_subzonas.svg' }}',
+                    SVG_CAR_INTERIOR_7_SUBZONE: '{{ '/img/damage_web/vehicle/svg/interior_7_plazas_subzonas.svg' }}',
+                    SVG_CAR_INTERIOR_9_SUBZONE: '{{ '/img/damage_web/vehicle/svg/interior_9_plazas_subzonas.svg' }}',
+                },
+                VAN: {
+                    IMG_VAN_EXTERIOR: '{{ '/img/damage_web/van/furgo_exterior.jpg' }}',
+
+                    IMG_VAN_INTERIOR_3_SEATS: '{{ '/img/damage_web/van/Furgo_interior_3.jpg' }}',
+                    IMG_VAN_INTERIOR_5_SEATS: '{{ '/img/damage_web/van/Furgo_interior_5.jpg' }}',
+                    IMG_VAN_INTERIOR_6_SEATS: '{{ '/img/damage_web/van/Furgo_interior_6.jpg' }}',
+                    IMG_VAN_INTERIOR_9_SEATS: '{{ '/img/damage_web/van/Furgo_interior_9.jpg' }}',
+                },
+                MOTO: {
+                    IMG_MOTO_EXTERIOR_2_WHEELS: '{{ '/img/damage_web/moto/Esquema-moto-2-ruedas.jpg' }}',
+                    IMG_MOTO_EXTERIOR_MOTO_3_WHEELS: '{{ '/img/damage_web/moto/Esquema-moto-3-ruedas.jpg' }}',
+                },
+            },
+            /**
+             * TODO: las constantes hardcode fueron eliminadas. 
+             * Aunque se comente el código, twig interpreta las variables y salta error conforme no se encuentra vehicleStatusConstants.
+             * Así que se ha decidido eliminar los valores hardcode y dejar solo el objeto vacío.
+             * Rellenar con los valores correspondientes cuando sea necesario.
+             * 
+             */
+            vehicleStatus: {
+            },
+        };
+    </script>
+{% endblock javascripts %}

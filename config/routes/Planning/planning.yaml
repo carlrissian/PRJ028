@@ -1,0 +1,24 @@
+planning.filter:
+  path:  /planning/filter/
+  controller: App\Controller\Planning\PlanningController::filter
+  methods: [POST]
+  options:
+    expose: true
+planning.list:
+  path:  /planning/list/
+  controller: App\Controller\Planning\PlanningController::list
+  methods: [POST,GET]
+  options:
+    expose: true
+planning.store:
+  path: /store
+  controller: App\Controller\Planning\PlanningController::store
+  methods: POST
+  options:
+    expose: true
+planning.excel:
+  path: /download-excel-planning
+  controller: App\Controller\Planning\PlanningController::downloadExcelPlanning
+  methods: POST
+  options:
+    expose: true

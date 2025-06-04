@@ -1,0 +1,6 @@
+department.selectList:
+  path: /selectlist
+  controller: App\Controller\Department\SelectListController
+  methods: GET
+  options:
+    expose: true

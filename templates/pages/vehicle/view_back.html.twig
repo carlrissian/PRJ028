@@ -1,0 +1,256 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vehicle{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        table td, th {
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="kt-portlet kt-portlet--bordered">
+                <div class="kt-portlet__body">
+                    <div class="kt-portlet kt-portlet--bordered">
+                        <div class="kt-portlet__head">
+                            <div class="kt-portlet__head-label">
+                                <h3 class="kt-portlet__head-title">
+                                    {{ "Vista vehículo" | trans }}
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="row">
+                                <table class="table table-striped table-bordered table-hover table-checkable dataTable no-footer dtr-inline">
+                                    <tr>
+                                        <th>{{ 'Model code' | trans }}</th>
+                                        <th>{{'Matrícula' | trans }}</th>
+                                        <th>{{'Bastidor' | trans }}</th>
+                                        <th>{{'Marca' | trans }}</th>
+                                        <th>{{'Modelo' | trans}}</th>
+                                        <th>{{'Fecha bloqueo' | trans}}</th>
+                                        <th>{{'Acriss' | trans}}</th>
+                                        <th>{{'Grupo' | trans}}</th>
+                                        <th>{{'Tipo de compra' | trans}}</th>
+                                        <th>{{'Código base' | trans}}</th>
+                                        <th>{{'Estado' | trans}}</th>
+                                    </tr>
+                                    <tr>
+                                        {% for data5 in datas5 %}
+                                            <td>{{ data5 }}</td>
+                                        {% endfor %}
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="kt-portlet__body">
+                            <div class="kt-portlet__head-toolbar">
+                                <ul class="nav nav-tabs nav-tabs-line nav-tabs-bold nav-tabs-line-left nav-tabs-line-primary"
+                                    role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#general" role="tab"
+                                           aria-selected="false">
+                                            {{ "General" | trans }}
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#matriculacion" role="tab"
+                                           aria-selected="false">
+                                            {{ "Matriculación" | trans }}
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#compraRecompra" role="tab"
+                                           aria-selected="false">
+                                            {{ "Compra - Recompra" | trans }}
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#gestionRecompra" role="tab"
+                                           aria-selected="false">
+                                            {{ "Gestión recompra" | trans }}
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="general" role="tabpanel">
+                                    <table class="table table-striped table-bordered table-hover table-checkable dataTable no-footer dtr-inline">
+                                        <tr>
+                                            <th>{{'Grupo' | trans}}</th>
+                                            <th>{{'Categoría' | trans}}</th>
+                                            <th>{{'Nº puertas' | trans}}</th>
+                                            <th>{{'Nº asientos' | trans}}</th>
+                                            <th>{{'Kilometros' | trans}}</th>
+                                        </tr>
+                                        <tr>
+                                            {% for data in datas %}
+                                                <td>{{ data }}</td>
+                                            {% endfor %}
+                                        </tr>
+                                        <tr>
+                                            <th>{{'Marca' | trans}}</th>
+                                            <th>{{'Modelo' | trans}}</th>
+                                            <th>{{'Submodelo' | trans}}</th>
+                                            <th>{{'Color' | trans}}</th>
+                                            <th>{{'Tipo cambio de marchas' | trans}}</th>
+                                        </tr>
+                                        <tr>
+                                            {% for data2 in datas2 %}
+                                                <td>{{ data2 }}</td>
+                                            {% endfor %}
+                                        </tr>
+                                        <tr>
+                                            <th>{{'Capacidad depósito' | trans}}</th>
+                                            <th>{{'Alto exterior' | trans}}</th>
+                                            <th>{{'Ancho exterior' | trans}}</th>
+                                            <th>{{'Largo exterior' | trans}}</th>
+                                            <th>{{'Capacidad maletero' | trans}}</th>
+                                        </tr>
+                                        <tr>
+                                            {% for data3 in datas3 %}
+                                                <td>{{ data3 }}</td>
+                                            {% endfor %}
+                                        </tr>
+                                        <tr>
+                                            <th>{{'Tipo carburante' | trans}}</th>
+                                            <th>{{'Alto interior' | trans}}</th>
+                                            <th>{{'Ancho interior' | trans}}</th>
+                                            <th>{{'Largo interior' | trans}}</th>
+                                            <th>{{'Volumen' | trans}}</th>
+                                        </tr>
+                                        <tr>
+                                            {% for data4 in datas4 %}
+                                                <td>{{ data4 }}</td>
+                                            {% endfor %}
+                                        </tr>
+                                    </table>
+                                    <div class="kt-separator kt-separator--border-dashed kt-separator--space-lg"></div>
+                                    <div class="">
+                                        <table class="table table-striped table-bordered table-hover table-checkable dataTable no-footer dtr-inline">
+                                            <tr>
+                                                <th>{{'País' | trans}}</th>
+                                                <th>{{'Zona' | trans}}</th>
+                                                <th>{{'Delegación' | trans}}</th>
+                                                <th>{{'Sucursal' | trans}}</th>
+                                                <th>{{'Situación' | trans}}</th>
+                                            </tr>
+                                            <tr>
+                                                {% for data6 in datas6 %}
+                                                    <td>{{ data6 }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                            <tr>
+                                                <th>{{'Sit. complementaria' | trans}}</th>
+                                                <th>{{'Parking' | trans}}</th>
+                                                <th>{{'Ubicación llave' | trans}}</th>
+                                                <th>{{'Fecha devolución' | trans}}</th>
+                                                <th>{{'Número contrato' | trans}}</th>
+                                            </tr>
+                                            <tr>
+                                                {% for data7 in datas7 %}
+                                                    <td>{{ data7 }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                            <tr>
+                                                <th>{{'Días alquiler' | trans}}</th>
+                                                <th>{{'Fijo' | trans}}</th>
+                                            </tr>
+                                            <tr>
+                                                {% for data8 in datas8 %}
+                                                    <td>{{ data8 }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        </table>
+                                        <div class="col text-center">
+                                            <img src="https://via.placeholder.com/310x155" class="rounded"
+                                                 alt="Vehiclo">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="matriculacion" role="tabpanel">
+                                    <div class="kt-section__body">
+                                        <table class="table table-striped table-bordered table-hover table-checkable dataTable no-footer dtr-inline">
+                                            <tr>
+                                                <th>{{'Fecha descarga' | trans}}</th>
+                                                <th>{{'Tipo compra' | trans}}</th>
+                                                <th>{{'Fecha compra' | trans}}</th>
+                                                <th>{{'Fecha matriculación' | trans}}</th>
+                                                <th>{{'Sucursal matriculación' | trans}}</th>
+                                            </tr>
+                                            <tr>
+                                                {% for data9 in datas9 %}
+                                                    <td>{{ data9 }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="compraRecompra" role="tabpanel">
+                                    <div class="kt-section__body">
+                                        <table class="table table-striped table-bordered table-hover table-checkable dataTable no-footer dtr-inline">
+                                            <tr>
+                                                <th>{{'Fecha Carga' | trans}}</th>
+                                                <th>{{'Fecha retirada' | trans}}</th>
+                                                <th>{{'Fecha limite recompra' | trans}}</th>
+                                            </tr>
+                                            <tr>
+                                                {% for data10 in datas10 %}
+                                                    <td>{{ data10 }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="gestionRecompra" role="tabpanel">
+                                    <div class="kt-section__body">
+                                        <table class="table table-striped table-bordered table-hover table-checkable dataTable no-footer dtr-inline">
+                                            <tr>
+                                                <th>{{'Albarán carga' | trans }}</th>
+                                                <th>{{'Campa destino' | trans}}</th>
+                                                <th>{{'Concesionario recompreador' | trans }}</th>
+                                                <th>{{'Transportista' | trans }}</th>
+                                            </tr>
+                                            <tr>
+                                                {% for data11 in datas11 %}
+                                                    <td>{{ data11 }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                            <tr>
+                                                <th>{{'Confirmación entrega' | trans }}</th>
+                                                <th>{{'Autorización carga' | trans }}</th>
+                                                <th>{{'Entrega' | trans}}</th>
+                                                <th>{{'Nº orden' | trans }}</th>
+                                            </tr>
+                                            <tr>
+                                                {% for data12 in datas12 %}
+                                                    <td>{{ data12 }}</td>
+                                                {% endfor %}
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function () {
+            $('.fecha').datepicker({
+                language: 'es',
+                orientation: "bottom left",
+                todayHighlight: true,
+            });
+        });
+    </script>
+{% endblock %}

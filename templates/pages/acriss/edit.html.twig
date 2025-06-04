@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Editar Acriss'|trans }}{% endblock %}
+
+{% block body %}
+    <acriss-edit-page :acriss="{{ acriss }}" />
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            titles: {
+                editAcriss: '{{ 'Editar ACRISS ' | trans }}',
+                vehicleFields: '{{ 'Campos vehículos' | trans }}',
+                permissionFields: '{{ 'Campos permisos' | trans }}',
+                translations: '{{ 'Traducciones' | trans }}',
+                imageList: '{{ 'Listado de imágenes' | trans }}',
+                translationList: '{{ 'Listado de traducciones' | trans }}',
+            },
+			fields: {
+                // Common
+                first: '{{ 'Primera' | trans }}',
+                second: '{{ 'Segunda' | trans }}',
+                third: '{{ 'Tercera' | trans }}',
+                fourth: '{{ 'Cuarta' | trans }}',
+                acrissLetter: '{{ 'Letra del ACRISS' | trans }}',
+
+                acriss: '{{ 'ACRISS' | trans }}',
+                carClass: '{{ 'CarClass' | trans }}',
+                vehicleType: '{{ 'Tipo de vehículo' | trans }}',
+                gearBox: '{{ 'Caja de cambios' | trans }}',
+                motorizationType: '{{ 'Tipo de motorización' | trans }}',
+                
+                marketingStartDate: '{{ 'Fecha inicio de comercialización' | trans }}',
+                marketingEndDate: '{{ 'Fecha fin de comercialización' | trans }}',
+                commercialVehicle: '{{ 'Vehículo comercial' | trans }}',
+                mediumTerm: '{{ 'Renting largo plazo' | trans }}',
+                numberOfSuitcases: '{{ 'Nº maletas' | trans }}',
+                numberOfSeats: '{{ 'Nº plazas' | trans }}',
+                numberOfDoors: '{{ 'Nº puertas' | trans }}',
+
+                minAge: '{{ 'Edad mínima' | trans  }}',
+                maxAge: '{{ 'Edad máxima' | trans  }}',
+                driverLicense: '{{ 'Licencia de conducir' | trans }}',
+                minDriverLicenseX: '{{ 'Años mínimos licencia' | trans }}',
+                classB: '{{ 'Clase B' | trans }}',
+                classA: '{{ 'Clase A' | trans }}',
+                classA1: '{{ 'Clase A1' | trans }}',
+                classA2: '{{ 'Clase A2' | trans }}',
+                
+                // Branch translations
+                branch: '{{ 'Delegación' | trans }}',
+                branchCommercialName: '{{ 'Nombre comercial' | trans }}',
+                defaultBranch: '{{ 'Delegación por defecto' | trans }}',
+                url: '{{ 'URL' | trans }}',
+                description: '{{ 'Descripción' | trans }}',
+                language: '{{ 'Idioma' | trans }}',
+                defaultLanguage: '{{ 'Idioma por defecto' | trans }}',
+                translation: '{{ 'Traducción' | trans }}',
+			},
+			form: {
+                select: '{{ 'Seleccione' | trans }}',
+                selectAnOption: '{{ 'Seleccione una opción' | trans }}',
+                enabled: '{{ 'Activado' | trans }}',
+                disabled: '{{ 'Desactivado' | trans }}',
+                flushField: '{{ 'Limpiar campo' | trans }}',
+				update: '{{ 'Actualizar' | trans }}',
+				updated: '{{ 'Actualizado' | trans }}',
+                yes: '{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+                continue: '{{ 'Continuar' | trans }}',
+                cancel: '{{ 'Cancelar' | trans }}',
+
+                errorLoadingLanguages: '{{ 'Se ha producido un error durante la carga del selector de idioma' | trans }}',
+
+                addBranch: '{{ 'Añadir delegación' | trans }}',
+                removeBranch: '{{ 'Eliminar delegación' | trans }}',
+				branchAlreadyAdded: '{{ 'La delegación seleccionada ya ha sido insertada' | trans }}',
+				removeBranchQuestion: '{{ 'Se va a eliminar del sistema la delegación con sus imágenes y traducciones. ¿Está segur@?' | trans }}',
+				cannotRemoveDefaultBranch: '{{ 'No se puede eliminar una delegación por defecto. Por favor, seleccione otra delegación por defecto para poder eliminarla' | trans }}',
+                errorRemovingBranchNotification: '{{ 'Disculpe, se ha producido un error durante la eliminación de la delegación. ' | trans }}',
+                branchRemovedSuccessNotification: '{{ 'Delegación eliminada correctamente' | trans }}',
+                
+                viewImage: '{{ 'Ver imagen' | trans }}',
+                addImageLine: '{{ 'Añadir imagen' | trans }}',
+                removeImageLine: '{{ 'Eliminar imagen' | trans }}',
+				removeImageLineQuestion: '{{ 'Se va a eliminar del sistema la imagen. ¿Está segur@?' | trans }}',
+				cannotRemoveDefaultImageLine: '{{ 'No se puede eliminar una imagen por defecto. Por favor, seleccione otra imagen por defecto para poder eliminarla' | trans }}',
+                errorRemovingImageLineNotification: '{{ 'Disculpe, se ha producido un error durante la eliminación de la imagen. ' | trans }}',
+                imageLineRemovedSuccessNotification: '{{ 'Imagen eliminada correctamente' | trans }}',
+				
+                addLanguage: '{{ 'Añadir idioma' | trans }}',
+                removeLanguage: '{{ 'Eliminar idioma' | trans }}',
+                languageAlreadyAdded: '{{ 'El idioma seleccionado ya ha sido insertado' | trans }}',
+				removeLanguageQuestion: '{{ 'Se va a eliminar del sistema el idioma. ¿Está segur@?' | trans }}',
+				cannotRemoveDefaultLanguage: '{{ 'No se puede eliminar un idioma por defecto. Por favor, seleccione otro idioma por defecto para poder eliminarlo' | trans }}',
+                errorRemovingLanguageNotification: '{{ 'Disculpe, se ha producido un error durante la eliminación del idioma. ' | trans }}',
+                languageRemovedSuccessNotification: '{{ 'Idioma eliminado correctamente' | trans }}',
+				
+                acrissUpdated: '{{ 'ACRISS actualizado' | trans }}',
+				errorAcrissAlreadyExists: '{{ 'El ACRISS ya existe. No se permite la creación de dos ACRISS iguales.' | trans }}',
+				associateAcrissQuestion: '{{ 'Hemos detectado que este es un ACRISS superior y existen ACRISS inferiores asociables. ¿Desea asociarlo?' | trans }}',
+                errorUpdatingAcrissNotification: '{{ 'Disculpe, se ha producido un error durante la actualización del ACRISS. ' | trans }}',
+                acrissUpdatedSuccessNotification: '{{ 'ACRISS actualizado correctamente' | trans }}',
+			},
+        };
+        
+        let constants = {
+            // Driver license
+            driverLicense: {
+                classB: 'classB',
+                classA: 'classA',
+                classA1: 'classA1',
+                classA2: 'classA2',
+            },
+            topAcrissLetter: 'R',
+        };
+    </script>
+{% endblock javascripts %}

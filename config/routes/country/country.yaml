@@ -1,0 +1,6 @@
+country.selectList:
+  path: /selectlist
+  controller: App\Controller\Country\SelectListController
+  methods: GET
+  options:
+    expose: true

@@ -1,0 +1,104 @@
+-
+  name: 'Distribución'
+  type: 'title'
+
+-
+  name: 'Movimientos'
+  icon: 'la la-angle-double-right'
+  type: 'submenu'
+  submenu:
+      -
+        name: 'Crear'
+        route: ['pagina.ejemplo1',[], true]
+        icon: 'la la-angle-double-right'
+        type: 'submenu'
+        submenu:
+            -
+              name: "Por conductor"
+              route: ['movimentFilter', [], true]
+              icon: 'la la-angle-double-right'
+              type: "element"
+            -
+              name: 'Por transportista'
+              route: ['movimentCarrierCreate', [], true]
+              icon: 'la la-angle-double-right'
+              type: 'element'
+      -
+        name: 'Consultar'
+        route: ['movimentSearch',[], true]
+        icon: 'la la-angle-double-right'
+        type: 'element'
+
+-
+  name: 'Vehículos'
+  icon: 'la la-angle-double-right'
+  type: 'submenu'
+  submenu:
+      -
+        name: 'Consultar'
+        route: ['carFilter',[], true]
+        icon: 'la la-angle-double-right'
+        type: 'element'
+      -
+        name: 'Listar'
+        route: ['carList',[], true]
+        icon: 'la la-angle-double-right'
+        type: 'element'
+
+-
+  name: 'Stop sales'
+  icon: 'la la-angle-double-right'
+  type: 'submenu'
+  submenu:
+      -
+        name: 'Stop sales'
+        route: ['stopSaleCreate',[], true]
+        icon: 'la la-angle-double-right'
+        type: 'element'
+      -
+        name: 'One way'
+        route: ['oneWayCreate',[], true]
+        icon: 'la la-angle-double-right'
+        type: 'element'
+
+-
+  name: 'Disponibilad por grupo'
+  route: ['locationList',[], true]
+  icon: 'la la-angle-double-right'
+  type: 'element'
+
+-
+  name: 'Grupos'
+  type: 'title'
+
+-
+  name: 'Configuración parámetros'
+  icon: 'la la-angle-double-right'
+  type: 'submenu'
+  submenu:
+      -
+        name: 'Crear'
+        route: ['parameterSettingsCreate',[], true]
+        icon: 'la la-angle-double-right'
+        type: 'element'
+      -
+        name: 'Listar'
+        route: ['locationList',[], true]
+        icon: 'la la-angle-double-right'
+        type: 'element'
+
+-
+  name: 'Temporadas'
+  route: ['seasonShow',[], true]
+  icon: 'la la-angle-double-right'
+  type: 'element'
+
+-
+  name: 'Gestión'
+  type: 'title'
+
+-
+  name: 'Localización'
+  route: ['locationList',[], true]
+  icon: 'la la-angle-double-right'
+  type: 'element'

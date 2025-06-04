@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Planning{% endblock %}
+{% block body %}
+    <planning-page
+            :select-list="{{ selectList }}"
+    ></planning-page>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            txtForm: {
+                save: '{{ 'Guardar' | trans }}',
+                validate: '{{ 'Validar' | trans }}',
+                reactivate: '{{ 'Reactivar' | trans }}',
+                brand: '{{ 'Marca' | trans }}',
+                model: '{{ 'Modelo' | trans }}',
+                purchaseMethod: '{{ 'Metodo de compra' | trans }}',
+                purchaseType: '{{ 'Tipo de compra' | trans }}',
+                gearBox: '{{ 'Caja de cambios' | trans }}',
+                motorizationType: '{{ 'Tipo de motorización' | trans }}',
+                acriss: '{{ 'Acriss' | trans }}',
+                carGroup: '{{ 'Grupo' | trans }}',
+                commercialGroup: '{{ 'Grupo comercial' | trans }}',
+                carClass: '{{ 'CarClass' | trans }}',
+                connectedVehicle: '{{ 'Vehiculo conectado' | trans }}',
+                pendingAssignments: '{{ 'Asignaciones Pendientes' | trans }}',
+                fleetPlannerStatus: '{{ 'Estado Distribución' | trans }}',
+                distributedTotal: '{{ 'Total distribuido' | trans }}',
+                bbTotal: '{{ 'Total BB' | trans }}',
+                riskTotal: '{{ 'Total Risk' | trans }}',
+                distributionPending: '{{ 'Pendiente distribuir' | trans }}',
+                planning:'{{ 'Planificación' | trans }}',
+                orPlan:'{{ 'OR PLAN' | trans }}',
+                abstractCarClass:'{{ 'Resumen CarClass' | trans }}',
+                abstractCarClassAccumulated:'{{ 'Resumen CarClass Acumulado' | trans }}',
+                excel:'{{ 'Excel Planning' | trans }}',
+                downloadExcel:'{{ 'Descargar Excel' | trans }}',
+                year:'{{ 'Año' | trans }}',
+                titleSelect:'{{ 'Seleccione' | trans }}',
+                titleSave: '{{ '¿Desea Guardar Planning? ' | trans }}',
+                titleValidate: '{{ '¿Desea Validar Planning? ' | trans }}',
+                titleReactivate: '{{ '¿Desea Reactivar Planning? ' | trans }}',
+                titleMonth: '{{ '¿Desea Cambiar de mes? No olvide guardar los datos antes.Gracias  ' | trans }}',
+                messageAssign: '{{ ' Se han asignado más vehículos de los que tenemos en la fila con ID' | trans }}',
+                messageAssignPending: '{{ 'Faltan vehiculos por asingar en la fila numero:' | trans }}',
+                assignedUnits: '{{ 'Unidades asignados' | trans }}',
+                totalUnits: '{{ 'Total unidades' | trans }}',
+                yes:'{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+                all: '{{ 'Todos' | trans }}',
+            }
+        };
+
+    </script>
+
+
+{% endblock javascripts %}

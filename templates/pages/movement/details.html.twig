@@ -1,0 +1,194 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ("Show Movement" | trans ) }}{% endblock %}
+
+{% block body %}
+    <movement-details-page
+            :movement="{{ movement }}"
+            :movement-type-id="{{ movementTypeId }}"
+    ></movement-details-page>
+{% endblock body %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            titles: {
+                movementDriverDetails:'{{ 'Detalles movimiento por conductor' | trans }}',
+                movementCarrierDetails:'{{ 'Detalles movimiento por transportista' | trans }}',
+                movementOperationDetails:'{{ 'Detalles movimiento por operaciones' | trans }}',
+                vehicleData: '{{ 'Datos del vehículo' | trans }}',
+                driverData: '{{ 'Datos del conductor' | trans }}',
+                movementClosureData:'{{ 'Datos cierre del movimiento' | trans }}',
+                movementCancelationData:'{{ 'Datos cancelación del movimiento' | trans }}',
+                filters:'{{ 'Filtros' | trans }}',
+                assignedVehicles: '{{ 'Vehículos asignados' | trans }}',
+            },
+            fields: {
+                // Vehicle data
+                orderMovement: '{{ 'Nº de movimiento' | trans }}',
+                licensePlate: '{{ 'Matrícula' | trans }}',
+                vin: '{{ 'Bastidor' | trans }}',
+                carClass: '{{ 'Carclass' | trans }}',
+                carGroup: '{{ 'Grupo' | trans }}',
+                acriss: '{{ 'Acriss' | trans }}',
+                kilometers: '{{ 'Kilometros' | trans }}',
+                actualKms: '{{ 'Kilómetros actuales' | trans }}',
+                batteryActual: '{{ 'Bateria (%)' | trans }}',
+                tankActualOctaves:  '{{ 'Depósito actual en octavos ' | trans }}',
+                brand: '{{ 'Marca' | trans }}',
+                model: '{{ 'Modelo' | trans }}',
+                trim: '{{ 'Acabado' | trans }}',
+                status: '{{ 'Estado' | trans }}',
+                rentingEndDate: '{{ 'Fecha fin alquiler' | trans }}',
+                country: '{{ 'Pais' | trans }}',
+                region: '{{ 'Región' | trans }}',
+                state: '{{ 'Provincia' | trans }}',
+                area: '{{ 'Área' | trans }}',
+                branch: '{{ 'Delegación' | trans }}',
+                location: '{{ 'Localización' | trans }}',
+                // Filters & Table
+                vehicleType: '{{ 'Tipo de vehículo ' | trans }}',
+                kmFrom: '{{ 'Kilometros desde ' | trans }}',
+                kmTo: '{{ 'Kilometros hasta ' | trans }}',
+                rentingEndDateFrom:'{{ 'Fecha fin alquiler desde' | trans }}',
+                rentingEndDateTo:'{{ 'Fecha fin alquiler hasta' | trans }}',
+                checkInDueDate:'{{ 'Fecha fin contrato prevista' | trans }}',
+                saleMethod:'{{ 'Método de venta' | trans }}',
+                vehicleStatus:'{{ 'Estado del vehículo' | trans }}',
+                connectedVehicle:'{{ 'Vehículo conectado' | trans }}',
+                actualLoadDate: '{{ 'Fecha real carga ' | trans }}',
+                actualUnloadDate:'{{ 'Fecha real descarga' | trans }}',
+                initBlockDate:'{{ 'Fecha inicio bloqueo' | trans }}',
+                endBlockDate:'{{ 'Fecha fin bloqueo' | trans }}',
+                maintenanceExpectedEndDate:'{{ 'Fecha prevista salida taller' | trans }}',
+
+                // Movement
+                movementId: '{{ 'ID# movimiento' | trans }}',
+                orderNumber: '{{ 'Nº de pedido' | trans }}',
+                driverType: '{{ 'Tipo de conductor' | trans }}',
+                category: '{{ 'Categoría' | trans }}',
+                locationType: '{{ 'Tipo de localización' | trans }}',
+                originBranch: '{{ 'Delegación origen' | trans }}',
+                destinationBranch: '{{ 'Delegación destino' | trans }}',
+                originLocation: '{{ 'Localización origen' | trans }}',
+                destinationLocation: '{{ 'Localización destino' | trans }}',
+
+                externalProvider: '{{ 'Proveedor localización externa destino' | trans }}',
+                externalLocation: '{{ 'Localización externa destino' | trans }}',
+                actualDepartureDate: '{{ 'Fecha de salida real' | trans }}',
+                actualArrivalDate: '{{ 'Fecha de llegada real' | trans }}',
+                expectedDepartureDate: '{{ 'Fecha de salida prevista' | trans }}',
+                expectedArrivalDate: '{{ 'Fecha de llegada prevista' | trans }}',
+                authDepartment: '{{ 'Autorizado por' | trans }}',
+                notes: '{{ 'Notas' | trans }}',
+                closingUser:'{{ 'Cerrado por' | trans }}',
+                closingDate:'{{ 'Fecha de cierre' | trans }}',
+                closingNotes:'{{ 'Motivo cierre' | trans }}',
+                cancelationUser:'{{ 'Cancelado por' | trans }}',
+                cancelationDate:'{{ 'Fecha cancelación' | trans }}',
+                cancelationNotes:'{{ 'Motivo cancelación' | trans }}',
+                creationUser:'{{ 'Usuario apertura' | trans }}',
+                creationDate:'{{ 'Fecha apertura' | trans }}',
+
+                // Driver
+                driverName: '{{ 'Nombre del conductor' | trans }}',
+                driverLastName: '{{ 'Apellidos del conductor' | trans }}',
+                driverIdNumber: '{{ 'DNI' | trans }}',
+                driverLicense: '{{ 'Nº permiso' | trans }}',
+                licenseIssueDate: '{{ 'Fecha de expiración' | trans }}',
+                address: '{{ 'Dirección' | trans }}',
+                state: '{{ 'Provincia' | trans }}',
+                city: '{{ 'Ciudad' | trans }}',
+                postalCode: '{{ 'Código postal' | trans }}',
+
+                // Movement type -> Ordinary/Not ordinary
+                provider: '{{ 'Proveedor' | trans }}',
+                providerType: '{{ 'Tipo proveedor' | trans }}',
+                businessUnit: '{{ 'Unidad de negocio' | trans }}',
+                businessUnitArticle: '{{ 'Artículo' | trans }}',
+                transportMethod: '{{ 'Método de transporte' | trans }}',
+                vehicleUnits: '{{ 'Unidades' | trans }}',
+                amount: '{{ 'Importe' | trans }}',
+                movementAmount: '{{ 'Importe movimiento' | trans }}',
+                automaticAmount: '{{ 'Importe automático' | trans }}',
+
+                // Campos genéricos
+                internal: '{{ 'Interno' | trans }}',
+                external: '{{ 'Externo' | trans }}',
+
+                // Assigned vehicles
+                assignedLicensePlate:'{{ 'Matrículas asignadas' | trans }}',
+                loadedLicensePlate:'{{ 'Matrículas cargadas' | trans }}',
+                unloadedLicensePlate:'{{ 'Matrículas descargadas' | trans }}',
+            },
+            form: {
+                edit: '{{ 'Editar' | trans }}',
+                cancel: '{{ 'Cancelar' | trans }}',
+                close: '{{ 'Cerrar' | trans }}',
+                yes: '{{ 'Sí' | trans }}',
+                no: '{{ 'No' | trans }}',
+                manageVehicles: '{{ 'Gestionar vehículos' | trans }}',
+                downloadExcel: '{{ 'Descargar excel' | trans }}',
+            },
+        };
+
+        let constants = {
+            // DriverType
+            driverType: {
+                employee: {{ movementConstants.MOVEMENT_DRIVER_TYPE_EMPLOYEE }},
+                provider: {{ movementConstants.MOVEMENT_DRIVER_TYPE_PROVIDER }},
+            },
+            // Category
+            category: {
+                ordinary: {{ constantsManager.TRANSPORTCAT_ORDINARY }},
+                notOrdinary: {{ constantsManager.TRANSPORTCAT_NOT_ORDINARY }},
+                internal: {{ constantsManager.TRANSPORTCAT_INTERNAL }},
+            },
+            // MovementTypr
+            movementType: {
+                driver: {{ constantsManager.TRANSPORTTYPE_DRIVER }},
+                carrier: {{ constantsManager.TRANSPORTTYPE_CARRIER }},
+                operation: {{ constantsManager.TRANSPORTTYPE_OPERATION }},
+            },
+            // MovementStatus
+            movementStatus: {
+                pending: {{ constantsManager.TRANSPORTSTATUS_PENDING }},
+                progress: {{ constantsManager.TRANSPORTSTATUS_IN_PROGRESS }},
+                finalized: {{ constantsManager.TRANSPORTSTATUS_FINISHED }},
+                cancelled: {{ constantsManager.TRANSPORTSTATUS_CANCELLED }},
+            },
+            // External locations
+            // TODO renombrar esto a externalLocations
+            locations: {
+                location: {
+                    id: '{{ locationConstants.EXTERNAL_LOCATION }}',
+                    name: '{{ locationConstants.EXTERNAL_LOCATION | trans }}'
+                },
+                not_location: {
+                    id: '{{ locationConstants.EXTERNAL_LOCATION_NOT_LOCATION }}',
+                    name: '{{ locationConstants.EXTERNAL_LOCATION_NOT_LOCATION | trans }}'
+                }
+            },
+            // BusinessUnit
+            businessUnit:{
+                center: '{{ constantsManager.BUSINESSUNIT_CENTER }}',
+                car: '{{ constantsManager.BUSINESSUNIT_CAR }}',
+                van: '{{ constantsManager.BUSINESSUNIT_VAN }}',
+                moto: '{{ constantsManager.BUSINESSUNIT_MOTO }}',
+                vob2c: '{{ constantsManager.BUSINESSUNIT_VO_B2C }}',
+                vob2b: '{{ constantsManager.BUSINESSUNIT_VO_B2B }}',
+            },
+            // BusinessUnitArticle
+            businessUnitArticle:{
+
+            },
+
+            COUNT_MAX_COST: 4,
+            MAX_SET_TIME: 1000,
+            UNITS_EN: 'units',
+            STORE_ITEMS: 'form/items',
+            STORE_DELETE: 'form/delete',
+        };
+        
+    </script>
+{% endblock javascripts %}

@@ -1,0 +1,41 @@
+parameterSettings.create:
+  path: /create
+  controller: App\Controller\ParameterSettings\ParameterSettingsController::create
+
+# FIXME no se usa
+parameterSettings.details:
+  path: /parameterSettings/show
+  controller: App\Controller\ParameterSettings\ParameterSettingsController::show
+
+parameterSettings.filter:
+  path: /filter
+  controller: App\Controller\ParameterSettings\FilterController
+  options:
+    expose: true
+
+parameterSettings.list:
+  path: /list
+  controller: App\Controller\ParameterSettings\ListController
+  options:
+    expose: true
+
+parameterSettings.list.filters:
+  path: /filters
+  controller: App\Controller\ParameterSettings\ParameterSettingsListController::getListFilters
+  methods: GET
+  options:
+    expose: true
+
+parameterSettings.store:
+  path: /store
+  controller: App\Controller\ParameterSettings\ParameterSettingsController::store
+  methods: POST
+  options:
+    expose: true
+
+parameterSettings.delete:
+    path: /delete
+    controller: App\Controller\ParameterSettings\ParameterSettingsController::delete
+    methods: POST
+    options:
+      expose: true

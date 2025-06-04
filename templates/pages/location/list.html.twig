@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Location List' | trans }}{% endblock %}
+
+{% block body %}
+    <location-list-page />
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    let txtTrans = {
+        titles: {
+            locationDetails: '{{ 'Detalles de localización' | trans }}',
+            locations: '{{ 'Localizaciones' | trans }}',
+            internalLocations: '{{ 'Record GO' | trans }}',
+            externalLocations: '{{ 'Externas' | trans }}',
+        },
+        fields: {
+            // Internal
+            country: '{{ 'País' | trans }}',
+            region: '{{ 'Región' | trans }}',
+            area: '{{ 'Área' | trans }}',
+            branch: '{{ 'Delegación' | trans }}',
+            branchGroup: '{{ 'Nombre de la agrupación' | trans }}',
+            location: '{{ 'Localización' | trans }}',
+            // External
+            providerCode: '{{ 'Código de tercero' | trans }}',
+            name: '{{ 'Nombre' | trans }}',
+            locationCode: '{{ 'Código localización' | trans }}',
+            locationName: '{{ 'Nombre localización' | trans }}',
+            state: '{{ 'Provincia' | trans }}',
+            city: '{{ 'Ciudad' | trans }}',
+
+            // Details
+            locationType: '{{ 'Tipo de localización' |trans }}',
+            branchIATA: '{{ 'Código IATA delegación' |trans }}',
+            officeManager: '{{ 'Nombre contacto' |trans }}',
+            address: '{{ 'Dirección' | trans }}',
+            gpsCoordinates: '{{ 'Coordenadas' | trans }}',
+            postalCode: '{{ 'Código postal' | trans }}',
+            deskCount: '{{ 'Nº de puestos' | trans }}',
+            totemCount: '{{ 'Nº de totems' | trans }}',
+            parkingSpots: '{{ 'Nº de plazas' | trans }}',
+            stockLimit: '{{ 'Stock máximo de vehiculos' | trans }}',
+            phone: '{{ 'Teléfono' | trans }}',
+            email: '{{ 'Email' | trans }}',
+            frontOfficeSchedule: '{{ 'Horario de atención' | trans }}',
+            fleetReceptionSchedule: '{{ 'Horario de carga/descarga' | trans }}',
+            parkingSituation: '{{ 'Planta de oficina en parking' | trans }}',
+            parkingDryCleaning: '{{ '¿Dispone de lavado en seco?' | trans }}',
+        },
+        form: {
+            actions: '{{ 'Acciones' | trans }}',
+            yes: '{{ 'Si' | trans }}',
+            no: '{{ 'No' | trans }}',
+            viewDetails: '{{ 'Ver detalles' | trans }}',
+        },
+    };
+</script>
+{% endblock javascripts %}

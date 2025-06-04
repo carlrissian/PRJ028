@@ -1,0 +1,18 @@
+acriss.translations.imageline.delete:
+  path: /translations/imageline/delete
+  controller: App\Controller\AcrissImageLinesTranslations\DeleteImageLineController
+  methods: POST
+  options:
+    expose: true
+acriss.translations.imageline.store:
+  path: /translations/imageline/store
+  controller: App\Controller\AcrissImageLinesTranslations\StoreImageLineController
+  methods: POST
+  options:
+    expose: true
+acriss.translations.imageline.update:
+  path: /translations/imageline/udpate
+  controller: App\Controller\AcrissImageLinesTranslations\UpdateImageLineController
+  methods: POST
+  options:
+    expose: true

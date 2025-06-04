@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Listado ACRISS' |trans }}{% endblock %}
+
+{% block body %}
+    <acriss-list-page />
+{% endblock %}
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            titles: {
+                
+            },
+            fields: {
+                acriss: '{{ 'ACRISS' | trans }}',
+                carClass: '{{ 'CarClass' | trans }}',
+                acrissType: '{{ 'Tipo' | trans }}',
+                gearBox: '{{ 'Caja de cambios' | trans }}',
+                motorizationType: '{{ 'Tipo de motorización' | trans }}',
+                commercialGroup: '{{ 'Grupo comercial' | trans }}',
+                carGroup: '{{ 'Grupo de flota' | trans }}',
+                status: ' {{ 'Estado' | trans }}',
+                actions: '{{ 'Acciones' | trans }}',
+                
+                // Filters
+                acrissCode: '{{ 'Código ACRISS' | trans }}',
+            },
+            form: {
+                createAcriss: '{{ 'Crear ACRISS' | trans }}',
+                enabled: '{{ 'Activado' | trans }}',
+                disabled: '{{ 'Desactivado' | trans }}',
+                selectAnOption: '{{ 'Selecciona una opción' | trans }}',
+            },
+        };
+    </script>
+{% endblock javascripts %}

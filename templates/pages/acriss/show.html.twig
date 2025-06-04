@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Acriss'|trans }}{% endblock %}
+
+{% block body %}
+    <acriss-show-page :acriss="{{ acriss }}"/>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            titles: {
+                acrissDetails: '{{ 'Ver detalle ACRISS' | trans }}',
+                vehicleFields: '{{ 'Campos asociados al vehículo' | trans }}',
+                translations: '{{ 'Traducciones' | trans }}',
+                imageList: '{{ 'Lista de imágenes' | trans }}',
+                translationsList: '{{ 'Lista de traducciones' | trans }}',
+            },
+            fields: {
+                acriss1stLetter: '{{ 'Primera letra del acriss' | trans }}',
+                acriss2ndLetter: '{{ 'Segunda letra del acriss' | trans }}',
+                acriss3rdLetter: '{{ 'Tercera letra del acriss' | trans }}',
+                acriss4thLetter: '{{ 'Cuarta letra del acriss' | trans }}',
+                acrissName: '{{ 'Acriss' | trans }}',
+                carClass: '{{ 'CarClass' | trans }}',
+                acrissType: '{{ 'Tipo' | trans }}',
+                gearBox: '{{ 'Caja de cambios' | trans }}',
+                motorizationType: '{{ 'Tipo de motorización' | trans }}',
+                numberSuitcase: '{{ 'Nº maletas' | trans }}',
+                numberDoors: '{{ 'Nº puertas' | trans }}',
+                numberSeats: '{{ 'Nº plazas' | trans }}',
+                commercialVehicle: '{{ 'Vehículo comercial' | trans }}',
+                mediumTerm: '{{ 'Renting largo plazo' | trans }}',
+                startDate: '{{ 'Fecha inicio' | trans }}',
+                endDate: '{{ 'Fecha fin' | trans }}',
+                minAge: '{{ 'Edad mínima' | trans  }}',
+                maxAge: '{{ 'Edad máxima' | trans  }}',
+                driverLicense: '{{ 'Licencia de conducir' | trans }}',
+                driveerLiceneseClassB: '{{ 'Licencia conducir Class B' | trans }}',
+                driveerLiceneseClassA: '{{ 'Licencia conducir Class A' | trans }}',
+                driveerLiceneseClassA1: '{{ 'Licencia conducir Class A1' | trans }}',
+                driveerLiceneseClassA2: '{{ 'Licencia conducir Class A2' | trans }}',
+                minAgeExperienceClassB: '{{ 'Años experiencia mínima con licencia clase B' | trans }}',
+                minAgeExperienceClassA: '{{ 'Años experiencia mínima con licencia clase A' | trans }}',
+                minAgeExperienceClassA1: '{{ 'Años experiencia mínima con licencia clase A1' | trans }}',
+                minAgeExperienceClassA2: '{{ 'Años experiencia mínima con licencia clase A2' | trans }}',
+                minHeight: '{{ 'Mínima altitud vehículo' | trans  }}',
+                maxHeight: '{{ 'Máxima altitud vehículo' | trans  }}',
+                minLength: '{{ 'Mínima longitud vehículo' | trans  }}',
+                maxLength: '{{ 'Máxima longitud vehículo' | trans  }}',
+                minWidth: '{{ 'Mínima anchura vehículo' | trans  }}',
+                maxWidth: '{{ 'Máxima anchura vehículo' | trans  }}',
+                minTareWeight: '{{ 'Mínima TARA vehículo' | trans  }}',
+                maxTareWeight: '{{ 'Máxima TARA vehículo' | trans  }}',
+
+                // Translations
+                branch: '{{ 'Delegación' | trans }}',
+                defaultBranch: '{{ 'Delegación por defecto' | trans }}',
+                commercialName: '{{ 'Nombre comercial' | trans }}',
+                byDefault: '{{ 'Por defecto' | trans }}',
+                description: '{{ 'Descripción' | trans }}',
+                image: '{{ 'Imagen' | trans }}',
+            },
+            form: {
+                yes: '{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+                edit: '{{ 'Editar' | trans }}',
+                add: '{{ 'Añadir' | trans }}',
+                create: '{{ 'Crear' | trans }}',
+                notTranslations: '{{ 'No existen traducciones para este ACRISS' | trans }}',
+                acrissStatusUpdatedSuccessNotification: '{{ 'Estado de ACRISS actualizado correctamente' | trans }}',
+                errorUpdatingAcrissStatusNotification: '{{ 'Disculpe, no se pudo actualizar el estado del ACRISS' | trans }}',
+                onBookingAcrissStatusNotification: '{{ 'No se puede editar el estado del ACRISS. Se encuentra en reserva o contrato' | trans }}',
+            },
+        };
+    </script>
+{% endblock javascripts %}

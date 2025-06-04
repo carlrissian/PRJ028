@@ -1,0 +1,216 @@
+movement.automatic.cost:
+  path: /automatic-cost
+  controller: App\Controller\Movement\MovementController::automaticCost
+  methods: [GET]
+  options:
+    expose: true
+
+movement.cancel:
+  path: /cancel
+  controller: App\Controller\Movement\MovementController::cancel
+  methods: [POST]
+  options:
+    expose: true
+
+movement.close:
+  path: /close
+  controller: App\Controller\Movement\MovementController::close
+  methods: [POST]
+  options:
+    expose: true
+
+movement.create:
+  path: /{movementType}/create
+  controller: App\Controller\Movement\MovementController::create
+  requirements:
+    movementType: driver|carrier|operation
+
+movement.deliveryNotes.delete:
+  path: /{movementId}/delivery-notes/delete/{deliveryNoteId}
+  controller: App\Controller\Movement\DeleteDeliveryNotesController
+  methods: POST
+  options:
+    expose: true
+
+movement.deliveryNotes.update:
+  path: /{movementId}/delivery-notes/update
+  controller: App\Controller\Movement\UpdateDeliveryNotesController
+  methods: POST
+  options:
+    expose: true
+
+movement.details.excel:
+  path: /deatils/download-excel
+  controller: App\Controller\Movement\DownloadAssignedVehiclesListController
+  methods: [GET]
+  options:
+    expose: true
+
+movement.edit:
+  path: /edit/{id}
+  controller: App\Controller\Movement\MovementController::edit
+  methods: [GET]
+  options:
+    expose: true
+
+movement.excel:
+  path: /download-excel
+  controller: App\Controller\Movement\MovementController::downloadExcelMovement
+  methods: GET
+  options:
+    expose: true
+
+movement.filter:
+  path: /filter
+  controller: App\Controller\Movement\MovementController::filter
+  methods: [POST, GET]
+  options:
+    expose: true
+
+movement.get.destinations:
+  path: /get/destinations
+  controller: App\Controller\Movement\MovementController::getDestinations
+  methods: [POST]
+  options:
+    expose: true
+
+movement.get.externalLocations:
+  path: /get/locations/external
+  controller: App\Controller\Movement\MovementController::getExternalLocations
+  methods: [GET]
+  options:
+    expose: true
+
+movement.get.locations:
+  path: /get/locations
+  controller: App\Controller\Movement\MovementController::getLocations
+  methods: [GET]
+  options:
+    expose: true
+
+movement.getMovement:
+  path: /get-movement/{id}
+  controller: App\Controller\Movement\MovementController::getMovement
+  methods: [GET]
+  options:
+    expose: true
+
+movement.list:
+  path: /{movementType}/list
+  controller: App\Controller\Movement\MovementController::list
+  methods: [GET]
+  requirements:
+    movementType: driver|carrier|operation
+  options:
+    expose: true
+
+movement.pdf:
+  path: /{id}/pdf
+  controller: App\Controller\Movement\MovementController::getPdf
+  options:
+    expose: true
+
+movement.show:
+  path: /show/{id}
+  controller: App\Controller\Movement\MovementController::show
+  methods: [GET]
+  options:
+    expose: true
+
+movement.store:
+  path: /store
+  controller: App\Controller\Movement\MovementController::store
+  methods: [POST]
+  options:
+    expose: true
+
+movement.update:
+  path: /update/{id}
+  controller: App\Controller\Movement\MovementController::update
+  methods: [POST]
+  options:
+    expose: true
+
+movement.validate:
+  path: /validate
+  controller: App\Controller\Movement\MovementController::validate
+  methods: [POST]
+  options:
+    expose: true
+
+movement.vehicleLine.assign:
+  path: /vehicles/assign
+  controller: App\Controller\Movement\MovementController::assignVehicle
+  methods: [POST]
+  options:
+    expose: true
+
+movement.vehicleLine.assign.downloadTemplate:
+  path: /vehicles/assign/download-template
+  controller: App\Controller\Movement\MovementController::downloadAssignVehiclesTemplate
+  methods: GET
+  options:
+    expose: true
+
+movement.vehicleLine.assign.excel:
+  path: /vehicles/assign/list/download-excel
+  controller: App\Controller\Movement\DownloadVehicleToAssignListController
+  methods: [GET, POST]
+  options:
+    expose: true
+
+movement.vehicleLine.assign.filter:
+  path: /vehicles/assign/filter
+  controller: App\Controller\Movement\FilterVehicleToAssignController
+  methods: [GET, POST]
+  options:
+    expose: true
+
+movement.vehicleLine.assign.list:
+  path: /{id}/vehicles/assign/list
+  controller: App\Controller\Movement\MovementController::listAssignVehicle
+  methods: [GET]
+  options:
+    expose: true
+
+movement.vehicleLine.assign.uploadCSV:
+  path: /vehicles/assign/upload
+  controller: App\Controller\Movement\MovementController::assignVehicleCSV
+  methods: POST
+  options:
+    expose: true
+
+movement.vehicleLine.assigned.filter:
+  path: /vehicles/assigned/filter
+  controller: App\Controller\Movement\FilterAssignedVehiclesController
+  methods: [GET]
+  options:
+    expose: true
+
+movement.vehicleLine.assigned.list:
+  path: /{id}/vehicles/assigned/list
+  controller: App\Controller\Movement\MovementController::listAssignedVehicle
+  methods: [GET]
+  options:
+    expose: true
+
+movement.vehicleLine.delete:
+  path: /vehicles/delete
+  controller: App\Controller\Movement\MovementController::deleteVehicleLine
+  methods: [POST]
+  options:
+    expose: true
+
+movement.vehicleLine.excel:
+  path: /vehicles/download-excel
+  controller: App\Controller\Movement\MovementController::downloadExcelVehicle
+  methods: [GET]
+  options:
+    expose: true
+
+movement.vehicleLine.updateDate:
+  path: /vehicles/update-date
+  controller: App\Controller\Movement\MovementController::updateDateVehicleLine
+  methods: [POST]
+  options:
+    expose: true

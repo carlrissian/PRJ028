@@ -1,0 +1,167 @@
+app_login:
+    path: /login
+    controller: App\Controller\Security\SecurityController::login
+
+logout:
+    path: /logout
+    controller: App\Controller\Security\SecurityController::logout
+
+index:
+    path: /
+    controller: App\Controller\PruebaController::index
+
+acriss:
+    resource: "./routes/acriss/acriss.yaml"
+    prefix: "acriss"
+
+acrissType:
+    resource: "./routes/acrissType/acrissType.yaml"
+    prefix: "acrissType"
+
+acriss.translations.branch:
+    resource: "./routes/acrissBranchTranslations/acrissBranchTranslations.yaml"
+    prefix: "acrissBranchTranslations"
+
+acriss.translations.translation:
+    resource: "./routes/acrissTranslations/acrissTranslations.yaml"
+    prefix: "acrissTranslations"
+
+acriss.translations.imageline:
+    resource: "./routes/AcrissImageLinesTranslations/acrissImageLinesTranslations.yaml"
+    prefix: "acrissImageLines"
+
+branch:
+    resource: "./routes/branch/branch.yaml"
+    prefix: "branch"
+
+brand:
+    resource: "./routes/brand/brand.yaml"
+    prefix: "brand"
+
+businessUnit:
+    resource: "./routes/businessUnit/businessUnit.yaml"
+    prefix: "business-unit"
+
+businessUnitArticle:
+    resource: "./routes/businessUnitArticle/businessUnitArticle.yaml"
+    prefix: "business-unit-article"
+
+carClass:
+    resource: "./routes/carClass/carClass.yaml"
+    prefix: "carClass"
+
+cargroup:
+    resource: "./routes/cargroup/cargroup.yaml"
+    prefix: "cargroup"
+
+commercialgroup:
+    resource: "./routes/commercialgroup/commercialgroup.yaml"
+    prefix: "commercial-group"
+
+commercialgroup.translations:
+    resource: "./routes/commercialGroupTranslations/commercialGroupTranslations.yaml"
+    prefix: "commercial-group"
+
+country:
+    resource: "./routes/country/country.yaml"
+    prefix: "country"
+
+damage:
+    resource: "./routes/damage/damage.yaml"
+    prefix: "damage"
+
+department:
+    resource: "./routes/department/department.yaml"
+    prefix: "department"
+
+fleetClassification:
+    resource: "./routes/fleetClassification/fleetClassification.yaml"
+    prefix: "fleetClassification"
+
+gearBox:
+    resource: "./routes/gearBox/gearBox.yaml"
+    prefix: "gearBox"
+
+language:
+    resource: "./routes/language/language.yaml"
+    prefix: "language"
+
+location:
+    resource: "./routes/location/location.yaml"
+    prefix: "location"
+
+locationType:
+    resource: "./routes/locationType/locationType.yaml"
+    prefix: "location.type"
+
+model:
+    resource: "./routes/model/model.yaml"
+    prefix: "model"
+
+motorizationType:
+    resource: "./routes/motorizationType/motorizationType.yaml"
+    prefix: "motorizationType"
+
+movement:
+    resource: "./routes/movement/movement.yaml"
+    prefix: "movement"
+
+movementCategory:
+    resource: "./routes/movementCategory/movementCategory.yaml"
+    prefix: "movement.category"
+
+movementStatus:
+    resource: "./routes/movementStatus/movementStatus.yaml"
+    prefix: "movement.status"
+
+parameterSettings:
+    resource: "./routes/parameterSettings/parameterSettings.yaml"
+    prefix: "parameter-settings"
+
+planning:
+    resource: "./routes/Planning/planning.yaml"
+    prefix: "planning"
+
+rentalAgreement:
+    resource: "./routes/rentalAgreement/rentalAgreement.yaml"
+    prefix: "rental-agreement"
+
+route:
+    resource: "./routes/route/route.yaml"
+    prefix: "route"
+
+saleMethod:
+    resource: "./routes/saleMethod/saleMethod.yaml"
+    prefix: "saleMethod"
+
+stopSale:
+    resource: "./routes/stopsale/stopsale.yaml"
+    prefix: "stop-sale"
+
+state:
+    resource: "./routes/state/state.yaml"
+    prefix: "state"
+
+supplier:
+    resource: "./routes/supplier/supplier.yaml"
+    prefix: "supplier"
+
+transportDriver:
+    resource: "./routes/transportDriver/transportDriver.yaml"
+    prefix: "transport-driver"
+
+updateData:
+    resource: "./routes/updateData/updateData.yaml"
+    prefix: "update-data"
+
+vehicle:
+    resource: "./routes/vehicle/vehicle.yaml"
+    prefix: "vehicle"
+
+vehicleType:
+    resource: "./routes/vehicleType/vehicleType.yaml"
+    prefix: "vehicle.type"
+
+vehicleStatus:
+    resource: "./routes/vehicleStatus/vehicleStatus.yaml"
+    prefix: "vehicle.status"

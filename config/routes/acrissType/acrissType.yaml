@@ -1,0 +1,6 @@
+acrissType.selectList:
+  path: /selectlist
+  controller: App\Controller\AcrissType\SelectListController
+  methods: GET
+  options:
+    expose: true

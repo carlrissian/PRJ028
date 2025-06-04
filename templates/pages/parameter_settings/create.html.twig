@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'Crear configuración de parámetros' | trans }}
+{% endblock %}
+
+{% block body %}
+	<parameter-setting-create-page :select-list="{{ selectList }}"/>
+{% endblock body %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            titles: {
+                createParameterSetting: '{{ 'Crear configuración de parámetros' | trans }}',
+            },
+            fields: {
+                startDate: '{{ 'Fecha inicio' | trans }}',
+                endDate: '{{ 'Fecha fin' | trans }}',
+                type: '{{ 'Tipo' | trans }}',
+                parameter: '{{ 'Parámetro' | trans }}',
+                carGroup: '{{ 'Grupos del parámetro' | trans }}',
+                acriss: '{{ 'ACRISS del parámetro' | trans }}',
+                replacementGroups: '{{ 'Grupos sustituidos' | trans }}',
+                replacementAcriss: '{{ 'ACRISS sustituidos' | trans }}',
+                country: '{{ 'Países' | trans }}',
+                region: '{{ 'Regiones' | trans }}',
+                area: '{{ 'Áreas' | trans }}',
+                branch: '{{ 'Delegaciones' | trans }}',
+                partners: '{{ 'Partners' | trans }}',
+                startTime: '{{ 'Hora inicio' | trans }}',
+                endTime: '{{ 'Hora fin' | trans }}',
+                connectedVehicle: '{{ 'Vehiculo conectado' | trans }}',
+            },
+            form: {
+                selectAnOption: '{{ 'Seleccione una opción' | trans }}',
+                yes:'{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+                all: '{{ 'Todos' | trans }}',
+                create: '{{ 'Crear' | trans }}',
+
+                errorCarGroupMustBeOne: '{{ 'El tipo de grupo seleccionado sólo permite seleccionar 1 grupo de parámetro' | trans }}',
+                errorCreatingparameterSettingNotification: '{{ 'Disculpe, se ha producido un error durante la creación de la configuración de parámetros' | trans }}',
+                parameterSettingCreatedSuccessNotification: '{{ 'Configuración de parámetros creada correctamente' | trans }}',
+            },
+        };
+
+        let constants = {
+            parameterType: {
+                group: {{ constantsManager.PARAMETERTYPE_GROUP }},
+                orderUpgrade: {{ constantsManager.PARAMETERTYPE_ORDER_UPGRADE }},
+                saleFamily: {{ constantsManager.PARAMETERTYPE_SALE_FAMILY }},
+            },
+        };
+    </script>
+{% endblock %}

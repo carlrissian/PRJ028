@@ -1,0 +1,16 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    cache: false
+
+    paths:
+        '%kernel.project_dir%/RecordGo/ERP/Shared/Utils/MenuTopCreator/templates': 'MenuTopCreator'
+
+    globals:
+        departmentConstants: '@App\Constants\DepartmentConstants'
+        locationConstants: '@App\Constants\LocationConstants'
+        movementConstants: '@App\Constants\MovementConstants'
+        movementCategoryConstants: '@App\Constants\MovementCategoryConstants'
+        parameterTypeConstants: '@App\Constants\ParameterTypeConstants'
+        transportMethodConstants: '@App\Constants\TransportMethodConstants'

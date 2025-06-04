@@ -1,0 +1,20 @@
+acriss.translations.translation.delete:
+  path: /translations/translation/delete
+  controller: App\Controller\AcrissTranslations\DeleteTranslationController
+  methods: POST
+  options:
+    expose: true
+
+acriss.translations.translation.store:
+  path: /translations/translation/store
+  controller: App\Controller\AcrissTranslations\StoreTranslationController
+  methods: POST
+  options:
+    expose: true
+
+acriss.translations.translation.update:
+  path: /translations/translation/update
+  controller: App\Controller\AcrissTranslations\UpdateTranslationController
+  methods: POST
+  options:
+    expose: true

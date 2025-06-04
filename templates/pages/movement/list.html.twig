@@ -1,0 +1,235 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ("List Movement" | trans ) }}{% endblock %}
+
+{% block body %}
+    <movement-list-page
+            :movement-type-id="{{ movementTypeId }}"
+            :movement-type-name="'{{ movementTypeName }}'"
+            :login-user="{{ loginUser }}"
+    ></movement-list-page>
+{% endblock body %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+            titles:{
+                validateMovement: '{{ 'Validar movimiento' | trans }}',
+                loadValidation: '{{ 'VALIDAR CARGA' | trans }}',
+                unloadValidation: '{{ 'VALIDAR DESCARGA' | trans }}',
+                deliveryManagement: '{{ 'Gestión de albaranes' | trans }}',
+                closeMovement:'{{ 'Cerrar movimiento' | trans }}',
+                cancelMovement:'{{ 'Anular movimiento' | trans }}',
+            },
+            fields:{
+                // Movement
+                movementNumber:'{{ 'Nº de movimiento' | trans }}',
+                orderNumber:'{{ 'Nº de pedido' | trans }}',
+                isExtTransport: '{{ 'Conductor externo' | trans }}',
+                movementCategory:'{{ 'Categoría del movimiento' | trans }}',
+                movementStatus:'{{ 'Estado del movimiento' | trans }}',
+                driverType: '{{ 'Tipo conductor' | trans }}',
+                driverName: '{{ 'Nombre del conductor ' | trans }}',
+                businessUnit:'{{ 'Unidad de negocio' | trans }}',
+                businessUnitArticle:'{{ 'Artículo' | trans }}',
+                businessUnitsArticle:'{{ 'Unidad de negocio / Artículo' | trans }}',
+                provider:'{{ 'Proveedor' | trans }}',
+                transportMethod: '{{ 'Método de transporte' | trans }}',
+                units:'{{ 'Unidades' | trans }}',
+                amount:'{{ 'Importe' | trans }}',
+                automaticCost:'{{ 'Importe automático' | trans }}',
+                expectedLoadDate: '{{ 'Fecha carga prevista' | trans }}',
+                expectedLoadDateFrom:'{{ 'Fecha carga prevista desde' | trans }}',
+                expectedLoadDateTo:'{{ 'Fecha carga prevista hasta' | trans }}',
+                expectedUnloadDate: '{{ 'Fecha descarga prevista' | trans }}',
+                expectedUnloadDateFrom:'{{ 'Fecha descarga prevista desde' | trans }}',
+                expectedUnloadDateTo:'{{ 'Fecha descarga prevista hasta' | trans }}',
+                actualLoadDate: '{{ 'Fecha carga real' | trans }}',
+                actualLoadDateFrom:'{{ 'Fecha carga real desde' | trans }}',
+                actualLoadDateTo:'{{ 'Fecha carga real hasta' | trans }}',
+                actualUnloadDate: '{{ 'Fecha descarga real' | trans }}',
+                actualUnloadDateFrom:'{{ 'Fecha descarga real desde' | trans }}',
+                actualUnloadDateTo:'{{ 'Fecha descarga real hasta' | trans }}',
+                originLocation: '{{ 'Localización origen' | trans }}',
+                destinationLocation: '{{ 'Localización destino' | trans }}',
+                manualOriginLocation: '{{ 'Localización origen (manual)' | trans }}',
+                manualDestinationLocation: '{{ 'Localización destino (manual)' | trans }}',
+                externalOriginLocation: '{{ 'Localización origen (externa)' | trans }}',
+                externalDestinationLocation: '{{ 'Localización destino (externa)' | trans }}',
+                originBranch: '{{ 'Delegación origen' | trans }}',
+                destinationBranch: '{{ 'Delegación destino' | trans }}',
+                creationUser: '{{ 'Usuario creación' | trans }}',
+                creationDate: '{{ 'Fecha creación' | trans }}',
+                department: '{{ 'Departamento' | trans }}',
+
+                // Vehicle Line
+                licensePlate: '{{ 'Matrícula' | trans }}',
+                vin: '{{ 'Bastidor' | trans }}',
+                brand: '{{ 'Marca' | trans }}',
+                model: '{{ 'Modelo' | trans }}',
+                carGroup:'{{ 'Grupo' | trans }}',
+                vehicleStatus:'{{ 'Estado del vehículo' | trans }}',
+                rentingEndDate: '{{ 'Fecha fin alquiler' | trans }}',
+                actualLoadDate: '{{ 'Fecha real carga ' | trans }}',
+                actualUnloadDate:'{{ 'Fecha real descarga' | trans }}',
+                connectedVehicle:'{{ 'Vehículo conectado' | trans }}',
+                kilometers: '{{ 'Kilometros' | trans }}',
+                tankOctave: '{{ 'Combustible' | trans }}',
+                battery: '{{ 'Batería' | trans }}',
+                tankActualOctaves:  '{{ 'Depósito actual en octavos ' | trans }}',
+                batteryActual: '{{ 'Bateria (%)' | trans }}',
+                
+                closingNotes:'{{ 'Notas de cierre' | trans }}',
+                cancelReason: '{{ 'Motivo anulación' | trans }}',
+
+                internal: '{{ 'Interno' | trans }}',
+                employee: '{{ 'Empleado' | trans }}',
+            },
+            form:{
+                selectAnOption: '{{ 'Seleccione una opción' | trans }}',
+                movementExcel: '{{ 'Excel Movimientos' | trans }}',
+                movementExcel: '{{ 'Excel Movimientos' | trans }}',
+                vehicleExcel: '{{ 'Excel Vehículos' | trans }}',
+                options: '{{ 'Opciones' | trans }}',
+                details: '{{ 'Detalles' | trans }}',
+                download: '{{ 'Descargar' | trans }}',
+                undo: '{{ 'Deshacer' | trans }}',
+                change: '{{ 'Cambiar' | trans }}',
+                remove: '{{ 'Eliminar' | trans }}',
+                edit: '{{ 'Editar' | trans }}',
+                continue: '{{ 'Continuar' | trans }}',
+                cancel: '{{ 'Cancelar' | trans }}',
+                yes: '{{ 'Si' | trans }}',
+                no: '{{ 'No' | trans }}',
+                editMovement: '{{ 'Editar movimiento' | trans }}',
+                validate: '{{ 'Validar movimiento' | trans }}',
+                closeMovement:'{{ 'Cerrar movimiento' | trans }}',
+                cancelMovement:'{{ 'Anular movimiento' | trans }}',
+                manageVehicles: '{{ 'Gestionar vehículos' | trans }}',
+                assignVehicles:'{{ 'Asignar vehículos' | trans }}',
+                pdf:'{{ 'PDF' | trans }}',
+                licensePlateLoad:'{{ 'Matrículas cargadas' | trans }}',
+                licensePlateUnload:'{{ 'Matrículas descargadas' | trans }}',
+                selectDate:'{{ 'Seleccionar fecha' | trans }}',
+                selectedTotal:'{{ 'Total seleccionados: ' | trans }}',
+                loadedTotal:'{{ 'Total cargados' | trans }}',
+                unloadedTotal:'{{ 'Total descargados' | trans }}',
+                of:'{{ 'de' | trans }}',
+                firstDate: '{{ 'Fecha más antigua' | trans }}',
+                lastDate: '{{ 'Fecha más reciente' | trans }}',
+                completeField:'{{ 'Es necesario completar el campo ' | trans }}',
+
+                deliveryNotes:'{{ 'Albaranes' | trans }}',
+                removeDeliveryNote:'{{ 'Eliminar albarán' | trans }}',
+                removeDeliveryNoteQuestion:'{{ '¿Está seguro de que desea eliminar el albarán? Está acción no se podrá deshacer' | trans }}',
+                deliveryNotePickUp: '{{ 'Albarán de recogida' | trans }}',
+                deliveryNoteDropOff: '{{ 'Albarán de entrega' | trans }}',
+                deliveryNotesUploadedSuccessNotification: '{{ 'subido correctamente' | trans }}',
+                errorUploadingDeliveryNotesNotification: '{{ 'Disculpe, se ha producido un error durante la subida del' | trans }}',
+                deliveryNotesDeletedSuccessNotification: '{{ 'eliminado correctamente' | trans }}',
+                errorDeletingDeliveryNotesNotification: '{{ 'Disculpe, se ha producido un error durante la eliminación del' | trans }}',
+
+                statusErrorVehicleUnits: '{{ 'No hay vehículos asignados' | trans }}',
+                statusErrorExpectedLoadDate: '{{ 'La fecha prevista de carga ha vencido' | trans }}',
+                statusErrorExpectedUnloadDate: '{{ 'La fecha prevista de descarga ha vencido' | trans }}',
+                statusErrorVehicleFilters: '{{ 'Los vehículos asignados no cumplen requisitos de los filtros para el movimiento' | trans }}',
+                errorProcessingDestinations: '{{ 'Se ha producido un error durante la carga de localizaciones destino' | trans }}',
+                reasonCancellation:'{{ 'Es obligatorio el motivo de la cancelacion' | trans }}',
+                reasonLoadingDate: '{{ 'Existen fechas de carga real en los vehiculos ' | trans }}',
+                pleaseSelectADate:'{{ 'Por favor, seleccione una fecha antes de validar' | trans }}',
+                pleaseSelectAVehicle:'{{ 'Por favor, seleccione al menos un vehículo para validar' | trans }}',
+                errorMovementFields:'{{ 'El movimiento no tiene rellenados los siguientes campos obligatorios:' | trans }}',
+                errorAssignedVehicles:'{{ 'No hay vehículos asignados al movmiento.' | trans }}',
+                cannotUnloadWithoutLoad:'{{ 'No se permite la validación de descarga sin realizar antes la validación de carga' | trans }}',
+                cannotUnloadIfUnloadDateIsLess:'{{ 'No se permite la validación de descarga si la fecha de descarga seleccionada es menor a la fecha de carga' | trans }}',
+                cannotUnloadDifferentDates:'{{ 'No se permite la validación de descarga de varios vehículos con fechas de carga distintas si la fecha de descarga seleccionada es anterior a la fecha de carga más reciente de los vehículos seleccionados' | trans }}',
+                movementValidatedSuccessNotification:'{{ 'Movimiento validado correctamente' | trans }}',
+                errorValidatingMovementNotification:'{{ 'Disculpe, se ha producido un error durante la validación del movimiento' | trans }}',
+                movementClosedSuccessNotification: '{{ 'Movimiento cerrado correctamente' | trans }}',
+                errorClosingMovementNotification: '{{ 'Disculpe, se ha producido un error durante el cierre del movimiento' | trans }}',
+                movementCancelledSuccessNotification: '{{ 'Movimiento cancelado correctamente' | trans }}',
+                errorCancelingMovementNotification: '{{ 'Disculpe, se ha producido un error durante la cancelación del movimiento' | trans }}',
+            },
+        };
+
+        let constants = {
+            // Category
+            category: {
+                ordinary: {{ constantsManager.TRANSPORTCAT_ORDINARY }},
+                notOrdinary: {{ constantsManager.TRANSPORTCAT_NOT_ORDINARY }},
+                internal: {{ constantsManager.TRANSPORTCAT_INTERNAL }},
+            },
+            // MovementTypr
+            movementType: {
+                driver: {{ constantsManager.TRANSPORTTYPE_DRIVER }},
+                carrier: {{ constantsManager.TRANSPORTTYPE_CARRIER }},
+                operation: {{ constantsManager.TRANSPORTTYPE_OPERATION }},
+            },
+            // MovementStatus
+            movementStatus: {
+                pending: {{ constantsManager.TRANSPORTSTATUS_PENDING }},
+                progress: {{ constantsManager.TRANSPORTSTATUS_IN_PROGRESS }},
+                finalized: {{ constantsManager.TRANSPORTSTATUS_FINISHED }},
+                cancelled: {{ constantsManager.TRANSPORTSTATUS_CANCELLED }},
+            },
+            // External locations
+            // TODO renombrar esto a externalLocations
+            locations: {
+                location: {
+                    id: '{{ locationConstants.EXTERNAL_LOCATION }}',
+                    name: '{{ locationConstants.EXTERNAL_LOCATION | trans }}'
+                },
+                not_location: {
+                    id: '{{ locationConstants.EXTERNAL_LOCATION_NOT_LOCATION }}',
+                    name: '{{ locationConstants.EXTERNAL_LOCATION_NOT_LOCATION | trans }}'
+                }
+            },
+            // BusinessUnit
+            businessUnit:{
+                center: '{{ constantsManager.BUSINESSUNIT_CENTER }}',
+                car: '{{ constantsManager.BUSINESSUNIT_CAR }}',
+                van: '{{ constantsManager.BUSINESSUNIT_VAN }}',
+                moto: '{{ constantsManager.BUSINESSUNIT_MOTO }}',
+                vob2c: '{{ constantsManager.BUSINESSUNIT_VO_B2C }}',
+                vob2b: '{{ constantsManager.BUSINESSUNIT_VO_B2B }}',
+            },
+
+            // MotorizationType
+            motorizationType: {
+                unespecifiedPowerAir: {{ constantsManager.MOTORTYPE_UF_POWE_WITH_AIR }},
+                unespecifiedPowerNoAir: {{ constantsManager.MOTORTYPE_UF_POWE_WITHOUT_AIR }},
+                dieselAir: {{ constantsManager.MOTORTYPE_DIESEL_AIR }},
+                dieselNoAir: {{ constantsManager.MOTORTYPE_DIESEL_NO_AIR }},
+                hybrid: {{ constantsManager.MOTORTYPE_HYBRID }},
+                hybridPlugin: {{ constantsManager.MOTORTYPE_HYBRID_PLUGIN }},
+                electricE: {{ constantsManager.MOTORTYPE_ELECTRIC_E }},
+                electricC: {{ constantsManager.MOTORTYPE_ELECTRIC_C }},
+                lpgAir: {{ constantsManager.MOTORTYPE_LPG_AIR }},
+                lpgNoAir: {{ constantsManager.MOTORTYPE_LPG_NO_AIR }},
+                hydrogenAir: {{ constantsManager.MOTORTYPE_HYDROGEN_AIR }},
+                hydrogenNoAir: {{ constantsManager.MOTORTYPE_HYDROGEN_NO_AIR }},
+                multiFuelAir: {{ constantsManager.MOTORTYPE_MF_POWER_AIR }},
+                multiFuelNoAir: {{ constantsManager.MOTORTYPE_MF_POWER_NO_AIR }},
+                petrolAir: {{ constantsManager.MOTORTYPE_PETROL_AIR }},
+                petrolNoAir: {{ constantsManager.MOTORTYPE_PETROL_NO_AIR }},
+                ethanolAir: {{ constantsManager.MOTORTYPE_ETHANOL_AIR }},
+                ethanolNoAir: {{ constantsManager.MOTORTYPE_ETHANOL_NO_AIR }},
+            },
+
+            deliveryNoteType: {
+                1: '{{ 'PickUp' | trans }}',
+                2: '{{ 'DropOff' | trans }}',
+            },
+
+            // Azure Token
+            azure: {
+                token: '{{ constantsManager.AZURE_STORAGE_READ_TOKEN | raw }}'
+            },
+            COUNT_MAX_COST: 4,
+            MAX_SET_TIME: 1000,
+            UNITS_EN: 'units',
+            STORE_ITEMS: 'form/items',
+            STORE_DELETE: 'form/delete',
+        };
+    </script>
+{% endblock javascripts %}

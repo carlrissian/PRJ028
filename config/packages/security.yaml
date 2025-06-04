@@ -1,0 +1,39 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+ #   providers:
+ #       app_users:
+ #           ldap:
+ #               service: Symfony\Component\Ldap\Ldap
+ #               base_dn: 'dc=gologin,dc=net'
+ #               search_dn: 'adminldap@gologin.net'
+ #               search_password: "adminldap@19"
+ #               uid_key: 'samaccountname'
+ #               default_roles: 'ROLE_USER'
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: ~
+#            form_login_ldap:
+#                provider: app_users
+#                login_path: app_login
+#                check_path: app_login
+#                service: Symfony\Component\Ldap\Ldap
+#                dn_string: '{username}@gologin.net'
+#            logout:
+#                path:   /logout
+#                target: /login
+
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#firewalls-authentication
+
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+#        - { path: '^/login', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: '^/', roles: ROLE_USER }

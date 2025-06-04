@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Crear Stop Sale' | trans }}{% endblock %}
+
+{% block body %}
+    <create-edit-stop-sale-page
+            :select-list='{{ selectList|json_encode|raw }}'
+            :category-id={{ stopSaleCategoryId }}
+            :stop-sale-name="'{{ stopSaleName }}'"
+            :user-country-iso="'IC'"></create-edit-stop-sale-page>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        let txtTrans = {
+            titles: {
+                createStandard: '{{ 'Crear Stop Sale Standard' | trans }}',
+                createOneWay: '{{ 'Crear Stop Sale OneWay' | trans }}'
+            },
+            fields: {
+                initDate:        '{{ 'Fecha inicio' | trans }}',
+                endDate:         '{{ 'Fecha fin' | trans }}',
+                carGroups:       '{{ 'Grupos' | trans }}',
+                acriss:          '{{ 'Acriss' | trans }}',
+                regions:         '{{ 'Regiones' | trans }}',
+                areas:           '{{ 'Áreas' | trans }}',
+                branches:        '{{ 'Delegaciones' | trans }}',
+                sellCodes:       '{{ 'Sell Codes' | trans }}',
+                products:        '{{ 'Productos' | trans }}',
+                stopSaleType:    '{{ 'Tipo Stop Sale' | trans }}',
+                startTime:       '{{ 'Hora inicio' | trans }}',
+                endTime:         '{{ 'Hora fin' | trans }}',
+                days:            '{{ 'Dias' | trans }}',
+                recurrence:      '{{ 'Recurrencia' | trans }}',
+                minDaysRent:     '{{ 'Dias desde' | trans }}',
+                maxDaysRent:     '{{ 'Dias hasta' | trans }}',
+                connectedVehicle:'{{ 'Vehículo conectado' | trans }}',
+                originRegion:    '{{ 'Región origen' | trans }}',
+                destinyRegion:   '{{ 'Región destino' | trans }}',
+                originArea:      '{{ 'Área origen' | trans }}',
+                destinyArea:     '{{ 'Área destino' | trans }}',
+                originBranch:    '{{ 'Delegación origen' | trans }}',
+                destinyBranch:   '{{ 'Delegación destino' | trans }}',
+                status:          '{{ 'Estado' | trans }}',
+                partners:        '{{ 'Partners' | trans }}',
+                sellCode:        '{{ 'Sell Code' | trans }}',
+                notes:           '{{ 'Notas' | trans }}'
+            },
+            form: {
+                yes:                '{{ 'Si' | trans }}',
+                no:                 '{{ 'No' | trans }}',
+                all:                '{{ 'todos' | trans }}',
+                create:             '{{ 'Crear' | trans }}',
+                update:             '{{ 'Actualizar' | trans }}',
+                continue:           '{{ 'Continuar' | trans }}',
+                cancel:             '{{ 'Cancelar' | trans }}',
+                close:              '{{ 'Cerrar' | trans }}',
+                selectAnOption:     '{{ 'Seleccione una opción' | trans }}',
+                cannotBeEditCreated:'{{ 'Disculpe, este Stop Sale no puede ser creado/editado' | trans }}',
+                selectAGroupOrAcriss:'{{ 'Seleccione al menos un grupo o ACRISS' | trans }}',
+                selectABranch:      '{{ 'Seleccione al menos una delegación' | trans }}',
+                onlySixRecurrences: '{{ 'Sólo se pueden seleccionar 6 días para la recurrencia' | trans }}',
+                errorCreatingStopSaleNotification:'{{ 'Disculpe, se ha producido un error durante la creación del Stop Sale' | trans }}',
+                stopSaleCreatedSuccessNotification:'{{ 'Stop Sale creado correctamente' | trans }}',
+                msgErrorProcessData:'{{ 'Ha habido un error al procesar los datos' | trans }}'
+            }
+        };
+
+        let constants = {
+            category: {
+                standard: {{ constantsManager.STOPSALECAT_STANDAR }},
+                oneway:   {{ constantsManager.STOPSALECAT_ONEWAY }}
+            },
+            department: {
+                distribution: {{ departmentConstants.DEPARTMENT_DISTRIBUTION }}
+            }
+        };
+    </script>
+{% endblock %}

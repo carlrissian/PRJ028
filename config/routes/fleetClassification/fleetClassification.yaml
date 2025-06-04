@@ -1,0 +1,6 @@
+fleetclassification.associate.list:
+    path: /associate
+    controller: App\Controller\FleetClassification\FleetClassificationController::associatePage
+    methods: GET
+    options:
+        expose: true

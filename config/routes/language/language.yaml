@@ -1,0 +1,6 @@
+language.selectList:
+  path: /selectlist
+  controller: App\Controller\Language\SelectListLanguageController
+  methods: GET
+  options:
+    expose: true

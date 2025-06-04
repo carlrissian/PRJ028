@@ -1,0 +1,56 @@
+stopsale.cancel:
+    path: /cancel
+    controller: App\Controller\StopSale\CancelStopSaleController
+    methods: POST
+    options:
+        expose: true
+
+stopsale.create:
+    path: /{stopSaleCategory}/create
+    controller: App\Controller\StopSale\CreateStopSaleController
+    requirements:
+        stopSaleCategory: standard|oneway
+
+stopsale.edit:
+    path: /edit/{id}
+    controller: App\Controller\StopSale\EditStopSaleController
+    methods: [GET]
+    options:
+        expose: true
+
+stopsale.filter:
+    path: /movement/filter
+    controller: App\Controller\StopSale\FilterStopSaleController
+    methods: [GET]
+    options:
+        expose: true
+
+stopsale.history:
+    path: /history/{id}
+    controller: App\Controller\StopSale\ListHistoryStopSaleController
+    methods: [GET]
+    options:
+        expose: true
+
+stopsale.list:
+    path: /{stopSaleCategory}/list
+    controller: App\Controller\StopSale\ListStopSaleController
+    methods: [GET]
+    requirements:
+        stopSaleCategory: standard|oneway
+    options:
+        expose: true
+
+stopsale.store:
+    path: /store
+    controller: App\Controller\StopSale\StoreStopSaleController
+    methods: [POST]
+    options:
+        expose: true
+
+stopsale.update:
+    path: /update/{id}
+    controller: App\Controller\StopSale\UpdateStopSaleController
+    methods: [POST]
+    options:
+        expose: true

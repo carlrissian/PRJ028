@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Proveedores'|trans }}{% endblock %}
+
+{% block body %}
+    <supplier-list-page />
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        let txtTrans = {
+                titles: {
+                    contactList:'{{ 'Listado de contactos' | trans }}',
+                    editContact:'{{ 'Editar contacto' | trans }}',
+                    addContact:'{{ 'Añadir contacto' | trans }}',
+                },
+                fields: {
+                    // Supplier
+                    code:'{{ 'Código' | trans }}',
+                    name:'{{ 'Nombre' | trans }}',
+                    cif:'{{ 'CIF' | trans }}',
+                    city:'{{ 'Ciudad' | trans }}',
+                    state:'{{ 'Provincia' | trans }}',
+                    country:'{{ 'País' | trans }}',
+
+                    //Contact
+                    departament:'{{ 'Departamento' | trans }}',
+                    responsable:'{{ 'Responsable' | trans }}',
+                    email:'{{ 'Email' | trans }}',
+                    phone:'{{ 'Teléfono' | trans }}',
+                    comment:'{{ 'Comentario' | trans }}',
+                },
+                form: {
+                    actions: '{{ 'Acciones' | trans }}',
+                    consult:'{{ 'Consultar' | trans }}',
+                    edit:'{{ 'Editar' | trans }}',
+                    add:'{{ 'Añadir' | trans }}',
+                    close:'{{ 'Cerrar' | trans }}',
+                    voidFields: '{{ 'Error: hay campos vacios. Todos los campos són obligatios.' | trans }}',
+                    questionDelete: '{{ '¿Desea eliminar el contacto' | trans }}'
+                },
+        };
+    </script>
+{% endblock javascripts %}

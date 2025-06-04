@@ -1,0 +1,6 @@
+saleMethod.selectList:
+  path: /selectlist
+  controller: App\Controller\SaleMethod\SelectListController
+  methods: GET
+  options:
+    expose: true
