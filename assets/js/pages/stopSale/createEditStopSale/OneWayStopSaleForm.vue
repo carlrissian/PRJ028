@@ -215,17 +215,18 @@
 
                                       <!-- Connected Vehicle (solo One-Way) -->
                                           <single-select-picker
-                                              @onChangeSelectPicker="canSubmit = true"
-                                              @updatedSelectPicker="stopSale.connectedVehicle = $event"
                                               name="connectedVehicle"
                                               id="connectedVehicle"
-                                              :label="'Vehículo conectado'"
-                                              required
+                                              divClass="form-group col-md-2"
+                                              :label="txt.fields.connectedVehicle"
+                                              :placeholder="txt.form.selectAnOption"
                                               :value="stopSale.connectedVehicle"
                                               :style="!canBeEditCreated ? styleObjectNo : styleObject"
-                                            >
-                                            <option :value="true">{{ txt.form.yes }}</option>
-                                            <option :value="false">{{ txt.form.no }}</option>
+                                              @onChangeSelectPicker="canSubmit = true"
+                                              @updatedSelectPicker="stopSale.connectedVehicle = $event"
+                                          >
+                                              <option :value="true">{{ txt.form.yes }}</option>
+                                              <option :value="false">{{ txt.form.no }}</option>
                                           </single-select-picker>
                                         <!--  -->
 
