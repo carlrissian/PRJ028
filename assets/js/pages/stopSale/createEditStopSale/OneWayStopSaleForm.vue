@@ -284,7 +284,6 @@ export default {
     data() {
         return {
             txt: {},
-            constants: {},
             title: null,
             submitButton: null,
             submitButtonClass: null,
@@ -331,10 +330,9 @@ export default {
     },
     created() {
         this.txt = txtTrans;
-        this.constants = constants;
 
         this.stopSale.stopSaleTypeId = 1;
-},
+    },
     mounted() {
         this.canBeEditCreated = this.selectList.canBeEditCreated;
         this.carGroupList = this.selectList.carGroupList;
@@ -538,16 +536,9 @@ export default {
             }
 
             if (!this.stopSale.endDate) {
-                if (this.stopSale.carGroupsId.length == 0 && this.stopSale.acrissId.length == 0) {
-                    validated = false;
-                    this.showNotification("warn", this.txt.form.selectAGroupOrAcriss);
-                    document.querySelector("#acrissId").focus();
-                }
-
-                if (this.stopSale.branchPickUpId.length == 0) {
                 if (
-                    this.stopSale.carGroupsId.length === 0 &&
-                    this.stopSale.acrissId.length === 0
+                    this.stopSale.carGroupsId.length == 0 &&
+                    this.stopSale.acrissId.length == 0
                 ) {
                     validated = false;
                     this.showNotification(
@@ -557,7 +548,7 @@ export default {
                     document.querySelector("#acrissId").focus();
                 }
 
-                if (this.stopSale.branchPickUpId.length === 0) {
+                if (this.stopSale.branchPickUpId.length == 0) {
                     validated = false;
                     this.showNotification("warn", this.txt.form.selectABranch);
                     document.querySelector("#branchPickUpId").focus();
