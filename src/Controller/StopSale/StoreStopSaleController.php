@@ -44,7 +44,7 @@ class StoreStopSaleController extends AbstractController
                 $stopSale['regionPickUpId'] ?? null,
                 $stopSale['regionDropOffId'] ?? null,
                 $stopSale['areaPickUpId'] ?? null,
-                $stopSale['areaPiDropOffId'] ?? null,
+                $stopSale['areaDropOffId'] ?? null,
                 $stopSale['branchPickUpId'] ?? null,
                 $stopSale['branchDropOffId'] ?? null,
                 $stopSale['partnersId'] ?? null,
