@@ -306,6 +306,7 @@ export default {
                 areaDropOffId: [],
                 branchPickUpId: [],
                 branchDropOffId: [],
+                recurrencesId: [],
                 stopSaleTypeId: null,
                 minDaysRent: null,
                 maxDaysRent: null,
@@ -314,6 +315,7 @@ export default {
                 cancelled: null,
             },
             canBeEditCreated: false,
+            canSubmit: false,
             carGroupList: [],
             acrissList: [],
             regionList: [],
@@ -597,7 +599,7 @@ export default {
 
                                 setTimeout(() => {
                                     window.location.href = this.routing.generate("stopsale.list", {
-                                        stopSaleCategory: "standard",
+                                        stopSaleCategory: "oneway",
                                     });
                                 }, 2000);
                             } else {
@@ -620,7 +622,7 @@ export default {
 
                                 setTimeout(() => {
                                     window.location.href = this.routing.generate("stopsale.list", {
-                                        stopSaleCategory: "standard",
+                                        stopSaleCategory: "oneway",
                                     });
                                 }, 2000);
                             } else {
