@@ -54,7 +54,7 @@ class FilterAcrissController extends AbstractController
             $request->get('acrissName'),
             $request->get('motorizationTypeIds') ? json_decode($request->get('motorizationTypeIds')) : null,
             $request->get('gearBoxIds') ? json_decode($request->get('gearBoxIds')) : null,
-            filter_var($request->get('status'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+            $request->get('status') ? filter_var($request->get('status'), FILTER_VALIDATE_BOOLEAN):null
         );
 
         $response = $this->handler->handle($query);

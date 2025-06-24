@@ -8,15 +8,15 @@
             :options="selectList.regionList"
         /> -->
 
-        <!-- <single-select-picker
-            name="area"
-            id="area"
+        <multiple-select-picker
+            name="areasId"
+            id="areasId"
             div-class="col-md-3 form-group"
             :label="txt.fields.area"
             :options="selectList.areaList"
-        /> -->
+        />
 
-        <single-select-picker
+        <multiple-select-picker
             name="branchId"
             id="branchId"
             div-class="col-md-3 form-group"
@@ -24,7 +24,7 @@
             :options="selectList.branchList"
         />
 
-        <single-select-picker
+        <multiple-select-picker
             name="locationId"
             id="locationId"
             div-class="col-md-3 form-group"
@@ -72,7 +72,7 @@
             :options="selectList.purchaseMethodList"
         />
 
-        <single-select-picker
+        <multiple-select-picker
             name="saleMethodId"
             id="saleMethodId"
             div-class="col-md-3 form-group"
@@ -322,50 +322,6 @@
         />
         <!--  -->
 
-        <!-- Fecha inicio bloqueo desde/hasta -->
-        <date-picker
-            @updatedDatePicker="vehicleFilters.startBlockageDateFrom = $event"
-            name="startBlockageDateFrom"
-            id="startBlockageDateFrom"
-            div-class="col-md-3 form-group"
-            :limit-end-day="vehicleFilters.startBlockageDateTo"
-            :label="txt.fields.startBlockageDateFrom"
-            :value="vehicleFilters.startBlockageDateFrom"
-        />
-
-        <date-picker
-            @updatedDatePicker="vehicleFilters.startBlockageDateTo = $event"
-            name="startBlockageDateTo"
-            id="startBlockageDateTo"
-            div-class="col-md-3 form-group"
-            :limit-start-day="vehicleFilters.startBlockageDateFrom"
-            :label="txt.fields.startBlockageDateTo"
-            :value="vehicleFilters.startBlockageDateTo"
-        />
-        <!--  -->
-
-        <!-- Fecha fin bloqueo desde/hasta -->
-        <date-picker
-            @updatedDatePicker="vehicleFilters.endBlockageDateFrom = $event"
-            name="endBlockageDateFrom"
-            id="endBlockageDateFrom"
-            div-class="col-md-3 form-group"
-            :limit-end-day="vehicleFilters.endBlockageDateTo"
-            :label="txt.fields.endBlockageDateFrom"
-            :value="vehicleFilters.endBlockageDateFrom"
-        />
-
-        <date-picker
-            @updatedDatePicker="vehicleFilters.endBlockageDateTo = $event"
-            name="endBlockageDateTo"
-            id="endBlockageDateTo"
-            div-class="col-md-3 form-group"
-            :limit-start-day="vehicleFilters.endBlockageDateFrom"
-            :label="txt.fields.endBlockageDateTo"
-            :value="vehicleFilters.endBlockageDateTo"
-        />
-        <!--  -->
-
         <!-- Fecha de carga real desde/hasta -->
         <!-- <date-picker
             @updatedDatePicker="vehicleFilters.actualLoadDateFrom = $event"
@@ -435,6 +391,17 @@
             :value="vehicleFilters.columns"
             disabled-options
         />
+        <single-select-picker
+            name="cleanVehicle"
+            id="cleanVehicle"
+            div-class="col-md-3 form-group"
+            :label="txt.fields.cleanVehicle"
+            :options="[
+                { id: '', name: 'Todos' },
+                { id: '1', name: 'Sí' },
+                { id: '0', name: 'No' }
+            ]"
+        />
     </erp-filter-vehicle-column>
 </template>
 
@@ -485,6 +452,7 @@ export default {
                 actualUnloadDateFrom: null,
                 actualUnloadDateTo: null,
                 columns: null,
+                cleanVehicle: '',
             },
         };
     },

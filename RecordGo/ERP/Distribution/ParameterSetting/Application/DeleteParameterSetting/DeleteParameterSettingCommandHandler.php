@@ -37,7 +37,7 @@ class DeleteParameterSettingCommandHandler
      */
     public function handle(DeleteParameterSettingCommand $command): DeleteParameterSettingCommandResponse
     {
-        $deleted = $this->parameterSettingRepository->delete($command->getId());
-        return new DeleteParameterSettingCommandResponse($deleted);
+        $response = $this->parameterSettingRepository->delete($command->getId());
+        return new DeleteParameterSettingCommandResponse($response->getOperationResponse()->wasSuccess());
     }
 }

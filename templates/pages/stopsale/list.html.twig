@@ -6,7 +6,7 @@
     <list-stop-sale-page
             :select-list="{{ selectList }}"
             :stop-sale-category-id="{{ stopSaleCategoryId }}"
-            :stop-sale-name="{{ stopSaleName | trans | json_encode | raw }}">
+            :stop-sale-name="'{{ stopSaleName | trans }}'">
     </list-stop-sale-page>
 {% endblock %}
 

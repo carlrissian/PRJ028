@@ -26,8 +26,8 @@ interface ParameterSettingRepository
 
      /**
      * @param int $id
-     * @return bool
+     * @return ParameterSettingOperationResponse
      */
-    public function delete(int $id): bool;
+    public function delete(int $id): ParameterSettingOperationResponse;
 }
 

@@ -32,19 +32,19 @@ class FilterVehicleQuery
     private ?int $regionId;
 
     /**
-     * @var integer|null
+     * @var array|null
      */
-    private ?int $areaId;
+    private ?array $areaId;
 
     /**
-     * @var integer|null
+     * @var array|null
      */
-    private ?int $branchId;
+    private ?array $branchId;
 
     /**
-     * @var integer|null
+     * @var array|null
      */
-    private ?int $locationId;
+    private ?array $locationId;
 
     /**
      * @var integer|null
@@ -252,6 +252,11 @@ class FilterVehicleQuery
     private ?array $columns;
 
     /**
+     * @var string|null
+     */
+    private ?string $cleanVehicle;
+
+    /**
      * FilterVehicleQuery constructor.
      *
      * @param integer|null $limit
@@ -259,8 +264,8 @@ class FilterVehicleQuery
      * @param string|null $sort
      * @param string|null $order
      * @param integer|null $regionId
-     * @param integer|null $areaId
-     * @param integer|null $branchId
+     * @param array|null $areaId
+     * @param array|null $branchId
      * @param integer|null $brandId
      * @param integer|null $modelId
      * @param integer|null $trimId
@@ -302,6 +307,7 @@ class FilterVehicleQuery
      * @param array|null $vehicleTypeIdIn
      * @param array|null $connectedIn
      * @param array|null $columns
+     *  @param string|null $cleanVehicle
      */
     public function __construct(
         ?int $limit,
@@ -309,9 +315,9 @@ class FilterVehicleQuery
         ?string $sort,
         ?string $order,
         ?int $regionId,
-        ?int $areaId,
-        ?int $branchId,
-        ?int $locationId,
+        ?array $areaId,
+        ?array $branchId,
+        ?array $locationId,
         ?int $brandId,
         ?int $modelId,
         ?int $trimId,
@@ -352,7 +358,8 @@ class FilterVehicleQuery
         ?string $checkOutDateTo,
         ?array $vehicleTypeIdIn,
         ?array $connectedIn,
-        ?array $columns = null
+        ?array $columns = null,
+        ?string $cleanVehicle = null
     ) {
         $this->limit = $limit;
         $this->offset = $offset;
@@ -403,6 +410,7 @@ class FilterVehicleQuery
         $this->vehicleTypeIdIn = $vehicleTypeIdIn;
         $this->connectedIn = $connectedIn;
         $this->columns = $columns;
+        $this->cleanVehicle = $cleanVehicle;
     }
 
     /**
@@ -450,25 +458,25 @@ class FilterVehicleQuery
     /**
      * @deprecated NO MVP
      * 
-     * @return integer|null
+     * @return array|null
      */
-    public function getAreaId(): ?int
+    public function getAreaId(): ?array
     {
         return $this->areaId;
     }
 
     /**
-     * @return integer|null
+     * @return array|null
      */
-    public function getBranchId(): ?int
+    public function getBranchId(): ?array
     {
         return $this->branchId;
     }
 
     /**
-     * @return integer|null
+     * @return array|null
      */
-    public function getLocationId(): ?int
+    public function getLocationId(): ?array
     {
         return $this->locationId;
     }
@@ -817,5 +825,13 @@ class FilterVehicleQuery
     public function getColumns(): ?array
     {
         return $this->columns;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCleanVehicle(): ?string
+    {
+        return $this->cleanVehicle;
     }
 }

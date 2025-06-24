@@ -46,7 +46,7 @@ class UpdateStopSaleController extends AbstractController
                 $stopSale['regionPickUpId'] ?? null,
                 $stopSale['regionDropOffId'] ?? null,
                 $stopSale['areaPickUpId'] ?? null,
-                $stopSale['areaDropOffId'] ?? null,
+                $stopSale['areaPiDropOffId'] ?? null,
                 $stopSale['branchPickUpId'] ?? null,
                 $stopSale['branchDropOffId'] ?? null,
                 $stopSale['partnersId'] ?? null,
