@@ -265,6 +265,7 @@ import ErpDatePickerStaticFilter from "../../../components/filterStatic/form/Erp
 import InputNumber from "../../../../SharedAssets/vue/components/base/inputs/InputNumber.vue";
 import SingleSelectPicker from "../../../../SharedAssets/vue/components/base/inputs/SingleSelectPicker.vue";
 
+
 export default {
     name: "OneWayStopSaleForm",
     components: {
