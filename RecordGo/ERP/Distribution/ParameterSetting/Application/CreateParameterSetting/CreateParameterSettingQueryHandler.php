@@ -10,7 +10,6 @@ use Doctrine\Common\Collections\Criteria;
 use Distribution\Area\Domain\AreaCriteria;
 use Shared\Domain\Criteria\FilterOperator;
 use App\Constants\ConnectedVehicleConstants;
-use Distribution\Acriss\Domain\Acriss;
 use Distribution\Area\Domain\AreaRepository;
 use Shared\Domain\Criteria\FilterCollection;
 use Distribution\Acriss\Domain\AcrissCriteria;
@@ -115,11 +114,36 @@ class CreateParameterSettingQueryHandler
 
         $parameterSettingTypeList = Utils::createSelect($parameterSettingTypeCollection);
         $carGroupList = Utils::createSelect($carGroupCollection);
-        $acrissList = Utils::createCustomSelectList($acrissCollection, 'id', 'name', 'carGroup.id');
+
+        $acrissList = [];
+        foreach ($acrissCollection as $acriss) {
+            $acrissList[] = [
+                'id' => $acriss->getId(),
+                'name' => $acriss->getAcrissName(),
+                'carGroupId' => $acriss->getCarGroup() ? $acriss->getCarGroup()->getId() : null,
+            ];
+        }
+
         $regionList = Utils::createSelect($regionCollection);
-        $areaList = Utils::createCustomSelectList($areaCollection, 'id', 'name', 'region.id');
-        $branchList = Utils::createCustomSelectList($branchCollection, 'id', 'name', 'area.id');
+
+        foreach ($areaCollection as $area) {
+           $areaList[] = [
+               'id' => $area->getId(),
+               'name' => $area->getName(),
+               'regionId' => $area->getRegion() ? $area->getRegion()->getId() : null,
+           ];
+        }
+
+        foreach ($branchCollection as $branch) {
+            $branchList[] = [
+                'id' => $branch->getId(),
+                'name' => $branch->getName(),
+                'areaId' => $branch->getArea() ? $branch->getArea()->getId() : null,
+            ];
+        }
+
         $partnerList = Utils::createSelect($partnerCollection);
+
         $connectedVehicleList = [
             ['id' => ConnectedVehicleConstants::CONNECTED_VEHICLE_YES, 'name' => 'yes'],
             ['id' => ConnectedVehicleConstants::CONNECTED_VEHICLE_NO, 'name' => 'no'],

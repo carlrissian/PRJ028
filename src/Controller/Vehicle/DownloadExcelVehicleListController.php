@@ -32,21 +32,6 @@ class DownloadExcelVehicleListController extends AbstractController
     public function __invoke(Request $request): StreamedResponse
     {
         try {
-            $areasIn = $request->get('areasId') ?
-                (is_numeric($request->get('areasId')) ?
-                    [intval($request->get('areasId'))]
-                    : json_decode($request->get('areasId', '[]'))
-                ) : null;
-             $branchsIn = $request->get('branchId') ?
-                (is_numeric($request->get('branchId')) ?
-                    [intval($request->get('branchId'))]
-                    : json_decode($request->get('branchId', '[]'))
-                ) : null;
-            $locationIn = $request->get('locationId') ?
-                (is_numeric($request->get('locationId')) ?
-                    [intval($request->get('locationId'))]
-                    : json_decode($request->get('locationId', '[]'))
-                ) : null;
             $providerIn = $request->get('providerId') ?
             (is_numeric($request->get('providerId')) ?
                 [intval($request->get('providerId'))]
@@ -143,10 +128,10 @@ class DownloadExcelVehicleListController extends AbstractController
                 null,
                 null,
                 null,
-                null,
-                $areasIn,
-                $branchsIn,
-                $locationIn,
+                $request->get('regionId') ? intval($request->get('regionId')) : null,
+                $request->get('areaId') ? intval($request->get('areaId')) : null,
+                $request->get('branchId') ? intval($request->get('branchId')) : null,
+                $request->get('locationId') ? intval($request->get('locationId')) : null,
                 $request->get('brandId') ? intval($request->get('brandId')) : null,
                 $request->get('modelId') ? intval($request->get('modelId')) : null,
                 $request->get('trimId') ? intval($request->get('trimId')) : null,
@@ -177,19 +162,17 @@ class DownloadExcelVehicleListController extends AbstractController
                 $request->get('creationDateTo'),
                 $request->get('registrationDateFrom'),
                 $request->get('registrationDateTo'),
-                null,
-                null,
-                null,
-                null,
+                $request->get('startBlockageDateFrom'),
+                $request->get('startBlockageDateTo'),
+                $request->get('endBlockageDateFrom'),
+                $request->get('endBlockageDateTo'),
                 $request->get('actualUnloadDateFrom'),
                 $request->get('actualUnloadDateTo'),
                 $request->get('actualLoadDateFrom'),
                 $request->get('actualLoadDateTo'),
                 $vehicleTypeIn,
                 $connectedVehicleIn,
-                $formattedColumns,
-                $request->get('cleanVehicle') ? intval($request->get('cleanVehicle')) : null
-
+                $formattedColumns
             );
 
             $response = $this->handler->handle($query, true);

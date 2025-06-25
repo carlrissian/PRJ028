@@ -325,6 +325,14 @@ class Acriss
         $this->name = $name;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getAcrissName(): string
+    {
+        return $this->getName();
+    }
+
 
     /**
      * @return CarClass

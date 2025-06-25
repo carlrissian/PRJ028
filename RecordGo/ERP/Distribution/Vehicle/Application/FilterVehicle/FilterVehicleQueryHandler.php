@@ -123,11 +123,11 @@ class FilterVehicleQueryHandler
 
         if ($query->getRegionId()) $filterCollection->add(new Filter('REGIONID', new FilterOperator(FilterOperator::EQUAL), $query->getRegionId()));
 
-        if ($query->getAreaId()) $filterCollection->add(new Filter('AREAIDIN', new FilterOperator(FilterOperator::IN), $query->getAreaId()));
+        if ($query->getAreaId()) $filterCollection->add(new Filter('AREAID', new FilterOperator(FilterOperator::EQUAL), $query->getAreaId()));
 
-        if ($query->getBranchId()) $filterCollection->add(new Filter('BRANCHIDIN', new FilterOperator(FilterOperator::IN), $query->getBranchId()));
+        if ($query->getBranchId()) $filterCollection->add(new Filter('BRANCHID', new FilterOperator(FilterOperator::EQUAL), $query->getBranchId()));
 
-        if ($query->getLocationId()) $filterCollection->add(new Filter('LOCATIONIDIN', new FilterOperator(FilterOperator::IN), $query->getLocationId()));
+        if ($query->getLocationId()) $filterCollection->add(new Filter('LOCATIONID', new FilterOperator(FilterOperator::EQUAL), $query->getLocationId()));
 
         if ($query->getBrandId()) $filterCollection->add(new Filter('BRANDID', new FilterOperator(FilterOperator::EQUAL), $query->getBrandId()));
 
@@ -200,18 +200,7 @@ class FilterVehicleQueryHandler
 
         if ($query->getConnectedIn()) $filterCollection->add(new Filter('CONNECTEDVEHICLEIN', new FilterOperator(FilterOperator::EQUAL), $query->getConnectedIn()));
 
-        if ($query->getSaleMethodId()) $filterCollection->add(new Filter('RESALECODEARRAY', new FilterOperator(FilterOperator::IN), $query->getSaleMethodId()));
-        
-        if ($query->getCleanVehicle() !== null && $query->getCleanVehicle() !== '') {
-            $cleanVehicle = intval($query->getCleanVehicle());
-            if ($cleanVehicle === 1) {
-                $filterCollection->add(new Filter('EXTERIORCLEAN', new FilterOperator(FilterOperator::EQUAL), 1));
-                $filterCollection->add(new Filter('INTERIORCLEAN', new FilterOperator(FilterOperator::EQUAL), 1));
-            } elseif ($cleanVehicle === 0) {
-                 $filterCollection->add(new Filter('EXTERIORCLEAN_OR_INTERIORCLEAN', new FilterOperator(FilterOperator::EQUAL), 0));
-            }
-            
-        }
+
         $sortCollection = null;
         if (!empty($query->getSort()) && !empty($query->getOrder())) {
             $sortCollection = new SortCollection([
