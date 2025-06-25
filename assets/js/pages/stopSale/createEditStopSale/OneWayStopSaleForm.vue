@@ -319,6 +319,7 @@ export default {
             styleObjectNo: {
                 pointerEvents: "none",
                 opacity: "0.5",
+                display: "none",
             },
             styleObject: {
                 pointerEvents: "visible",
