@@ -262,12 +262,14 @@ import Axios from "axios";
 import Loading from "../../../../assets/js/utilities";
 import ErpMultipleSelectStaticFilter from "../../../components/filterStatic/form/ErpMultipleSelectStaticFilter";
 import ErpDatePickerStaticFilter from "../../../components/filterStatic/form/ErpDatePickerStaticFilter";
+import SingleSelectPicker from "../../../../SharedAssets/vue/components/base/inputs/SingleSelectPicker";
 
 export default {
     name: "OneWayStopSaleForm",
     components: {
         ErpMultipleSelectStaticFilter,
         ErpDatePickerStaticFilter,
+        SingleSelectPicker,
     },
     props: {
         selectList: Object,
