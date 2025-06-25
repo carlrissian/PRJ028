@@ -4,7 +4,7 @@
 
 {% block body %}
     <create-edit-stop-sale-page
-            :select-list="{{ selectList }}"
+            :select-list='{{ selectList|raw }}'
             :category-id={{ stopSaleCategoryId }}
             :stop-sale-name="'{{ stopSaleName }}'"
             :user-country-iso="'IC'"></create-edit-stop-sale-page>
