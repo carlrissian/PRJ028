@@ -188,7 +188,6 @@ class Acriss
      */
     private ?int $toTareWeight;
 
-    // TODO FALTAN CAMPOS PARA FUNCIÓN REPOSITORIO GETBYID Y SHOWACRISS
 
     /**
      * @param int|null $id
