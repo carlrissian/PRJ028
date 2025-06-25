@@ -99,18 +99,6 @@
 
                                     <!-- Pick Up -->
                                     <div class="row">
-                                        <!-- Regions -->
-                                        <erp-multiple-select-static-filter
-                                            @changeSelectMultiple="onChangeRegionPickUp()"
-                                            name="regionPickUpId[]"
-                                            id="regionPickUpId"
-                                            class-number="2"
-                                            :label="txt.fields.originRegion"
-                                            :data-for-ajax="regionList"
-                                            :value="stopSale.regionPickUpId"
-                                            v-bind:style="[this.canBeEditCreated === true ? styleObjectNo : styleObject]"
-                                        />
-                                        <!--  -->
 
                                         <!-- Areas -->
                                         <erp-multiple-select-static-filter
@@ -300,7 +288,6 @@ export default {
                 endDate: null,
                 carGroupsId: [],
                 acrissId: [],
-                regionPickUpId: [],
                 regionDropOffId: [],
                 areaPickUpId: [],
                 areaDropOffId: [],
@@ -376,7 +363,6 @@ export default {
         this.$nextTick(function() {
             $("#carGroupsId").selectpicker("refresh");
             $("#acrissId").selectpicker("refresh");
-            $("#regionPickUpId").selectpicker("refresh");
             $("#regionDropOffId").selectpicker("refresh");
             $("#areaPickUpId").selectpicker("refresh");
             $("#areaDropOffId").selectpicker("refresh");
@@ -447,8 +433,6 @@ export default {
 
             if (this.stopSaleData.acriss != null) this.getSelectedIds(this.stopSaleData.acriss, this.stopSale.acrissId);
 
-            if (this.stopSaleData.regionPickUp != null)
-                this.getSelectedIds(this.stopSaleData.regionPickUp, this.stopSale.regionPickUpId);
 
             if (this.stopSaleData.regionDropOff != null)
                 this.getSelectedIds(this.stopSaleData.regionDropOff, this.stopSale.regionDropOffId);
@@ -528,11 +512,6 @@ export default {
 
             let carGroupsId = $("#carGroupsId");
             carGroupsId.val(this.stopSale.carGroupsId);
-        },
-        onChangeRegionPickUp() {
-            this.stopSale.regionPickUpId = $("#regionPickUpId")
-                .val()
-                .map((element) => parseInt(element));
         },
         onChangeRegionDropOff() {
             this.stopSale.regionDropOffId = $("#regionDropOffId")
