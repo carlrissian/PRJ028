@@ -44,7 +44,7 @@
                                             :options="selectList.stopSaleTypeList"
                                             :value="stopSale.stopSaleTypeId"
                                             required
-                                            :disabled="editMode"
+                                            disabled
                                             v-bind:style="[canBeEditCreated !== true ? styleObjectNo : styleObject]"
                                         />
                                         <!--  -->
@@ -464,6 +464,7 @@ export default {
             this.submitButtonClass = "la-plus";
             this.stopSale.departmentId = constants.department.distribution;
             this.stopSale.categoryId = constants.category.standard;
+            this.stopSale.stopSaleTypeId = 2;
             // this.stopSale.startTime = moment("00:00", "HH:mm").format("HH:mm");
             // this.stopSale.endTime = moment("23:59", "HH:mm").format("HH:mm");
             this.stopSale.initDate = moment(new Date(), "DD/MM/YYYY").format("DD/MM/YYYY");
