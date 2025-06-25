@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Distribution\StopSale\Domain\StopSaleException;
 use Distribution\StopSale\Application\StoreStopSale\StoreStopSaleCommand;
 use Distribution\StopSale\Application\StoreStopSale\StoreStopSaleCommandHandler;
 
@@ -44,7 +45,7 @@ class StoreStopSaleController extends AbstractController
                 $stopSale['regionPickUpId'] ?? null,
                 $stopSale['regionDropOffId'] ?? null,
                 $stopSale['areaPickUpId'] ?? null,
-                $stopSale['areaPiDropOffId'] ?? null,
+                $stopSale['areaDropOffId'] ?? null,
                 $stopSale['branchPickUpId'] ?? null,
                 $stopSale['branchDropOffId'] ?? null,
                 $stopSale['partnersId'] ?? null,
