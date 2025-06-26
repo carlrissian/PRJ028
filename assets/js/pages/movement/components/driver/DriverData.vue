@@ -478,6 +478,18 @@ export default {
         requireProvince() {
             if (!this.driver.country) return false;
 
+<<<<<<< rvcvg7-codex/update-requireprovince-logic-and-tests
+            const iso = (
+                this.driver.country.iso ||
+                this.driver.country.countryCode ||
+                ''
+            ).toUpperCase();
+
+            const id = Number(this.driver.country.id);
+
+            // Province is only mandatory for Spain (ES) and Canary Islands (IC)
+            return iso === 'ES' || iso === 'IC' || id === 1;
+=======
             const isoRaw =
                 this.driver.country.iso ||
                 this.driver.country.countryCode ||
@@ -496,6 +508,7 @@ export default {
 
             return !(isos.includes(iso) || isIds.includes(id));
 
+>>>>>>> main
         },
     },
     mounted() {
@@ -756,6 +769,10 @@ export default {
                 }
             },
             deep: true,
+<<<<<<< rvcvg7-codex/update-requireprovince-logic-and-tests
+            immediate: true,
+=======
+>>>>>>> main
         },
     },
 };
