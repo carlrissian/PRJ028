@@ -478,7 +478,6 @@ export default {
         requireProvince() {
             if (!this.driver.country) return false;
 
-            const id = Number(this.driver.country.id ?? this.driver.country.ID);
             const isoRaw =
                 this.driver.country.iso ||
                 this.driver.country.countryCode ||
@@ -489,10 +488,10 @@ export default {
                 '';
             const iso = typeof isoRaw === 'string' ? isoRaw.toUpperCase() : '';
 
-            const ids = [1]; // Spain (fallback ID)
             const isos = ['ES', 'IC']; // Spain and Canary Islands ISO codes
 
-            return isos.includes(iso) || ids.includes(id);
+            return !isos.includes(iso);
+
         },
     },
     mounted() {
