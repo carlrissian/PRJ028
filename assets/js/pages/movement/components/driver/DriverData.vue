@@ -478,6 +478,7 @@ export default {
         requireProvince() {
             if (!this.driver.country) return false;
 
+<<<<<<< rvcvg7-codex/update-requireprovince-logic-and-tests
             const iso = (
                 this.driver.country.iso ||
                 this.driver.country.countryCode ||
@@ -488,6 +489,26 @@ export default {
 
             // Province is only mandatory for Spain (ES) and Canary Islands (IC)
             return iso === 'ES' || iso === 'IC' || id === 1;
+=======
+            const isoRaw =
+                this.driver.country.iso ||
+                this.driver.country.countryCode ||
+                this.driver.country.countryISO ||
+                this.driver.country.COUNTRYISO ||
+                this.driver.country.code ||
+                this.driver.country.ISO ||
+                '';
+            const iso = typeof isoRaw === 'string' ? isoRaw.toUpperCase() : '';
+
+
+            const id = Number(this.driver.country.id);
+
+            const isos = ['ES', 'IC']; // Spain and Canary Islands ISO codes
+            const isIds = [1]; // Spain id
+
+            return !(isos.includes(iso) || isIds.includes(id));
+
+>>>>>>> main
         },
     },
     mounted() {
@@ -748,7 +769,10 @@ export default {
                 }
             },
             deep: true,
+<<<<<<< rvcvg7-codex/update-requireprovince-logic-and-tests
             immediate: true,
+=======
+>>>>>>> main
         },
     },
 };
