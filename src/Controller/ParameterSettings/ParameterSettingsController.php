@@ -14,6 +14,7 @@ use Distribution\ParameterSetting\Application\CreateParameterSetting\CreateParam
 use Distribution\ParameterSetting\Application\DeleteParameterSetting\DeleteParameterSettingCommand;
 use Distribution\ParameterSetting\Application\DeleteParameterSetting\DeleteParameterSettingCommandHandler;
 use Distribution\ParameterSetting\Application\StoreParameterSetting\StoreParameterSettingCommandHandler;
+use App\Constants\ConnectedVehicleConstants;
 
 class ParameterSettingsController extends Controller
 {
@@ -57,7 +58,13 @@ class ParameterSettingsController extends Controller
                 $request->get('partnerIds'),
                 $request->get('startTime'),
                 $request->get('endTime'),
-                boolval($request->get('connectedVehicle')),
+                $request->get('connectedVehicle') !== null
+                    ? (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_YES
+                        ? true
+                        : (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_NO
+                            ? false
+                            : null))
+                    : false,
                 filter_var($request->get('isOverride', false), FILTER_VALIDATE_BOOLEAN)
     
             );

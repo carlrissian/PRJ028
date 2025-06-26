@@ -160,11 +160,11 @@ export default {
                             this.selectList.saleMethodList = saleMethod.data;
                             this.selectList.connectedVehicleList = [
                                 {
-                                    id: true,
+                                    id: 1,
                                     name: this.txt.form.yes,
                                 },
                                 {
-                                    id: false,
+                                    id: 2,
                                     name: this.txt.form.no,
                                 },
                             ];

@@ -611,7 +611,15 @@ export default {
                 });
                 formData.set("startTime", this.parameterSetting.startTime);
                 formData.set("endTime", this.parameterSetting.endTime);
-                formData.set("connectedVehicle", this.parameterSetting.connectedVehicle);
+                let connectedVehicleValue = this.parameterSetting.connectedVehicle;
+                if (connectedVehicleValue !== null && connectedVehicleValue !== undefined) {
+                    if (parseInt(connectedVehicleValue) === 1) {
+                        connectedVehicleValue = true;
+                    } else if (parseInt(connectedVehicleValue) === 2) {
+                        connectedVehicleValue = false;
+                    }
+                }
+                formData.set("connectedVehicle", connectedVehicleValue);
 
                 this.axios
                     .post(url, formData)
