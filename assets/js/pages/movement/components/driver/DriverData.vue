@@ -491,6 +491,7 @@ export default {
             const isos = ['ES', 'IC']; // Spain and Canary Islands ISO codes
 
             return !isos.includes(iso);
+
         },
     },
     mounted() {
