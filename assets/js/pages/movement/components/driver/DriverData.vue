@@ -488,9 +488,13 @@ export default {
                 '';
             const iso = typeof isoRaw === 'string' ? isoRaw.toUpperCase() : '';
 
-            const isos = ['ES', 'IC']; // Spain and Canary Islands ISO codes
 
-            return !isos.includes(iso);
+            const id = Number(this.driver.country.id);
+
+            const isos = ['ES', 'IC']; // Spain and Canary Islands ISO codes
+            const isIds = [1]; // Spain id
+
+            return !(isos.includes(iso) || isIds.includes(id));
 
         },
     },
