@@ -477,14 +477,14 @@ export default {
     computed: {
         requireProvince() {
             if (!this.driver.country) return false;
-            const name = this.driver.country.name ? this.driver.country.name.toLowerCase() : '';
-            return [
-                'espa\u00f1a',
-                'spain',
-                'canarias',
-                'islas canarias',
-                'canary islands'
-            ].includes(name);
+
+            const id = this.driver.country.id;
+            const iso = (this.driver.country.iso || this.driver.country.countryCode || '').toUpperCase();
+
+            const ids = [1]; // Spain ID
+            const isos = ['ES', 'IC'];
+
+            return ids.includes(id) || isos.includes(iso);
         },
     },
     mounted() {
