@@ -477,13 +477,12 @@ export default {
     computed: {
         requireProvince() {
             if (!this.driver.country) return false;
-
-            const id = this.driver.country.id;
+            
+            const id = Number(this.driver.country.id);
             const iso = (this.driver.country.iso || this.driver.country.countryCode || '').toUpperCase();
 
-            const ids = [1]; // Spain ID
-            const isos = ['ES', 'IC'];
-
+            const ids = [1]; // Spain
+            const isos = ['ES', 'IC']; // Spain and Canary Islands ISO codes
             return ids.includes(id) || isos.includes(iso);
         },
     },
@@ -737,11 +736,14 @@ export default {
             if (this.driver.provider === null) this.driver.provider = {};
             this.driver.provider.id = this.providerId;
         },
-        'driver.country': function () {
-            if (!this.requireProvince) {
-                this.driver.state = null;
-                this.driver.postalCode = null;
-            }
+        'driver.country': {
+            handler() {
+                if (!this.requireProvince) {
+                    this.driver.state = null;
+                    this.driver.postalCode = null;
+                }
+            },
+            deep: true,
         },
     },
 };
