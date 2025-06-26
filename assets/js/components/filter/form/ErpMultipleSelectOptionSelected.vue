@@ -77,29 +77,26 @@ export default {
             this.el.val(this.value);
             this.el.selectpicker("refresh");
         },
-        dataForAjax: {
-            handler() {
-                if (this.dataForAjax) {
-                    this.dataForAjax.forEach((item, key) => {
-                        let obj = {};
-                        if (typeof item === "object") {
-                            obj = {
-                                value: item.id,
-                                text: item.name,
-                            };
-                        } else {
-                            obj = {
-                                value: key,
-                                text: item,
-                            };
-                        }
-                        this.el.append($("<option>", obj));
-                        this.valueDataAjax = this.value;
-                        this.el.selectpicker("refresh");
-                    });
-                }
-            },
-            immediate: true,
+        dataForAjax() {
+            if (this.dataForAjax) {
+                this.dataForAjax.forEach((item, key) => {
+                    let obj = {};
+                    if (typeof item === "object") {
+                        obj = {
+                            value: item.id,
+                            text: item.name,
+                        };
+                    } else {
+                        obj = {
+                            value: key,
+                            text: item,
+                        };
+                    }
+                    this.el.append($("<option>", obj));
+                    this.valueDataAjax = this.value;
+                    this.el.selectpicker("refresh");
+                });
+            }
         },
     },
 };

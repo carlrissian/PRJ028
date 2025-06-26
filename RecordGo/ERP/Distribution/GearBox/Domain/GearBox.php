@@ -16,7 +16,7 @@ class GearBox implements JsonSerializable
     /**
      * @var string|null
      */
-    private string $name;
+    private ?string $name;
 
     /**
      * @var string|null

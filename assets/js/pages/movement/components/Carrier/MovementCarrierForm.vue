@@ -1027,15 +1027,7 @@ export default {
                             this.movement.vehicleFilters.vehicleStatusIdIn.forEach((item) => {
                                 formData.append("vehicleStatusIdIn[]", item.id);
                             });
-                            let connectedVehicleValue = this.movement.vehicleFilters.connectedVehicle.value;
-                            if (connectedVehicleValue !== null && connectedVehicleValue !== undefined) {
-                                if (parseInt(connectedVehicleValue) === 1) {
-                                    connectedVehicleValue = true;
-                                } else if (parseInt(connectedVehicleValue) === 2) {
-                                    connectedVehicleValue = false;
-                                }
-                            }
-                            formData.set("connectedVehicle", connectedVehicleValue);
+                            formData.set("connectedVehicle", this.movement.vehicleFilters.connectedVehicle.value);
                         }
 
                         let url = this.movement.id

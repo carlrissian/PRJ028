@@ -4,8 +4,8 @@
 
 {% block body %}
     <create-edit-stop-sale-page
-            :select-list='{{ selectList|raw }}'
-            :stop-sale='{{ stopSale|raw }}'
+            :select-list="{{ selectList }}"
+            :stop-sale="{{ stopSale }}"
             :category-id="{{ stopSaleCategoryId }}"
     >
     </create-edit-stop-sale-page>
@@ -37,6 +37,7 @@
                 connectedVehicle:'{{'Vehículo conectado' | trans }}',
 
                 // One Way
+                originRegion:'{{ 'Región origen' | trans }}',
                 destinyRegion:'{{ 'Región destino' | trans }}',
                 originArea:'{{ 'Área origen' | trans }}',
                 destinyArea:'{{ 'Área destino' | trans }}',

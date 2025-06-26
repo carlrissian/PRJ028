@@ -33,12 +33,16 @@
                                     <h6 v-text="txt.fields.carGroup"></h6>
                                     <p v-text="Formatter.formatField(vehicle.vehicleGroup)"></p>
                                 </div>
+                                <div class="col-2">
+                                  <h6 v-text="txt.fields.salesMethod"></h6>
+                                  <p v-text="Formatter.formatField(vehicle.saleMethod)"></p>
+                                </div>
                             </div>
 
                             <div class="group row mt-3">
                                 <div class="col-2">
-                                    <h6 v-text="txt.fields.salesMethod"></h6>
-                                    <p v-text="Formatter.formatField(vehicle.saleMethod)"></p>
+                                    <h6 v-text="txt.fields.firstRentDate"></h6>
+                                    <p v-text="Formatter.formatDate(vehicle.firstRentDate)"></p>
                                 </div>
                                 <div class="col-2">
                                     <h6 v-text="txt.fields.rentingEndDate"></h6>

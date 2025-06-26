@@ -44,7 +44,7 @@
                                             :options="selectList.stopSaleTypeList"
                                             :value="stopSale.stopSaleTypeId"
                                             required
-                                            disabled
+                                            :disabled="editMode"
                                             v-bind:style="[canBeEditCreated !== true ? styleObjectNo : styleObject]"
                                         />
                                         <!--  -->
@@ -405,7 +405,6 @@ export default {
             styleObjectNo: {
                 pointerEvents: "none",
                 opacity: "0.5",
-                display: "none",
             },
             styleObject: {
                 pointerEvents: "visible",
@@ -465,7 +464,6 @@ export default {
             this.submitButtonClass = "la-plus";
             this.stopSale.departmentId = constants.department.distribution;
             this.stopSale.categoryId = constants.category.standard;
-            this.stopSale.stopSaleTypeId = 2;
             // this.stopSale.startTime = moment("00:00", "HH:mm").format("HH:mm");
             // this.stopSale.endTime = moment("23:59", "HH:mm").format("HH:mm");
             this.stopSale.initDate = moment(new Date(), "DD/MM/YYYY").format("DD/MM/YYYY");
@@ -585,15 +583,7 @@ export default {
                 Loading.starLoading();
 
                 let formData = new FormData();
-                let stopSaleData = { ...this.stopSale };
-                if (stopSaleData.connectedVehicle !== null && stopSaleData.connectedVehicle !== undefined) {
-                    if (parseInt(stopSaleData.connectedVehicle) === 1) {
-                        stopSaleData.connectedVehicle = true;
-                    } else if (parseInt(stopSaleData.connectedVehicle) === 2) {
-                        stopSaleData.connectedVehicle = false;
-                    }
-                }
-                formData.set("stopSale", JSON.stringify(stopSaleData));
+                formData.set("stopSale", JSON.stringify(this.stopSale));
 
                 let url = this.editMode
                     ? this.routing.generate("stopsale.update", {

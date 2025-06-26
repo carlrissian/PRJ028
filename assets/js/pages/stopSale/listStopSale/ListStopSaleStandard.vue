@@ -72,6 +72,7 @@ export default {
                 {
                     field: "recurrence",
                     title: txtTrans.fields.recurrence,
+                    sortable: false,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 // {
@@ -101,53 +102,62 @@ export default {
                 {
                     field: "carGroups",
                     title: txtTrans.fields.carGroups,
+                    sortable: false,
                     // formatter: (value) => Formatter.trimArray(value),
                     formatter: (value) => Formatter.trimArray(value,3),
-                    
                 },
                 {
                     field: "acriss",
                     title: txtTrans.fields.acriss,
+                    sortable: false,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
                     field: "startTime",
                     title: txtTrans.fields.startTime,
+                    sortable: false,
                     formatter: (value) => Formatter.formatField(value),
                 },
                 {
                     field: "endTime",
                     title: txtTrans.fields.endTime,
+                    sortable: false,
                     formatter: (value) => Formatter.formatField(value),
                 },
                 {
                     field: "minDaysRent",
                     title: txtTrans.fields.minDaysRent,
+                    sortable: false,
                     formatter: (value) => Formatter.formatField(value),
                 },
                 {
                     field: "maxDaysRent",
                     title: txtTrans.fields.maxDaysRent,
+                    sortable: false,
                     formatter: (value) => Formatter.formatField(value),
                 },
                 {
                     field: "partners",
                     title: txtTrans.fields.partners,
+                    sortable: false,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
                     field: "sellCodes",
                     title: txtTrans.fields.sellCodes,
+                    sortable: false,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
                     field: "products",
                     title: txtTrans.fields.products,
+                    sortable: false,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
                     field: "creationUser",
                     title: txtTrans.fields.creationUser,
+                    sortable: false,
                     formatter: (value) => Formatter.formatField(value),
                 },
                 {

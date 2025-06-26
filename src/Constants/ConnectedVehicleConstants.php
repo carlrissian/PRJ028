@@ -6,6 +6,6 @@ namespace App\Constants;
 
 class ConnectedVehicleConstants extends Constants
 {
-    public const CONNECTED_VEHICLE_YES = 1;
-    public const CONNECTED_VEHICLE_NO = 2;
+    public const CONNECTED_VEHICLE_YES = true;
+    public const CONNECTED_VEHICLE_NO = false;
 }

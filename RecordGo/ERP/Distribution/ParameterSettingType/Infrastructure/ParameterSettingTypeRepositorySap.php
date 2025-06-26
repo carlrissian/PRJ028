@@ -1,43 +1,64 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\ParameterSettingType\Infrastructure;
 
-use Shared\Repository\RepositoryHelper;
-use Doctrine\Common\Collections\Criteria;
+use Shared\Utils\Utils;
+use Shared\Domain\RequestHelper\SapRequestHelper;
 use Distribution\ParameterSettingType\Domain\ParameterSettingType;
+use Distribution\ParameterSettingType\Domain\ParameterSettingTypeCriteria;
 use Distribution\ParameterSettingType\Domain\ParameterSettingTypeCollection;
-use Distribution\ParameterSettingType\Domain\ParameterSettingTypeRepository;
 use Distribution\ParameterSettingType\Domain\ParameterSettingTypeGetByResponse;
+use Distribution\ParameterSettingType\Domain\ParameterSettingTypeRepositoryInterface;
 
-class ParameterSettingTypeRepositorySap extends RepositoryHelper implements ParameterSettingTypeRepository
+class ParameterSettingTypeRepositorySap implements ParameterSettingTypeRepositoryInterface
 {
     private const PREFIX_FUNCTION_NAME = 'ParameterSettingType/ParameterSettingTypeRepository';
 
     /**
+     * @var SapRequestHelper $sapRequestHelper
+     */
+    public SapRequestHelper $sapRequestHelper;
+
+    public function __construct(SapRequestHelper $sapRequestHelper)
+    {
+        $this->sapRequestHelper = $sapRequestHelper;
+    }
+
+    /**
      * @inheritDoc
      */
-    public function getBy(Criteria $criteria): ParameterSettingTypeGetByResponse
+    public function getBy(ParameterSettingTypeCriteria $criteria): ParameterSettingTypeGetByResponse
     {
-        $functionName = self::PREFIX_FUNCTION_NAME . '_' . __FUNCTION__;
-
-        $method = 'GET';
+        $functionName = sprintf('%s_%s', self::PREFIX_FUNCTION_NAME, __FUNCTION__);
         $collection = new ParameterSettingTypeCollection([]);
 
-        $body = json_encode([]);
+        try {
+            $body = json_encode(Utils::createCriteria($criteria));
 
-        $response = $this->sapRequestHelper->request($method, $functionName, $body);
+            $response  = $this->sapRequestHelper->request('GET', $functionName, $body);
+            if (empty($response)) {
+                throw new \Exception(sprintf("The %s request hasn't returned a response", __FUNCTION__));
+            }
+            $responseArray = json_decode($response, true);
 
-        $response = json_decode($response, true);
+            foreach ($responseArray['TParameterSettingTypeResponse'] as $itemArray) {
+                $collection->add($this->arrayToParameterSettingType($itemArray));
+            }
+            $totalRows = (isset($responseArray['TotalRows'])) ? $responseArray['TotalRows'] : $collection->count();
 
-        foreach ($response['TParameterSettingTypeResponse'] as $parameterTypeArray) {
-            $collection->add(new ParameterSettingType(
-                intval($parameterTypeArray['ID']),
-                $parameterTypeArray['NAME']
-            ));
+            return new ParameterSettingTypeGetByResponse($collection, $totalRows ?? 0);
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage(), $exception->getCode());
         }
+    }
 
-        return new ParameterSettingTypeGetByResponse($collection, $collection->count());
+
+    /**
+     * @param array $parameterSettingTypeArray
+     * @return ParameterSettingType
+     */
+    private function arrayToParameterSettingType(array $parameterSettingTypeArray): ParameterSettingType
+    {
+        return ParameterSettingType::createFromArray($parameterSettingTypeArray);
     }
 }

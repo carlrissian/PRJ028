@@ -76,6 +76,7 @@
 
 <script>
 import Loading from "../../../assets/js/utilities";
+import { downloadBlobFileButtonAction } from "../../../SharedAssets/js/utils.js";
 import Alert from "../../../SharedAssets/vue/components/Alert.vue";
 import InputFilePond from "../../../SharedAssets/vue/components/base/inputs/InputFilePond.vue";
 import { htmlToText } from "html-to-text";
@@ -114,33 +115,25 @@ export default {
     },
     methods: {
         async downloadTemplate() {
-            // location.href = this.routing.generate("updateData.downloadTemplate");
-
-            Loading.starLoading();
-            this.axios
-                .get(this.routing.generate("updateData.downloadTemplate"), {
+            try {
+                Loading.starLoading();
+                const response = await this.axios.get(this.routing.generate("updateData.downloadTemplate"), {
                     responseType: "blob",
-                })
-                .then((response) => {
-                    Loading.endLoading();
-
-                    const url = window.URL.createObjectURL(new Blob([response.data]));
-                    const link = document.createElement("a");
-                    link.href = url;
-                    const filename = response?.headers["content-disposition"]?.split("filename=")[1] ?? "template.xslx";
-                    link.setAttribute("download", filename);
-                    document.body.appendChild(link);
-                    link.click();
-                })
-                .catch(async (error) => {
-                    Loading.endLoading();
-                    let errorMessage = JSON.parse(await error.response.data.text());
-                    this.$notify({
-                        title: errorMessage.error,
-                        message: errorMessage.error,
-                        type: "error",
-                    });
                 });
+                Loading.endLoading();
+
+                const file = new Blob([response.data]);
+                const filename = response?.headers["content-disposition"]?.split("filename=")[1] ?? "template.xslx";
+                downloadBlobFileButtonAction(document, file, filename);
+            } catch (error) {
+                Loading.endLoading();
+                let errorMessage = JSON.parse(await error.response.data.text());
+                this.$notify({
+                    title: errorMessage.error,
+                    message: errorMessage.error,
+                    type: "error",
+                });
+            }
         },
         flush() {
             this.showMessages = false;
@@ -179,6 +172,7 @@ export default {
             }
         },
         error(response) {
+            this.flush();
             let result = JSON.parse(response);
 
             this.$notify({
@@ -192,6 +186,7 @@ export default {
             this.showMessages = true;
         },
         success(response) {
+            this.flush();
             let result = JSON.parse(response);
 
             this.$notify({
@@ -201,10 +196,6 @@ export default {
 
             this.formatSuccessMessages(result.vehicles.updated);
             this.showMessages = true;
-
-            setTimeout(() => {
-                window.location.reload();
-            }, 3000);
         },
         exportMessages() {
             let messages = [this.successVehiclesList, this.warningMessages, this.errorVehiclesList]

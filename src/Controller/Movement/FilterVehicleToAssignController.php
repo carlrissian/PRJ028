@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Distribution\Movement\Application\FilterVehicleToAssign\FilterVehicleToAssignQuery;
 use Distribution\Movement\Application\FilterVehicleToAssign\FilterVehicleToAssignQueryHandler;
-use App\Constants\ConnectedVehicleConstants;
 
 class FilterVehicleToAssignController extends AbstractController
 {
@@ -53,13 +52,7 @@ class FilterVehicleToAssignController extends AbstractController
                 $request->get('checkInDateFrom'),
                 $request->get('vehicleStatusId'),
                 is_numeric($request->get('checkInLocation')) ? intval($request->get('checkInLocation')) : null,
-                $request->get('connectedVehicle') !== null
-                    ? (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_YES
-                        ? true
-                        : (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_NO
-                            ? false
-                            : null))
-                    : null
+                !is_null($request->get('connectedVehicle')) ? filter_var($request->get('connectedVehicle'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : null
             );
 
             $response = $this->handler->handle($query, false);

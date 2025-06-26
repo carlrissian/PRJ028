@@ -210,17 +210,10 @@ export default {
         this.vehicleFilters.connectedVehicle = this.filters?.connectedVehicleList;
 
         if (!["", null, undefined].includes(this.vehicleFilters.connectedVehicle)) {
-            let value = this.vehicleFilters.connectedVehicle;
-            let name = null;
-            if (parseInt(value) === 1) {
-                name = this.txt.form.yes;
-            } else if (parseInt(value) === 2) {
-                name = this.txt.form.no;
-            }
             this.connectedVehicleList = [
                 {
-                    id: value,
-                    name: name,
+                    id: this.vehicleFilters.connectedVehicle,
+                    name: this.vehicleFilters.connectedVehicle ? this.txt.form.yes : this.txt.form.no,
                 },
             ];
         }

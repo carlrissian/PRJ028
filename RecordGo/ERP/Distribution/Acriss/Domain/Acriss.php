@@ -188,6 +188,7 @@ class Acriss
      */
     private ?int $toTareWeight;
 
+    // TODO FALTAN CAMPOS PARA FUNCIÓN REPOSITORIO GETBYID Y SHOWACRISS
 
     /**
      * @param int|null $id
@@ -322,14 +323,6 @@ class Acriss
     public function setName(?string $name): void
     {
         $this->name = $name;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getAcrissName(): string
-    {
-        return $this->getName();
     }
 
 

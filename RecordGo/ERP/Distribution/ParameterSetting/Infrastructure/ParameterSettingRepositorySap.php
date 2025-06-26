@@ -7,6 +7,7 @@ namespace Distribution\ParameterSetting\Infrastructure;
 use Exception;
 use Shared\Domain\User;
 use Shared\Utils\Utils;
+use Shared\Domain\OperationResponse;
 use Shared\Repository\RepositoryHelper;
 use Distribution\ParameterSetting\Domain\Area;
 use Shared\Domain\ValueObject\DateValueObject;
@@ -28,6 +29,7 @@ use Distribution\ParameterSetting\Domain\ParameterSettingCollection;
 use Distribution\ParameterSetting\Domain\ParameterSettingRepository;
 use Distribution\ParameterSetting\Domain\ParameterSettingGetByResponse;
 use Distribution\ParameterSetting\Domain\ParameterSettingCalendarCriteria;
+use Distribution\ParameterSetting\Domain\ParameterSettingOperationResponse;
 
 class ParameterSettingRepositorySap extends RepositoryHelper implements ParameterSettingRepository
 {
@@ -96,6 +98,27 @@ class ParameterSettingRepositorySap extends RepositoryHelper implements Paramete
     }
 
     /**
+     * @inheritDoc
+     */
+    public function delete(int $id): ParameterSettingOperationResponse
+    {
+        $functionName = sprintf('%s_%s/%d', self::PREFIX_FUNCTION_NAME, __FUNCTION__, $id);
+
+        try {
+            $response = $this->sapRequestHelper->request('DELETE', $functionName, "");
+            $responseArray = json_decode($response, true);
+
+            return new ParameterSettingOperationResponse(
+                isset($responseArray['ID']) ? intval($responseArray['ID']) : null,
+                OperationResponse::createFromArray($responseArray['ToperationResponse'])
+            );
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+
+    /**
      * @param array $parameterSettingArray
      * @return ParameterSetting
      */
@@ -161,27 +184,4 @@ class ParameterSettingRepositorySap extends RepositoryHelper implements Paramete
             isset($parameterSettingArray['CREATIONDATE']) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($parameterSettingArray['CREATIONDATE'])) : null,
         );
     }
-
-    /**
-     * @inheritDoc
-     * @throws Exception
-     */
-    
-     final public function delete(int $id): bool
-     {
-        $functionName = self::PREFIX_FUNCTION_NAME . '_' . __FUNCTION__ . '/' . $id;
-    
-        try {
-            $response = $this->sapRequestHelper->request('DELETE', $functionName, "");
-            $responseArray = json_decode($response, true);
-            // Validación más robusta
-            if (!isset($responseArray['ToperationResponse'])) {
-                throw new Exception('Respuesta inesperada del SAT.');
-            }
-    
-            return $responseArray['ToperationResponse']['SUCCESS'] === 'true';
-        } catch (\Exception $exception) {
-            throw new Exception($exception->getMessage(), $exception->getCode());
-        }
-     }
 }
