@@ -478,8 +478,11 @@ export default {
         requireProvince() {
             if (!this.driver.country) return false;
 
-<<<<<<< rvcvg7-codex/update-requireprovince-logic-and-tests
-            const iso = (
+            const isSpain = iso === 'ES' || id === 1;
+            const isCanary = iso === 'IC';
+
+            // Province and postal code should be optional for Spain and the Canary Islands
+            return !(isSpain || isCanary);
                 this.driver.country.iso ||
                 this.driver.country.countryCode ||
                 ''
