@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Distribution\StopSale\Domain\StopSaleException;
 use Distribution\StopSale\Application\StoreStopSale\StoreStopSaleCommand;
 use Distribution\StopSale\Application\StoreStopSale\StoreStopSaleCommandHandler;
+use App\Constants\ConnectedVehicleConstants;
 
 class StoreStopSaleController extends AbstractController
 {
@@ -57,7 +58,13 @@ class StoreStopSaleController extends AbstractController
                 $stopSale['recurrencesId'] ?? null,
                 $stopSale['minDaysRent'] ? intval($stopSale['minDaysRent']) : null,
                 $stopSale['maxDaysRent'] ? intval($stopSale['maxDaysRent']) : null,
-                filter_var($stopSale['connectedVehicle'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+                isset($stopSale['connectedVehicle'])
+                    ? (intval($stopSale['connectedVehicle']) === ConnectedVehicleConstants::CONNECTED_VEHICLE_YES
+                        ? true
+                        : (intval($stopSale['connectedVehicle']) === ConnectedVehicleConstants::CONNECTED_VEHICLE_NO
+                            ? false
+                            : null))
+                    : null,
                 $stopSale['notes']
             );
 

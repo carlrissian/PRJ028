@@ -572,7 +572,15 @@ export default {
 
             if (validated) {
                 let formData = new FormData();
-                formData.set("stopSale", JSON.stringify(this.stopSale));
+                let stopSaleData = { ...this.stopSale };
+                if (stopSaleData.connectedVehicle !== null && stopSaleData.connectedVehicle !== undefined) {
+                    if (parseInt(stopSaleData.connectedVehicle) === 1) {
+                        stopSaleData.connectedVehicle = true;
+                    } else if (parseInt(stopSaleData.connectedVehicle) === 2) {
+                        stopSaleData.connectedVehicle = false;
+                    }
+                }
+                formData.set("stopSale", JSON.stringify(stopSaleData));
 
                 if (!this.editMode) {
                     url = this.routing.generate("stopsale.store");
