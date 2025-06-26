@@ -60,7 +60,7 @@ class StoreTransportDriverCommand
     private $countryName;
 
     /**
-     * @var integer
+     * @var integer|null
      */
     private $postalCode;
 
@@ -103,7 +103,7 @@ class StoreTransportDriverCommand
      * @param string|null $stateName
      * @param integer $countryId
      * @param string|null $countryName
-     * @param integer $postalCode
+     * @param integer|null $postalCode
      * @param string $address
      * @param boolean $internalDriver
      * @param integer|null $providerId
@@ -118,11 +118,11 @@ class StoreTransportDriverCommand
         string $issueDate,
         string $expirationDate,
         string $city,
-        int $stateId,
+        ?int $stateId,
         ?string $stateName,
         int $countryId,
         ?string $countryName,
-        int $postalCode,
+        ?int $postalCode,
         string $address,
         bool $internalDriver,
         ?int $providerId,
@@ -221,9 +221,9 @@ class StoreTransportDriverCommand
     /**
      * Get the value of stateId
      *
-     * @return int
+     * @return int|null
      */
-    public function getStateId(): int
+    public function getStateId(): ?int
     {
         return $this->stateId;
     }
@@ -261,9 +261,9 @@ class StoreTransportDriverCommand
     /**
      * Get the value of postalCode
      *
-     * @return integer
+     * @return integer|null
      */
-    public function getPostalCode(): int
+    public function getPostalCode(): ?int
     {
         return $this->postalCode;
     }
