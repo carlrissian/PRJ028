@@ -267,7 +267,7 @@ export default {
                 partnerIds: [],
                 startTime: null,
                 endTime: null,
-                connectedVehicle: false,
+                connectedVehicle: null,
             },
 
             disableReplacementFields: false,

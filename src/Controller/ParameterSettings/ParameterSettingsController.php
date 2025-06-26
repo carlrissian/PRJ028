@@ -64,7 +64,7 @@ class ParameterSettingsController extends Controller
                         : (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_NO
                             ? false
                             : null))
-                    : false,
+                    : null,
                 filter_var($request->get('isOverride', false), FILTER_VALIDATE_BOOLEAN)
     
             );
