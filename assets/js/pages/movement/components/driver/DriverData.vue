@@ -477,13 +477,12 @@ export default {
     computed: {
         requireProvince() {
             if (!this.driver.country) return false;
-
+            
             const id = Number(this.driver.country.id);
             const iso = (this.driver.country.iso || this.driver.country.countryCode || '').toUpperCase();
 
             const ids = [1]; // Spain
             const isos = ['ES', 'IC']; // Spain and Canary Islands ISO codes
-
             return ids.includes(id) || isos.includes(iso);
         },
     },
