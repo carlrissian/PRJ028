@@ -282,6 +282,7 @@
 
                         <!-- State -->
                         <single-select-picker
+                            v-if="requireProvince"
                             @updatedSelectPicker="driver.state = $event"
                             name="driverState"
                             id="driverState"
@@ -289,7 +290,7 @@
                             :label="txt.fields.state"
                             :placeholder="txt.form.selectAnOption"
                             :value="driver.state"
-                            required
+                            :required="requireProvince"
                             return-object
                             :options="stateListFiltered"
                         />
@@ -297,13 +298,14 @@
 
                         <!-- Postal code -->
                         <input-number
+                            v-if="requireProvince"
                             @updatedInputNumber="driver.postalCode = $event"
                             name="driverPC"
                             id="driverPC"
                             div-class="form-group col-md-3"
                             :label="txt.fields.postalCode"
                             :value="driver.postalCode"
-                            required
+                            :required="requireProvince"
                         />
                         <!--  -->
 
@@ -471,6 +473,19 @@ export default {
                 branch: null,
             },
         };
+    },
+    computed: {
+        requireProvince() {
+            if (!this.driver.country) return false;
+            const name = this.driver.country.name ? this.driver.country.name.toLowerCase() : '';
+            return [
+                'espa\u00f1a',
+                'spain',
+                'canarias',
+                'islas canarias',
+                'canary islands'
+            ].includes(name);
+        },
     },
     mounted() {
         this.driver.internalDriver = this.internalDriver;
@@ -721,6 +736,12 @@ export default {
         providerId() {
             if (this.driver.provider === null) this.driver.provider = {};
             this.driver.provider.id = this.providerId;
+        },
+        'driver.country': function () {
+            if (!this.requireProvince) {
+                this.driver.state = null;
+                this.driver.postalCode = null;
+            }
         },
     },
 };
