@@ -477,13 +477,22 @@ export default {
     computed: {
         requireProvince() {
             if (!this.driver.country) return false;
-            
-            const id = Number(this.driver.country.id);
-            const iso = (this.driver.country.iso || this.driver.country.countryCode || '').toUpperCase();
 
-            const ids = [1]; // Spain
+            const id = Number(this.driver.country.id ?? this.driver.country.ID);
+            const isoRaw =
+                this.driver.country.iso ||
+                this.driver.country.countryCode ||
+                this.driver.country.countryISO ||
+                this.driver.country.COUNTRYISO ||
+                this.driver.country.code ||
+                this.driver.country.ISO ||
+                '';
+            const iso = typeof isoRaw === 'string' ? isoRaw.toUpperCase() : '';
+
+            const ids = [1]; // Spain (fallback ID)
             const isos = ['ES', 'IC']; // Spain and Canary Islands ISO codes
-            return ids.includes(id) || isos.includes(iso);
+
+            return isos.includes(iso) || ids.includes(id);
         },
     },
     mounted() {
