@@ -1,11 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Distribution\ParameterSetting\Application\CreateParameterSetting;
 
 use Shared\Utils\Utils;
+use Shared\Domain\Criteria\Filter;
+use Doctrine\Common\Collections\Criteria;
 use Distribution\Area\Domain\AreaCriteria;
+use Shared\Domain\Criteria\FilterOperator;
 use App\Constants\ConnectedVehicleConstants;
 use Distribution\Area\Domain\AreaRepository;
+use Shared\Domain\Criteria\FilterCollection;
 use Distribution\Acriss\Domain\AcrissCriteria;
 use Distribution\Branch\Domain\BranchCriteria;
 use Distribution\Region\Domain\RegionCriteria;
@@ -16,15 +22,14 @@ use Distribution\Region\Domain\RegionRepository;
 use Distribution\CarGroup\Domain\CarGroupCriteria;
 use Distribution\Partner\Domain\PartnerRepository;
 use Distribution\CarGroup\Domain\CarGroupRepository;
-use Distribution\ParameterSettingType\Domain\ParameterSettingTypeCriteria;
-use Distribution\ParameterSettingType\Domain\ParameterSettingTypeRepositoryInterface;
+use Distribution\ParameterSettingType\Domain\ParameterSettingTypeRepository;
 
 class CreateParameterSettingQueryHandler
 {
     /**
-     * @var ParameterSettingTypeRepositoryInterface
+     * @var ParameterSettingTypeRepository
      */
-    private ParameterSettingTypeRepositoryInterface $parameterSettingTypeRepository;
+    private ParameterSettingTypeRepository $parameterSettingTypeRepository;
 
     /**
      * @var CarGroupRepository
@@ -59,7 +64,7 @@ class CreateParameterSettingQueryHandler
     /**
      * CreateParameterSettingQueryHandler constructor.
      *
-     * @param ParameterSettingTypeRepositoryInterface $parameterSettingTypeRepository
+     * @param ParameterSettingTypeRepository $parameterSettingTypeRepository
      * @param CarGroupRepository $carGroupRepository
      * @param AcrissRepository $acrissRepository
      * @param RegionRepository $regionRepository
@@ -68,7 +73,7 @@ class CreateParameterSettingQueryHandler
      * @param PartnerRepository $partnerRepository
      */
     public function __construct(
-        ParameterSettingTypeRepositoryInterface $parameterSettingTypeRepository,
+        ParameterSettingTypeRepository $parameterSettingTypeRepository,
         CarGroupRepository $carGroupRepository,
         AcrissRepository $acrissRepository,
         RegionRepository $regionRepository,
@@ -91,40 +96,54 @@ class CreateParameterSettingQueryHandler
      */
     public function handle(CreateParameterSettingQuery $query): CreateParameterSettingResponse
     {
-        // FIXME pendiente mover la carga de selectores al frontend
-        $parameterSettingTypeCollection = $this->parameterSettingTypeRepository->getBy(new ParameterSettingTypeCriteria())->getCollection();
+        // TODO se va a filtrar por país (?)
+        $countryId = $query->getCountryId();
+        $countryFilterCollection = new FilterCollection([]);
+        // $countryFilterCollection = new FilterCollection(
+        //     [new Filter('COUNTRYID', new FilterOperator(FilterOperator::EQUAL), $countryId)]
+        // );
+
+        // FIXME mover esta lógica al frontend
+        $parameterSettingTypeCollection = $this->parameterSettingTypeRepository->getBy(new Criteria())->getCollection();
         $carGroupCollection = $this->carGroupRepository->getBy(new CarGroupCriteria())->getCollection();
         $acrissCollection = $this->acrissRepository->getBy(new AcrissCriteria())->getCollection();
-        $regionCollection = $this->regionRepository->getBy(new RegionCriteria())->getCollection();
-        $areaCollection = $this->areaRepository->getBy(new AreaCriteria())->getCollection();
+        $regionCollection = $this->regionRepository->getBy(new RegionCriteria($countryFilterCollection))->getCollection();
+        $areaCollection = $this->areaRepository->getBy(new AreaCriteria($countryFilterCollection))->getCollection();
         $branchCollection = $this->branchRepository->getBy(new BranchCriteria())->getCollection();
         $partnerCollection = $this->partnerRepository->getBy(new PartnerCriteria())->getCollection();
 
         $parameterSettingTypeList = Utils::createSelect($parameterSettingTypeCollection);
         $carGroupList = Utils::createSelect($carGroupCollection);
-        usort($carGroupList, function ($a, $b) {
-            return strcmp($a['name'], $b['name']);
-        });
-        $acrissList = Utils::createCustomSelectList($acrissCollection, 'id', 'name', 'carGroup.id');
-        usort($acrissList, function ($a, $b) {
-            return strcmp($a['name'], $b['name']);
-        });
+
+        $acrissList = [];
+        foreach ($acrissCollection as $acriss) {
+            $acrissList[] = [
+                'id' => $acriss->getId(),
+                'name' => $acriss->getAcrissName(),
+                'carGroupId' => $acriss->getCarGroup() ? $acriss->getCarGroup()->getId() : null,
+            ];
+        }
+
         $regionList = Utils::createSelect($regionCollection);
-        usort($regionList, function ($a, $b) {
-            return strcmp($a['name'], $b['name']);
-        });
-        $areaList = Utils::createCustomSelectList($areaCollection, 'id', 'name', 'region.id');
-        usort($areaList, function ($a, $b) {
-            return strcmp($a['name'], $b['name']);
-        });
-        $branchList = Utils::createCustomSelectList($branchCollection, 'id', 'name', 'area.id');
-        usort($branchList, function ($a, $b) {
-            return strcmp($a['name'], $b['name']);
-        });
+
+        foreach ($areaCollection as $area) {
+           $areaList[] = [
+               'id' => $area->getId(),
+               'name' => $area->getName(),
+               'regionId' => $area->getRegion() ? $area->getRegion()->getId() : null,
+           ];
+        }
+
+        foreach ($branchCollection as $branch) {
+            $branchList[] = [
+                'id' => $branch->getId(),
+                'name' => $branch->getName(),
+                'areaId' => $branch->getArea() ? $branch->getArea()->getId() : null,
+            ];
+        }
+
         $partnerList = Utils::createSelect($partnerCollection);
-        usort($partnerList, function ($a, $b) {
-            return strcmp($a['name'], $b['name']);
-        });
+
         $connectedVehicleList = [
             ['id' => ConnectedVehicleConstants::CONNECTED_VEHICLE_YES, 'name' => 'yes'],
             ['id' => ConnectedVehicleConstants::CONNECTED_VEHICLE_NO, 'name' => 'no'],

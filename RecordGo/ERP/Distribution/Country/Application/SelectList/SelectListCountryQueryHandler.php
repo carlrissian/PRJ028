@@ -29,8 +29,6 @@ class SelectListCountryQueryHandler
     public function handle(): SelectListCountryResponse
     {
         $countryCollection = $this->countryRepository->getBy(new CountryCriteria())->getCollection();
-        return new SelectListCountryResponse(
-            Utils::createCustomSelectList($countryCollection, 'id', 'name', 'countryCode')
-        );
+        return new SelectListCountryResponse(Utils::createSelect($countryCollection));
     }
 }

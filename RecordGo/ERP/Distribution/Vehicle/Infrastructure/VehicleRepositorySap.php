@@ -39,7 +39,7 @@ class VehicleRepositorySap extends RepositoryHelper implements VehicleRepository
 
         try {
             $body = json_encode(parent::createCriteria($criteria));
-            
+
             $response  = $this->sapRequestHelper->request('GET', $functionName, $body);
 
             if ($response === false) {

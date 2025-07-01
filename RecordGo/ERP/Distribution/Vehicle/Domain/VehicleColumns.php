@@ -36,13 +36,6 @@ abstract class VehicleColumns
             'sort' => "MODELNAME",
         ],
         [
-            'id' => 'modelyear',
-            'name' => 'Año de modelo',
-            'selected' => true,
-            'disabled' => true,
-            'sort' => "MODELYEAR",
-        ],
-        [
             'id' => 'trim',
             'name' => 'Acabado',
             'sort' => "TRIMNAME",
@@ -152,27 +145,22 @@ abstract class VehicleColumns
         // ],
         [
             'id' => 'deliveryDate',
-            'name' => 'F. PU',
-            'sort' => "DELIVERYDATE",
-        ],
-        [
-            'id' => 'deliveryTime',
-            'name' => 'Hora PU',
-        ],
-        [
-            'id' => 'intDeliveryDate',
-            'name' => 'Fecha Recepción',
+            'name' => 'Fecha recepción',
             'sort' => "INTDELIVERYDATE",
         ],
+        // [
+        //     'id' => 'deliveryTime',
+        //     'name' => 'Hora recepción',
+        // ],
         [
             'id' => 'returnDate',
-            'name' => 'F. DO',
+            'name' => 'Fecha devolución',
             'sort' => "RETURNDATE",
         ],
-        [
-            'id' => 'returnTime',
-            'name' => 'Hora DO',
-        ],
+        // [
+        //     'id' => 'returnTime',
+        //     'name' => 'Hora devolución',
+        // ],
         [
             'id' => 'firstRentDate',
             'name' => 'Fecha inicio alquiler',
@@ -325,7 +313,6 @@ abstract class VehicleColumns
             return $columnsNotExcluded;
         }
 
-        
         return self::$columns;
     }
 

@@ -31,6 +31,12 @@
                                         required
                                     />
 
+                                    <input
+                                        type="hidden"
+                                        name="stopSaleTypeId"
+                                        v-model="stopSale.stopSaleTypeId"
+                                    />
+
                                     <div class="row">
                                         <!-- Init date -->
                                         <erp-date-picker-static-filter
@@ -70,7 +76,8 @@
                                             :label="txt.fields.carGroups"
                                             :data-for-ajax="carGroupList"
                                             :value="stopSale.carGroupsId"
-                                            v-bind:style="[this.canBeEditCreated === true ? styleObjectNo : styleObject]"
+                                            :disabled="disableGroupAcriss"
+                                            v-bind:style="[disableGroupAcriss ? styleObjectNo : styleObject]"
                                         />
                                         <!--  -->
 
@@ -83,46 +90,15 @@
                                             :label="txt.fields.acriss"
                                             :data-for-ajax="acrissList"
                                             :value="stopSale.acrissId"
-                                            v-bind:style="[this.canBeEditCreated === true ? styleObjectNo : styleObject]"
+                                            :disabled="disableGroupAcriss"
+                                            v-bind:style="[disableGroupAcriss ? styleObjectNo : styleObject]"
                                         />
                                         <!--  -->
 
-                                        <!-- Stop Sale Type -->
-                                        <single-select-picker
-                                            v-if="false" @onChangeSelectPicker="canSubmit = true"
-                                            @updatedSelectPicker="stopSale.stopSaleTypeId = $event"
-                                            name="stopSaleTypeId"
-                                            id="stopSaleTypeId"
-                                            :label="this.txt.fields.stopSaleType"
-                                            :required="true"
-                                            :value="stopSale.stopSaleTypeId"
-                                            v-bind:style="[this.canBeEditCreated !== true ? styleObjectNo : styleObject]"
-                                        >
-                                            <option
-                                                v-for="item in this.selectList.stopSaleTypeList"
-                                                :key="item.id"
-                                                :value="item.id"
-                                            >
-                                                {{ item.name }}
-                                            </option>
-                                        </single-select-picker>
-                                        <!--  -->
                                     </div>
 
                                     <!-- Pick Up -->
                                     <div class="row">
-                                        <!-- Regions -->
-                                        <erp-multiple-select-static-filter
-                                            @changeSelectMultiple="onChangeRegionPickUp()"
-                                            name="regionPickUpId[]"
-                                            id="regionPickUpId"
-                                            class-number="2"
-                                            :label="txt.fields.originRegion"
-                                            :data-for-ajax="regionList"
-                                            :value="stopSale.regionPickUpId"
-                                            v-bind:style="[this.canBeEditCreated === true ? styleObjectNo : styleObject]"
-                                        />
-                                        <!--  -->
 
                                         <!-- Areas -->
                                         <erp-multiple-select-static-filter
@@ -146,7 +122,8 @@
                                             :label="txt.fields.originBranch"
                                             :data-for-ajax="branchList"
                                             :value="stopSale.branchPickUpId"
-                                            v-bind:style="[this.canBeEditCreated === true ? styleObjectNo : styleObject]"
+                                            :disabled="disableBranchPickUp"
+                                            v-bind:style="[disableBranchPickUp ? styleObjectNo : styleObject]"
                                         />
                                         <!--  -->
                                     </div>
@@ -226,17 +203,18 @@
 
                                       <!-- Connected Vehicle (solo One-Way) -->
                                           <single-select-picker
-                                              @onChangeSelectPicker="canSubmit = true"
-                                              @updatedSelectPicker="stopSale.connectedVehicle = $event"
                                               name="connectedVehicle"
                                               id="connectedVehicle"
-                                              :label="'Vehículo conectado'"
-                                              required
+                                              divClass="form-group col-md-2"
+                                              :label="txt.fields.connectedVehicle"
+                                              :placeholder="txt.form.selectAnOption"
                                               :value="stopSale.connectedVehicle"
                                               :style="!canBeEditCreated ? styleObjectNo : styleObject"
-                                            >
-                                            <option :value="true">{{ txt.form.yes }}</option>
-                                            <option :value="false">{{ txt.form.no }}</option>
+                                              @onChangeSelectPicker="canSubmit = true"
+                                              @updatedSelectPicker="stopSale.connectedVehicle = $event"
+                                          >
+                                              <option :value="true">{{ txt.form.yes }}</option>
+                                              <option :value="false">{{ txt.form.no }}</option>
                                           </single-select-picker>
                                         <!--  -->
 
@@ -284,12 +262,17 @@ import Axios from "axios";
 import Loading from "../../../../assets/js/utilities";
 import ErpMultipleSelectStaticFilter from "../../../components/filterStatic/form/ErpMultipleSelectStaticFilter";
 import ErpDatePickerStaticFilter from "../../../components/filterStatic/form/ErpDatePickerStaticFilter";
+import InputNumber from "../../../../SharedAssets/vue/components/base/inputs/InputNumber.vue";
+import SingleSelectPicker from "../../../../SharedAssets/vue/components/base/inputs/SingleSelectPicker.vue";
+
 
 export default {
     name: "OneWayStopSaleForm",
     components: {
         ErpMultipleSelectStaticFilter,
         ErpDatePickerStaticFilter,
+        InputNumber,
+        SingleSelectPicker,
     },
     props: {
         selectList: Object,
@@ -298,7 +281,6 @@ export default {
     data() {
         return {
             txt: {},
-            constants: {},
             title: null,
             submitButton: null,
             submitButtonClass: null,
@@ -311,12 +293,12 @@ export default {
                 endDate: null,
                 carGroupsId: [],
                 acrissId: [],
-                regionPickUpId: [],
                 regionDropOffId: [],
                 areaPickUpId: [],
-                areaPiDropOffId: [],
+                areaDropOffId: [],
                 branchPickUpId: [],
                 branchDropOffId: [],
+                recurrencesId: [],
                 stopSaleTypeId: null,
                 minDaysRent: null,
                 maxDaysRent: null,
@@ -325,18 +307,19 @@ export default {
                 cancelled: null,
             },
             canBeEditCreated: false,
+            canSubmit: false,
             carGroupList: [],
             acrissList: [],
             regionList: [],
             areaList: [],
             branchList: [],
-            stopSaleTypeList: [],
             daysList: [],
             connectedVehicleList: [],
 
             styleObjectNo: {
                 pointerEvents: "none",
                 opacity: "0.5",
+                display: "none",
             },
             styleObject: {
                 pointerEvents: "visible",
@@ -346,10 +329,9 @@ export default {
     },
     created() {
         this.txt = txtTrans;
-        this.constants = constants;
-    
-        this.stopSale.stopSaleTypeId = parseInt(this.constants.STOPSALETYPE_TOTAL, 10);
-},
+
+        this.stopSale.stopSaleTypeId = 1;
+    },
     mounted() {
         this.canBeEditCreated = this.selectList.canBeEditCreated;
         this.carGroupList = this.selectList.carGroupList;
@@ -357,7 +339,6 @@ export default {
         this.regionList = this.selectList.regionList;
         this.areaList = this.selectList.areaList;
         this.branchList = this.selectList.branchList;
-        this.stopSaleTypeList = this.selectList.stopSaleTypeList;
         this.daysList = this.selectList.daysList;
         this.connectedVehicleList = this.selectList.connectedVehicleList;
         this.stopSaleStatusList = this.selectList.stopSaleStatusList;
@@ -375,7 +356,7 @@ export default {
             this.title = this.txt.titles.createOneWay;
             this.submitButton = this.txt.form.create;
             this.submitButtonClass = "la-plus";
-            this.stopSale.departmentId = this.constants.department.distribution;
+            this.stopSale.departmentId = constants.department.distribution;
             this.stopSale.categoryId = constants.category.oneway;
             this.stopSale.startTime = moment(new Date(), "HH:mm").format("HH:mm");
             this.stopSale.endTime = moment(new Date(), "HH:mm")
@@ -388,15 +369,40 @@ export default {
         this.$nextTick(function() {
             $("#carGroupsId").selectpicker("refresh");
             $("#acrissId").selectpicker("refresh");
-            $("#regionPickUpId").selectpicker("refresh");
             $("#regionDropOffId").selectpicker("refresh");
             $("#areaPickUpId").selectpicker("refresh");
             $("#areaDropOffId").selectpicker("refresh");
             $("#branchPickUpId").selectpicker("refresh");
             $("#branchDropOffId").selectpicker("refresh");
-            $("#stopSaleTypeId").selectpicker("refresh");
             $("#connectedVehicle").selectpicker("refresh");
         });
+    },
+    computed: {
+        disableGroupAcriss() {
+            return (
+                this.stopSale.endDate &&
+                this.stopSale.carGroupsId.length === 0 &&
+                this.stopSale.acrissId.length === 0
+            );
+        },
+        disableBranchPickUp() {
+            return (
+                this.stopSale.endDate && this.stopSale.branchPickUpId.length === 0
+            );
+        },
+    },
+    watch: {
+        disableGroupAcriss(val) {
+            if (val) {
+                this.stopSale.carGroupsId = [];
+                this.stopSale.acrissId = [];
+            }
+        },
+        disableBranchPickUp(val) {
+            if (val) {
+                this.stopSale.branchPickUpId = [];
+            }
+        },
     },
     methods: {
         showNotification(type = "", text = "") {
@@ -411,9 +417,6 @@ export default {
                 actionsBox: true,
             };
 
-            // stopSaleTypeId
-            let stopSaleTypeId = $("#stopSaleTypeId");
-            stopSaleTypeId.selectpicker(config);
             // connectedVehicle
             let connectedVehicle = $("#connectedVehicle");
             connectedVehicle.selectpicker(config);
@@ -422,10 +425,10 @@ export default {
             this.stopSale.id = this.stopSaleData?.id;
             this.stopSale.departmentId = this.stopSaleData?.department?.id
                 ? this.stopSaleData.department.id
-                : this.constants.department.distribution;
+                : constants.department.distribution;
             this.stopSale.categoryId = this.stopSaleData?.category?.id
                 ? this.stopSaleData.category.id
-                : this.constants.category.oneway;
+                : constants.category.oneway;
             this.stopSale.initDate = this.stopSaleData?.initDate;
             this.stopSale.endDate = this.stopSaleData?.endDate;
             if (this.stopSaleData.acriss != null)
@@ -436,8 +439,6 @@ export default {
 
             if (this.stopSaleData.acriss != null) this.getSelectedIds(this.stopSaleData.acriss, this.stopSale.acrissId);
 
-            if (this.stopSaleData.regionPickUp != null)
-                this.getSelectedIds(this.stopSaleData.regionPickUp, this.stopSale.regionPickUpId);
 
             if (this.stopSaleData.regionDropOff != null)
                 this.getSelectedIds(this.stopSaleData.regionDropOff, this.stopSale.regionDropOffId);
@@ -518,11 +519,6 @@ export default {
             let carGroupsId = $("#carGroupsId");
             carGroupsId.val(this.stopSale.carGroupsId);
         },
-        onChangeRegionPickUp() {
-            this.stopSale.regionPickUpId = $("#regionPickUpId")
-                .val()
-                .map((element) => parseInt(element));
-        },
         onChangeRegionDropOff() {
             this.stopSale.regionDropOffId = $("#regionDropOffId")
                 .val()
@@ -557,13 +553,13 @@ export default {
                 this.showNotification("error", this.txt.form.cannotBeEditCreated);
             }
 
-            if (this.stopSale.carGroupsId.length == 0 && this.stopSale.acrissId.length == 0) {
+            if (!this.disableGroupAcriss && this.stopSale.carGroupsId.length == 0 && this.stopSale.acrissId.length == 0) {
                 validated = false;
                 this.showNotification("warn", this.txt.form.selectAGroupOrAcriss);
                 document.querySelector("#acrissId").focus();
             }
 
-            if (this.stopSale.branchPickUpId.length == 0) {
+            if (!this.disableBranchPickUp && this.stopSale.branchPickUpId.length == 0) {
                 validated = false;
                 this.showNotification("warn", this.txt.form.selectABranch);
                 document.querySelector("#branchPickUpId").focus();
@@ -576,7 +572,15 @@ export default {
 
             if (validated) {
                 let formData = new FormData();
-                formData.set("stopSale", JSON.stringify(this.stopSale));
+                let stopSaleData = { ...this.stopSale };
+                if (stopSaleData.connectedVehicle !== null && stopSaleData.connectedVehicle !== undefined) {
+                    if (parseInt(stopSaleData.connectedVehicle) === 1) {
+                        stopSaleData.connectedVehicle = true;
+                    } else if (parseInt(stopSaleData.connectedVehicle) === 2) {
+                        stopSaleData.connectedVehicle = false;
+                    }
+                }
+                formData.set("stopSale", JSON.stringify(stopSaleData));
 
                 if (!this.editMode) {
                     url = this.routing.generate("stopsale.store");
@@ -588,7 +592,7 @@ export default {
 
                                 setTimeout(() => {
                                     window.location.href = this.routing.generate("stopsale.list", {
-                                        stopSaleCategory: "standard",
+                                        stopSaleCategory: "oneway",
                                     });
                                 }, 2000);
                             } else {
@@ -611,7 +615,7 @@ export default {
 
                                 setTimeout(() => {
                                     window.location.href = this.routing.generate("stopsale.list", {
-                                        stopSaleCategory: "standard",
+                                        stopSaleCategory: "oneway",
                                     });
                                 }, 2000);
                             } else {
@@ -628,5 +632,4 @@ export default {
     },
 };
 </script>
-
 <style scoped></style>

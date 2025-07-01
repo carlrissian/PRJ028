@@ -20,7 +20,6 @@
                                     id="startDate"
                                     divClass="form-group col-md-3"
                                     :label="txt.fields.startDate"
-                                    :limit-start-day="today"
                                     :limit-end-day="parameterSetting.endDate"
                                     :value="parameterSetting.startDate"
                                     required
@@ -252,7 +251,7 @@ export default {
     data() {
         return {
             txt: txtTrans,
-            today: new Intl.DateTimeFormat("en-GB").format(new Date(Date.now())),
+
             parameterSetting: {
                 startDate: new Intl.DateTimeFormat("en-GB").format(new Date(Date.now())),
                 endDate: null,
@@ -350,6 +349,28 @@ export default {
         },
     },
     created() {
+        this.selectList.carGroupList.sort((a, b) => {
+            let nameA = a.name.toLowerCase();
+            let nameB = b.name.toLowerCase();
+            if (nameA < nameB) return -1;
+            if (nameA > nameB) return 1;
+            return 0;
+        });
+        this.selectList.acrissList.sort((a, b) => {
+            let nameA = a.name.toLowerCase();
+            let nameB = b.name.toLowerCase();
+            if (nameA < nameB) return -1;
+            if (nameA > nameB) return 1;
+            return 0;
+        });
+        this.selectList.partnerList.sort((a, b) => {
+            let nameA = a.name.toLowerCase();
+            let nameB = b.name.toLowerCase();
+            if (nameA < nameB) return -1;
+            if (nameA > nameB) return 1;
+            return 0;
+        });
+
         this.customCarGroupList = this.selectList.carGroupList;
         this.customAcrissList = this.selectList.acrissList;
         this.customReplacementCarGroupList = this.selectList.carGroupList;
@@ -590,7 +611,15 @@ export default {
                 });
                 formData.set("startTime", this.parameterSetting.startTime);
                 formData.set("endTime", this.parameterSetting.endTime);
-                formData.set("connectedVehicle", this.parameterSetting.connectedVehicle);
+                let connectedVehicleValue = this.parameterSetting.connectedVehicle;
+                if (connectedVehicleValue !== null && connectedVehicleValue !== undefined) {
+                    if (parseInt(connectedVehicleValue) === 1) {
+                        connectedVehicleValue = true;
+                    } else if (parseInt(connectedVehicleValue) === 2) {
+                        connectedVehicleValue = false;
+                    }
+                }
+                formData.set("connectedVehicle", connectedVehicleValue);
 
                 this.axios
                     .post(url, formData)
@@ -650,5 +679,4 @@ export default {
     },
 };
 </script>
-
 <style scoped></style>

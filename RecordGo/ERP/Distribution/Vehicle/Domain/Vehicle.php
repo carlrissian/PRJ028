@@ -56,11 +56,6 @@ class Vehicle
     private ?Model $model;
 
     /**
-     * @var ?string|null;
-     */
-    private ?string $modelYear;
-
-    /**
      * @var Trim|null
      */
     private ?Trim $trim;
@@ -342,7 +337,6 @@ class Vehicle
      * @param VehicleGroup|null $vehicleGroup
      * @param Brand|null $brand
      * @param Model|null $model
-     * @param string|null $modelyear
      * @param Trim|null $trim
      * @param MotorizationType|null $motorizationType
      * @param GearBox|null $gearBox
@@ -385,7 +379,6 @@ class Vehicle
      * @param DateTimeValueObject|null $rentingEndDate
      * @param DateValueObject|null $byeByeDate
      * @param DateTimeValueObject|null $deliveryConfirmationDate
-     * @param DateTimeValueObject|null $intDeliveryConfirmationDate
      * @param DateTimeValueObject|null $returnDate
      * @param DateTimeValueObject|null $dropOffDate
      * @param DateTimeValueObject|null $checkInDate
@@ -408,7 +401,6 @@ class Vehicle
         ?VehicleGroup $vehicleGroup,
         ?Brand $brand,
         ?Model $model,
-        ?string $modelYear,
         ?Trim $trim,
         ?MotorizationType $motorizationType,
         ?GearBox $gearBox,
@@ -451,7 +443,6 @@ class Vehicle
         ?DateTimeValueObject $rentingEndDate,
         ?DateValueObject $byeByeDate,
         ?DateTimeValueObject $deliveryConfirmationDate,
-        ?DateTimeValueObject  $intDeliveryConfirmationDate,
         ?DateTimeValueObject $returnDate,
         ?DateTimeValueObject $dropOffDate,
         ?DateTimeValueObject $checkInDate,
@@ -473,7 +464,6 @@ class Vehicle
         $this->vehicleGroup = $vehicleGroup;
         $this->brand = $brand;
         $this->model = $model;
-        $this->modelYear = $modelYear;
         $this->trim = $trim;
         $this->motorizationType = $motorizationType;
         $this->gearBox = $gearBox;
@@ -516,7 +506,6 @@ class Vehicle
         $this->rentingEndDate = $rentingEndDate;
         $this->byeByeDate = $byeByeDate;
         $this->deliveryConfirmationDate = $deliveryConfirmationDate;
-        $this->intDeliveryConfirmationDate = $intDeliveryConfirmationDate;
         $this->returnDate = $returnDate;
         $this->dropOffDate = $dropOffDate;
         $this->checkInDate = $checkInDate;
@@ -593,14 +582,6 @@ class Vehicle
     public function getModel(): ?Model
     {
         return $this->model;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getModelYear(): ?string
-    {
-        return $this->modelYear;
     }
 
     /**
@@ -975,11 +956,6 @@ class Vehicle
         return $this->deliveryConfirmationDate;
     }
 
-    public function getIntDeliveryConfirmationDate(): ?DateTimeValueObject
-    {
-        return $this->intDeliveryConfirmationDate;
-    }
-
     /**
      * @return DateTimeValueObject|null
      */
@@ -1135,7 +1111,6 @@ class Vehicle
             (isset($vehicleArray['CarGroup'])) ? VehicleGroup::createFromArray($vehicleArray['CarGroup']) : null,
             (isset($vehicleArray['Brand'])) ? Brand::createFromArray($vehicleArray['Brand']) : null,
             (isset($vehicleArray['Model'])) ? Model::createFromArray($vehicleArray['Model']) : null,
-            (isset($vehicleArray['Model'])) ? Model::createFromArray($vehicleArray['Model'])->getYear() : null,
             (isset($vehicleArray['Trim'])) ? Trim::createFromArray($vehicleArray['Trim']) : null,
             (isset($vehicleArray['MotorizationType'])) ? MotorizationType::createFromArray($vehicleArray['MotorizationType']) : null,
             (isset($vehicleArray['GearBox'])) ? GearBox::createFromArray($vehicleArray['GearBox']) : null,
@@ -1178,7 +1153,6 @@ class Vehicle
             (isset($vehicleArray['RENTINGENDDATE'])) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($vehicleArray['RENTINGENDDATE'])) : null,
             isset($vehicleArray['BYEBYEDATE']) ? new DateValueObject(Utils::convertOdataDateToDateTime($vehicleArray['BYEBYEDATE'])) : null,
             (isset($vehicleArray['DELIVERYDATE'])) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($vehicleArray['DELIVERYDATE'])) : null,
-            (isset($vehicleArray['INTDELIVERYDATE'])) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($vehicleArray['INTDELIVERYDATE'])) : null,
             (isset($vehicleArray['RETURNDATE'])) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($vehicleArray['RETURNDATE'])) : null,
             (isset($vehicleArray['DROPOFFDATE'])) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($vehicleArray['DROPOFFDATE'])) : null,
             (isset($vehicleArray['UNLOADDATE'])) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($vehicleArray['UNLOADDATE'])) : null,

@@ -75,19 +75,20 @@
                 this.el.val(this.value);
                 this.el.selectpicker("refresh");
             },
-            dataForAjax() {
-                this.dataForAjax.forEach(item => {
-                    this.el.append($("<option>", {
-                        value: item.id,
-                        text: item.name
-                    }));
-                    this.valueDataAjax = this.value;
-                    this.el.selectpicker("refresh");
-                });
+            dataForAjax: {
+                handler() {
+                    this.dataForAjax.forEach(item => {
+                        this.el.append($("<option>", {
+                            value: item.id,
+                            text: item.name
+                        }));
+                        this.valueDataAjax = this.value;
+                        this.el.selectpicker("refresh");
+                    });
+                },
+                immediate: true,
             }
         }
     }
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>

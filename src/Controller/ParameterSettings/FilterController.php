@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Distribution\ParameterSetting\Application\FilterParameterSettings\FilterParameterSettingsQuery;
 use Distribution\ParameterSetting\Application\FilterParameterSettings\FilterParameterSettingsQueryHandler;
+use App\Constants\ConnectedVehicleConstants;
 
 class FilterController extends AbstractController
 {
@@ -43,7 +44,13 @@ class FilterController extends AbstractController
             $request->get('areaIds') ? json_decode($request->get('areaIds')) : null,
             $request->get('branchIds') ? json_decode($request->get('branchIds')) : null,
             $request->get('parameterSettingTypeId') ? intval($request->get('parameterSettingTypeId')) : null,
-            !is_null($request->get('connectedVehicle')) ? filter_var($request->get('connectedVehicle'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : null,
+            $request->get('connectedVehicle') !== null
+                ? (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_YES
+                    ? true
+                    : (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_NO
+                        ? false
+                        : null))
+                : null,
             $countryId,
             $request->get('startDate'),
             $request->get('endDate'),
@@ -58,3 +65,4 @@ class FilterController extends AbstractController
         return $this->json($response->getParameterSettingResponse());
     }
 }
+

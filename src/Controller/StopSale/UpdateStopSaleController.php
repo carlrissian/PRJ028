@@ -6,8 +6,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Distribution\StopSale\Domain\StopSaleException;
 use Distribution\StopSale\Application\UpdateStopSale\UpdateStopSaleCommand;
 use Distribution\StopSale\Application\UpdateStopSale\UpdateStopSaleCommandHandler;
+use App\Constants\ConnectedVehicleConstants;
 
 class UpdateStopSaleController extends AbstractController
 {
@@ -46,7 +48,7 @@ class UpdateStopSaleController extends AbstractController
                 $stopSale['regionPickUpId'] ?? null,
                 $stopSale['regionDropOffId'] ?? null,
                 $stopSale['areaPickUpId'] ?? null,
-                $stopSale['areaPiDropOffId'] ?? null,
+                $stopSale['areaDropOffId'] ?? null,
                 $stopSale['branchPickUpId'] ?? null,
                 $stopSale['branchDropOffId'] ?? null,
                 $stopSale['partnersId'] ?? null,
@@ -58,7 +60,13 @@ class UpdateStopSaleController extends AbstractController
                 $stopSale['recurrencesId'] ?? null,
                 $stopSale['minDaysRent'] !== null ? intval($stopSale['minDaysRent']) : null,
                 $stopSale['maxDaysRent'] !== null ? intval($stopSale['maxDaysRent']) : null,
-                filter_var($stopSale['connectedVehicle'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+                isset($stopSale['connectedVehicle'])
+                    ? (intval($stopSale['connectedVehicle']) === ConnectedVehicleConstants::CONNECTED_VEHICLE_YES
+                        ? true
+                        : (intval($stopSale['connectedVehicle']) === ConnectedVehicleConstants::CONNECTED_VEHICLE_NO
+                            ? false
+                            : null))
+                    : null,
                 $stopSale['notes']
             );
 

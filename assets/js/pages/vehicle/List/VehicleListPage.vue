@@ -45,22 +45,22 @@ export default {
             count: 0,
             ref: {},
             hiddenColumns: [],
-            defaultColumns: ["vin", "licensePlate", "brand", "model", "modelyear"],
+            defaultColumns: ["licensePlate", "vin", "brand", "model"],
             columns: [
-                 {
-                    field: "vin",
-                    title: txtTrans.fields.vin,
-                    sortable: true,
-                    formatter: (value) => this.vehicleLinkFormatter(value, "vin"),
-                    events: {
-                        "click .details": (e, value, row) => this.clickDetailsRow(row),
-                    },
-                },
                 {
                     field: "licensePlate",
                     title: txtTrans.fields.licensePlate,
                     sortable: true,
                     formatter: (value) => this.vehicleLinkFormatter(value, "licensePlate"),
+                    events: {
+                        "click .details": (e, value, row) => this.clickDetailsRow(row),
+                    },
+                },
+                {
+                    field: "vin",
+                    title: txtTrans.fields.vin,
+                    sortable: true,
+                    formatter: (value) => this.vehicleLinkFormatter(value, "vin"),
                     events: {
                         "click .details": (e, value, row) => this.clickDetailsRow(row),
                     },
@@ -74,12 +74,6 @@ export default {
                 {
                     field: "model",
                     title: txtTrans.fields.model,
-                    sortable: true,
-                    formatter: (value) => Formatter.formatField(value),
-                },
-                {
-                    field: "modelyear",
-                    title: txtTrans.fields.modelyear,
                     sortable: true,
                     formatter: (value) => Formatter.formatField(value),
                 },

@@ -1,21 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\ParameterSettings;
 
 use App\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use Distribution\ParameterSetting\Application\ListParemeterSettingsSelects\ListParameterSettingsSelectsQuery;
 use Distribution\ParameterSetting\Application\ListParemeterSettingsSelects\ListParameterSettingsSelectsQueryHandler;
+use Distribution\ParameterSetting\Application\ListParemeterSettingsSelects\ListParameterSettingsSelectsQuery;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ParameterSettingsListController extends Controller
 {
-    final public function getListFilters(ListParameterSettingsSelectsQueryHandler $handler): Response
+    final public function getListFilters(ListParameterSettingsSelectsQueryHandler $listParameterSettingsSelectsQueryHandler): JsonResponse
     {
-        $query = new ListParameterSettingsSelectsQuery();
-        $response = $handler->handle($query);
+        //TODO Obtener id país desde donde se guarde tras LOGIN
+        $countryId = $this->get('session')->get('countryId') ?: 1;
 
-        return $this->render('pages/parameter_settings/list.html.twig', [
-            'selectList' => $this->json($response->getSelectList())->getContent(),
+        $response = $listParameterSettingsSelectsQueryHandler->handle(new ListParameterSettingsSelectsQuery($countryId));
+
+        // FIXME mover esta lógica al frontend
+        return $this->json([
+            'regions' => $response->getRegions(),
+            'areas' => $response->getAreas(),
+            'delegations' => $response->getDelegations(),
+            'connectedVehicleList' => $response->getConnectedVehicleList(),
+            'carGroupList' => $response->getCarGroupList(),
+            'acrissList' => $response->getAcrissList(),
+            'parameterSettingTypeList' => $response->getParameterSettingTypeList()
         ]);
     }
 }

@@ -198,7 +198,7 @@ class FilterStopSaleQueryHandler
 
         $sortCollection = null;
         if (!empty($query->getSort()) && !empty($query->getOrder())) {
-             // Reglas para transformar los valores de sort
+            // Reglas para transformar los valores de sort
             $sort = $query->getSort();
             if ($sort === 'DEPARTMENT') {
                 $sort = 'DEPARTMENTNAME';

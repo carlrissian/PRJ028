@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Distribution\Branch\Domain\BranchException;
 use Distribution\Country\Domain\CountryException;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Constants\ConnectedVehicleConstants;
 use Distribution\CarGroup\Domain\CarGroupException;
 use Distribution\Location\Domain\LocationException;
 use Distribution\Movement\Domain\MovementException;
@@ -305,7 +306,13 @@ class MovementController extends Controller
             $request->get('checkInDateFrom') != 'null' ? $request->get('checkInDateFrom') : null,
             $request->get('saleMethodIdIn'),
             $request->get('vehicleStatusIdIn'),
-            filter_var($request->get('connectedVehicle'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+            $request->get('connectedVehicle') !== null
+                ? (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_YES
+                    ? true
+                    : (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_NO
+                        ? false
+                        : null))
+                : null
         );
 
         $response = $handler->handle($command);
@@ -437,7 +444,13 @@ class MovementController extends Controller
             $request->get('checkInDateFrom') != 'null' ? $request->get('checkInDateFrom') : null,
             $request->get('saleMethodIdIn'),
             $request->get('vehicleStatusIdIn'),
-            filter_var($request->get('connectedVehicle'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+            $request->get('connectedVehicle') !== null
+                ? (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_YES
+                    ? true
+                    : (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_NO
+                        ? false
+                        : null))
+                : null
         );
 
         $response = $handler->handle($command);
@@ -888,3 +901,4 @@ class MovementController extends Controller
         ]);
     }
 }
+

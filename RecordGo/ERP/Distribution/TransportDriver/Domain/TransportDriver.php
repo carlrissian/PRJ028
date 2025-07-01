@@ -77,9 +77,9 @@ class TransportDriver
 
     /**
      *
-     * @var int|null
+     * @var int
      */
-    private ?int $postalCode;
+    private $postalCode;
 
     /**
      * Ciudad del permiso
@@ -123,7 +123,7 @@ class TransportDriver
      * @param DateValueObject $issueDate
      * @param DateValueObject $expirationDate
      * @param string $address
-     * @param integer|null $postalCode
+     * @param integer $postalCode
      * @param string $city
      * @param string $state
      * @param Country $country
@@ -140,7 +140,7 @@ class TransportDriver
         DateValueObject $issueDate,
         DateValueObject $expirationDate,
         string $address,
-        ?int $postalCode,
+        int $postalCode,
         string $city,
         ?string $state,
         Country $country,
@@ -266,9 +266,9 @@ class TransportDriver
     /**
      * Get the value of postalCode
      *
-     * @return int|null
+     * @return int
      */
-    public function getPostalCode(): ?int
+    public function getPostalCode(): int
     {
         return $this->postalCode;
     }

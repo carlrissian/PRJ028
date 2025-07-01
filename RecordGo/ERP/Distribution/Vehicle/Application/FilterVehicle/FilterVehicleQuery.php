@@ -32,19 +32,19 @@ class FilterVehicleQuery
     private ?int $regionId;
 
     /**
-     * @var array|null
+     * @var integer|null
      */
-    private ?array $areaId;
+    private ?int $areaId;
 
     /**
-     * @var array|null
+     * @var integer|null
      */
-    private ?array $branchId;
+    private ?int $branchId;
 
     /**
-     * @var array|null
+     * @var integer|null
      */
-    private ?array $locationId;
+    private ?int $locationId;
 
     /**
      * @var integer|null
@@ -125,16 +125,6 @@ class FilterVehicleQuery
      * @var string|null
      */
     private ?string $deliveryDateTo;
-
-    /**
-     * @var string|null
-     */
-    private ?string $intDeliveryDateFrom;
-
-    /**
-     * @var string|null
-     */
-    private ?string $intDeliveryDateTo;
 
     /**
      * @var string|null
@@ -262,11 +252,6 @@ class FilterVehicleQuery
     private ?array $columns;
 
     /**
-     * @var string|null
-     */
-    private ?string $cleanVehicle;
-
-    /**
      * FilterVehicleQuery constructor.
      *
      * @param integer|null $limit
@@ -274,8 +259,8 @@ class FilterVehicleQuery
      * @param string|null $sort
      * @param string|null $order
      * @param integer|null $regionId
-     * @param array|null $areaId
-     * @param array|null $branchId
+     * @param integer|null $areaId
+     * @param integer|null $branchId
      * @param integer|null $brandId
      * @param integer|null $modelId
      * @param integer|null $trimId
@@ -292,8 +277,6 @@ class FilterVehicleQuery
      * @param int|null $actualKmsTo
      * @param string|null $deliveryDateFrom
      * @param string|null $deliveryDateTo
-     * @param string|null $intDeliveryDateFrom
-     * @param string|null $intDeliveryDateTo
      * @param string|null $firstRentDateFrom
      * @param string|null $firstRentDateTo
      * @param string|null $rentingEndDateFrom
@@ -319,7 +302,6 @@ class FilterVehicleQuery
      * @param array|null $vehicleTypeIdIn
      * @param array|null $connectedIn
      * @param array|null $columns
-     *  @param string|null $cleanVehicle
      */
     public function __construct(
         ?int $limit,
@@ -327,9 +309,9 @@ class FilterVehicleQuery
         ?string $sort,
         ?string $order,
         ?int $regionId,
-        ?array $areaId,
-        ?array $branchId,
-        ?array $locationId,
+        ?int $areaId,
+        ?int $branchId,
+        ?int $locationId,
         ?int $brandId,
         ?int $modelId,
         ?int $trimId,
@@ -346,8 +328,6 @@ class FilterVehicleQuery
         ?int $actualKmsTo,
         ?string $deliveryDateFrom,
         ?string $deliveryDateTo,
-        ?string $intDeliveryDateFrom,
-        ?string $intDeliveryDateTo,
         ?string $firstRentDateFrom,
         ?string $firstRentDateTo,
         ?string $rentingEndDateFrom,
@@ -372,8 +352,7 @@ class FilterVehicleQuery
         ?string $checkOutDateTo,
         ?array $vehicleTypeIdIn,
         ?array $connectedIn,
-        ?array $columns = null,
-        ?string $cleanVehicle = null
+        ?array $columns = null
     ) {
         $this->limit = $limit;
         $this->offset = $offset;
@@ -399,8 +378,6 @@ class FilterVehicleQuery
         $this->actualKmsTo = $actualKmsTo;
         $this->deliveryDateFrom = $deliveryDateFrom;
         $this->deliveryDateTo = $deliveryDateTo;
-        $this->intDeliveryDateFrom = $intDeliveryDateFrom;
-        $this->intDeliveryDateTo = $intDeliveryDateTo;
         $this->firstRentDateFrom = $firstRentDateFrom;
         $this->firstRentDateTo = $firstRentDateTo;
         $this->rentingEndDateFrom = $rentingEndDateFrom;
@@ -426,7 +403,6 @@ class FilterVehicleQuery
         $this->vehicleTypeIdIn = $vehicleTypeIdIn;
         $this->connectedIn = $connectedIn;
         $this->columns = $columns;
-        $this->cleanVehicle = $cleanVehicle;
     }
 
     /**
@@ -474,25 +450,25 @@ class FilterVehicleQuery
     /**
      * @deprecated NO MVP
      * 
-     * @return array|null
+     * @return integer|null
      */
-    public function getAreaId(): ?array
+    public function getAreaId(): ?int
     {
         return $this->areaId;
     }
 
     /**
-     * @return array|null
+     * @return integer|null
      */
-    public function getBranchId(): ?array
+    public function getBranchId(): ?int
     {
         return $this->branchId;
     }
 
     /**
-     * @return array|null
+     * @return integer|null
      */
-    public function getLocationId(): ?array
+    public function getLocationId(): ?int
     {
         return $this->locationId;
     }
@@ -623,23 +599,6 @@ class FilterVehicleQuery
     public function getDeliveryDateTo(): ?string
     {
         return $this->deliveryDateTo;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getIntDeliveryDateFrom(): ?string
-    {
-        return $this->intDeliveryDateFrom;
-
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getIntDeliveryDateTo(): ?string
-    {
-        return $this->intDeliveryDateTo;
     }
 
     /**
@@ -858,13 +817,5 @@ class FilterVehicleQuery
     public function getColumns(): ?array
     {
         return $this->columns;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCleanVehicle(): ?string
-    {
-        return $this->cleanVehicle;
     }
 }

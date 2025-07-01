@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Distribution\ParameterSetting\Domain;
 
+use Shared\Constants\Infrastructure\ConstantsJsonFile;
 use Shared\Domain\User;
 use Shared\Utils\Utils;
 use Shared\Domain\ValueObject\DateValueObject;
 use Shared\Domain\ValueObject\TimeValueObject;
 use Shared\Domain\ValueObject\DateTimeValueObject;
-use Shared\Constants\Infrastructure\ConstantsJsonFile;
 use Distribution\ParameterSettingType\Domain\ParameterSettingType;
 
 class ParameterSetting

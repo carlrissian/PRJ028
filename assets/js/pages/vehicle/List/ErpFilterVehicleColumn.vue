@@ -28,7 +28,7 @@
                     :data-target="item.name"
                 >
                     {{ formatterChip(item) }}
-                    <i @click.stop="removeItemFilter(item)" class="fa fa-times-circle fa-lg ml-2"></i>
+                    <i @click="removeItemFilter(item)" class="fa fa-times-circle fa-lg ml-2"></i>
                 </button>
             </div>
 
@@ -117,133 +117,106 @@ export default {
             }
         },
         saveField(field) {
+            // console.log("Field: ", field);
             if (!["", null, undefined].includes(field.value) && !this.selectedFilters.some((item) => item.name === field.name)) {
                 this.filters[field.filterName] = field.value;
                 this.selectedFilters.push(field);
             }
         },
         saveFilters() {
-          this.flush();
+            this.flush();
 
-          this.formFields.forEach((element) => {
-            let field = {
-              type: null,
-              filterName: null,
-              name: null,
-              value: null,
-              text: null,
-            };
+            this.formFields.forEach((element) => {
+                let field = {
+                    type: null,
+                    filterName: null,
+                    name: null,
+                    value: null,
+                    text: null,
+                };
 
-            field.type = element.nodeName.toLowerCase();
+                // console.log("Element: ", element);
+                field.type = element.nodeName.toLowerCase();
 
-            switch (field.type) {
-              case "input":
-                if (["text", "number"].includes(element.type)) {
-                  field.filterName = element.name;
-                  field.value = element.value;
+                switch (field.type) {
+                    case "input":
+                        if (["text", "number"].includes(element.type)) {
+                            field.filterName = element.name;
+                            field.value = element.value;
+                            field.name = element.classList.contains("date")
+                                ? element.parentElement.parentElement.querySelector("label").innerText
+                                : element.parentElement.querySelector("label").innerText;
+                            field.text = element.value;
+                        }
+                        break;
+                    case "select":
+                        field.filterName = element.name;
+                        field.name = element.parentElement.parentElement.querySelector("label").innerText;
 
-                  const wrapper = element.closest(".form-group") || element.closest(".col-md-3");
-                  const label = wrapper?.querySelector("label")?.innerText || '';
+                        if (element.type === "select-multiple") {
+                            let selectedOptions = Array.from(element.selectedOptions).map((option) => option.value);
 
-                  field.name = label;
-                  field.text = element.value !== null && element.value !== '' ? element.value : '(empty)';
+                            if (element.id === "columns") {
+                                this.selectedColumns = selectedOptions;
+                            } else {
+                                field.value = selectedOptions.length > 0 ? selectedOptions : null;
+                                field.text = Array.from(element.selectedOptions)
+                                    .map((option) => option.text)
+                                    .join(", ");
+                            }
+                        } else {
+                            let selectedOption = element.options[element.selectedIndex];
+                            if (selectedOption === undefined) {
+                                break;
+                            }
+                            // console.log("Selected option: ", selectedOption);
+                            field.value = selectedOption.value;
+
+                            // console.log("Selected value: ", field.value);
+                            field.text = selectedOption.text;
+                        }
+                        break;
+                    default:
+                        console.warn("Tipo de elemento desconocido: ", element);
+                        break;
                 }
-                break;
-              case "select":
-                field.filterName = element.name;
-                field.name  = element.parentElement?.parentElement?.querySelector("label")?.innerText ?? "";
 
-                if (element.type === "select-multiple") {
-                  let selectedOptions = Array.from(element.selectedOptions).map((option) => option.value);
-
-                  if (element.id === "columns") {
-                    this.selectedColumns = selectedOptions;
-                  } else {
-                    field.value = selectedOptions.length > 0 ? selectedOptions : null;
-                    field.text = Array.from(element.selectedOptions)
-                        .map((option) => option.text)
-                        .join(", ");
-                  }
-                  this.saveField(field);
-                } else {
-                  let selectedOption = element.options[element.selectedIndex];
-                  if (selectedOption === undefined) break;
-
-                  field.value = selectedOption.value;
-                  field.text = selectedOption.text;
-                  this.saveField(field);
-                }
-                break;
-              default:
-                console.warn("Tipo de elemento desconocido: ", element);
-                break;
-            }
-          });
-
-          const vehicleFilters = this.$parent?.vehicleFilters || {};
-          const rangeFilterKeys = Object.keys(vehicleFilters).filter(
-              key => /From$|To$/.test(key)
-          );
-
-          rangeFilterKeys.forEach(key => {
-            const value = vehicleFilters[key];
-            if (value !== null && value !== undefined && value !== '') {
-              this.filters[key] = value;
-
-              const labelText = window.FILTER_LABELS?.[key] || key;
-
-              this.selectedFilters.push({
-                name: labelText,
-                filterName: key,
-                value,
-                text: value,
-              });
-            }
-          });
+                this.saveField(field);
+            });
         },
         removeItemFilter(item) {
-          this.flush(item);
+            this.flush(item);
 
-          this.formFields.forEach((element) => {
-            if (item.filterName === element.name) {
-              switch (element.nodeName.toLowerCase()) {
-                case "input":
-                  if (["text", "number"].includes(element.type) && !element.hasAttribute("disabled")) {
-                    element.value = '';
-                  }
-                  break;
-                case "select":
-                  Array.from(element.options).forEach((option) => {
-                    if (!option.hasAttribute("disabled")) option.selected = false;
-                  });
-                  $(`#${element.id}`).selectpicker("refresh");
-                  break;
-                default:
-                  console.warn("Tipo de elemento desconocido: ", element);
-                  break;
-              }
+            this.formFields.forEach((element) => {
+                if (item.filterName === element.name) {
+                    switch (element.nodeName.toLowerCase()) {
+                        case "input":
+                            if (["text", "number"].includes(element.type) && !element.hasAttribute("disabled")) {
+                                element.value = null;
+                            }
+                            break;
+                        case "select":
+                            Array.from(element.options).forEach((option) => (option.selected = false));
+                            $(`#${element.id}`).selectpicker("refresh");
+                            break;
+                        default:
+                            console.warn("Tipo de elemento desconocido: ", element);
+                            break;
+                    }
 
-              this.$emit("filterDeleted", item.name);
-            }
-          });
-
-          const vehicleFilters = this.$parent?.vehicleFilters || {};
-          if (vehicleFilters.hasOwnProperty(item.filterName)) {
-            vehicleFilters[item.filterName] = null;
-          }
-
-          this.selectedFilters = this.selectedFilters.filter(
-              (f) => f.filterName !== item.filterName
-          );
-
-          if (this.selectedFilters.length > 0 || this.autoSubmit) {
-            this.$nextTick(() => {
-              this.search();
+                    this.$emit("filterDeleted", item.name);
+                }
             });
-          } else {
-            this.submitted = false;
-            this.$emit("filtersCleared", this.submitted);
-          }
+
+            if (this.selectedFilters.length > 0 || this.autoSubmit) {
+                // Es necesario para que a los componentes de Bootsrap les de tiempo a actualizar el value
+                this.$nextTick(function() {
+                    this.search();
+                });
+            } else {
+                this.submitted = false;
+                this.$emit("filtersCleared", this.submitted);
+            }
         },
         removeFilters() {
             this.flush();
@@ -265,11 +238,6 @@ export default {
                         console.warn("Tipo de elemento desconocido: ", element);
                         break;
                 }
-            });
-
-            const vehicleFilters = this.$parent?.vehicleFilters || {};
-            Object.keys(vehicleFilters).forEach(key => {
-              vehicleFilters[key] = null;
             });
 
             this.$emit("filtersCleared", this.submitted);
