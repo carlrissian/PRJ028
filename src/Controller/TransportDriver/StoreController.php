@@ -33,6 +33,10 @@ class StoreController extends Controller
     {
         $driver = json_decode($request->get('driver'), true);
 
+        $stateId = isset($driver['state']['id']) ? intval($driver['state']['id']) : 0;
+        $stateName = $driver['state']['name'] ?? ' ';
+        $postalCode = isset($driver['postalCode']) ? intval($driver['postalCode']) : 0;
+
         $command = new StoreTransportDriverCommand(
             $driver['name'],
             $driver['lastName'],
@@ -41,11 +45,11 @@ class StoreController extends Controller
             $driver['issueDate'],
             $driver['expirationDate'],
             $driver['city'],
-            intval($driver['state']['id']),
-            $driver['state']['name'],
+            $stateId,
+            $stateName,
             intval($driver['country']['id']),
             $driver['country']['name'],
-            intval($driver['postalCode']),
+            $postalCode,
             $driver['address'],
             boolval($driver['internalDriver']),
             isset($driver['provider']['id']) ? intval($driver['provider']['id']) : null,

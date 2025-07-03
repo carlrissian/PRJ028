@@ -730,8 +730,8 @@ export default {
         },
         'driver.country'() {
             if (!this.requireDriverLocation) {
-                this.driver.state = null;
-                this.driver.postalCode = null;
+                this.driver.state = '';
+                this.driver.postalCode = '';
             }
         },
     },
