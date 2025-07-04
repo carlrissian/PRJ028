@@ -19,10 +19,8 @@ class Area
      * @param int $id
      * @param string|null $name
      */
-    public function __construct(
-        int $id,
-        ?string $name = null
-    ) {
+    private function __construct(int $id, ?string $name = null)
+    {
         $this->id = $id;
         $this->name = $name;
     }
@@ -41,6 +39,17 @@ class Area
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+
+    /**
+     * @param int $id
+     * @param string|null $name
+     */
+    public static function create(int $id, ?string $name = null): self
+    {
+        $area = new self($id, $name);
+        return $area;
     }
 
 

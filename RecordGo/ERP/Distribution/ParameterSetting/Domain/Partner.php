@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\ParameterSetting\Domain;
 
 class Partner
@@ -10,6 +8,7 @@ class Partner
      * @var int|null
      */
     private ?int $id;
+
     /**
      * @var string
      */
@@ -20,7 +19,7 @@ class Partner
      * @param int|null $id
      * @param string $name
      */
-    public function __construct(?int $id, string $name)
+    private function __construct(?int $id, string $name)
     {
         $this->id = $id;
         $this->name = $name;
@@ -40,6 +39,16 @@ class Partner
     final public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @param int|null $id
+     * @param string $name
+     */
+    public static function create(?int $id, string $name): self
+    {
+        $partner = new self($id, $name);
+        return $partner;
     }
 
 

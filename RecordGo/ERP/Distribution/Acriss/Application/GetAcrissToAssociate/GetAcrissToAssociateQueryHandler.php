@@ -36,11 +36,11 @@ class GetAcrissToAssociateQueryHandler
         $acriss = $this->acrissRepository->getById($getAcrissToAssociateQuery->getAcrissId());
 
         $filterAssociate = new FilterCollection([]);
-        $filterAssociate->add(new Filter('acrissFirstLetter', new FilterOperator(FilterOperator::EQUAL), $acriss->getAcrissName()->getAcriss1()));
-        $filterAssociate->add(new Filter('acrissSecondLetter', new FilterOperator(FilterOperator::EQUAL), $acriss->getAcrissName()->getAcriss2()));
-        $filterAssociate->add(new Filter('acrissThirdLetter', new FilterOperator(FilterOperator::EQUAL), $acriss->getAcrissName()->getAcriss3()));
+        $filterAssociate->add(new Filter('acrissFirstLetter', new FilterOperator(FilterOperator::EQUAL), $this->getAcrissLetter($acriss->getName(), 0)));
+        $filterAssociate->add(new Filter('acrissSecondLetter', new FilterOperator(FilterOperator::EQUAL), $this->getAcrissLetter($acriss->getName(), 1)));
+        $filterAssociate->add(new Filter('acrissThirdLetter', new FilterOperator(FilterOperator::EQUAL), $this->getAcrissLetter($acriss->getName(), 2)));
 
-        $fourthLetterFilterOperator =  $acriss->getAcrissName()->getAcriss4() == 'R' ? new FilterOperator(FilterOperator::NOT_EQUAL) : new FilterOperator(FilterOperator::EQUAL);
+        $fourthLetterFilterOperator =  $this->getAcrissLetter($acriss->getName(), 3) == 'R' ? new FilterOperator(FilterOperator::NOT_EQUAL) : new FilterOperator(FilterOperator::EQUAL);
         $filterAssociate->add(new Filter('acrissFourthLetter', $fourthLetterFilterOperator, 'R'));
 
         $filterAssociate->add(new Filter('parentId', new FilterOperator(FilterOperator::NOT_EQUAL), $acriss->getId()));
@@ -50,5 +50,10 @@ class GetAcrissToAssociateQueryHandler
 
 
         return new GetAcrissToAssociateResponse($response->getCollection(), $response->getTotalRows());
+    }
+
+    private function getAcrissLetter(?string $name, int $letterPosition): string
+    {
+        return $name[$letterPosition];
     }
 }

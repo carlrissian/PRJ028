@@ -1,6 +1,6 @@
 <template>
     <fragment>
-        <parameter-setting-filter />
+        <parameter-setting-list-filter />
         <div class="kt-portlet kt-portlet--bordered">
             <div class="kt-portlet__body">
                 <div class="kt-datatable kt-datatable--default kt-datatable--brand kt-datatable--loaded">
@@ -12,17 +12,17 @@
 </template>
 
 <script>
+import Axios from "axios";
+import Loading from "../../../../assets/js/utilities";
 import Formatter from "../../../../SharedAssets/js/formatter";
 import ErpAjaxTable from "../../../../SharedAssets/vue/components/table/ErpAjaxTable.vue";
-import ParameterSettingFilter from "./ParameterSettingFilter.vue";
-import Loading from "../../../../assets/js/utilities";
-import Axios from "axios";
+import ParameterSettingListFilter from "./ParameterSettingListFilter.vue";
 
 export default {
     name: "ParameterSettingListPage",
     components: {
         ErpAjaxTable,
-        ParameterSettingFilter,
+        ParameterSettingListFilter,
     },
     data() {
         return {
@@ -167,14 +167,14 @@ export default {
         },
         clickDelete(row) {
             window.swal
-            .fire({
+                .fire({
                     title: this.txt.form.deleteParameterSetting,
                     text: this.txt.form.thisChangeCannotBeRevert,
                     icon: "warning",
                     confirmButtonText: this.txt.form.delete,
                     confirmButtonColor: "#48465b",
                     showCancelButton: true,
-                    cancelButtonText: this.txt.form.cancel, 
+                    cancelButtonText: this.txt.form.cancel,
                     cancelButtonColor: "#d33",
                 })
                 .then((result) => {
@@ -193,11 +193,10 @@ export default {
                                         type: "success",
                                     });
                                     this.$store.commit(`filter/items`, {});
-                                }else {
+                                } else {
                                     Loading.endLoading();
                                     this.$notify({
-                                        text: this.txt.form
-                                        .errorDeletingParameterSetting,
+                                        text: this.txt.form.errorDeletingParameterSetting,
                                         type: "error",
                                     });
                                 }

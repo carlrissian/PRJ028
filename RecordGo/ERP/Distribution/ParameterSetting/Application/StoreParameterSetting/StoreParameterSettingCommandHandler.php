@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Distribution\ParameterSetting\Application\StoreParameterSetting;
 
 use Exception;
+use Shared\Utils\Utils;
+use Shared\Domain\Criteria\Filter;
+use Shared\Domain\Criteria\FilterOperator;
+use Shared\Domain\Criteria\FilterCollection;
 use Distribution\ParameterSetting\Domain\Area;
 use Shared\Domain\ValueObject\DateValueObject;
 use Shared\Domain\ValueObject\TimeValueObject;
@@ -16,15 +20,12 @@ use Distribution\ParameterSetting\Domain\AreaCollection;
 use Distribution\ParameterSetting\Domain\AcrissCollection;
 use Distribution\ParameterSetting\Domain\BranchCollection;
 use Distribution\ParameterSetting\Domain\ParameterSetting;
-use Distribution\ParameterSetting\Domain\ParameterSettingCriteria;
 use Distribution\ParameterSetting\Domain\RegionCollection;
 use Distribution\ParameterSetting\Domain\PartnerCollection;
+use Distribution\ParameterSetting\Domain\ParameterSettingCriteria;
 use Distribution\ParameterSettingType\Domain\ParameterSettingType;
 use Distribution\ParameterSetting\Domain\ParameterSettingRepository;
-use Shared\Domain\Criteria\Filter;
-use Shared\Domain\Criteria\FilterCollection;
-use Shared\Domain\Criteria\FilterOperator;
-use Shared\Utils\Utils;
+
 class StoreParameterSettingCommandHandler
 {
     /**
@@ -53,14 +54,13 @@ class StoreParameterSettingCommandHandler
         if ($command->getAcrissIds()) {
             $acrissCollection = new AcrissCollection([]);
             foreach ($command->getAcrissIds() as $acrissId) {
-                $acrissCollection->add(new Acriss(intval($acrissId)));
+                $acrissCollection->add(Acriss::create(intval($acrissId)));
             }
         }
-
         if ($command->getReplacementAcrissIds()) {
             $replacementAcrissCollection = new AcrissCollection([]);
             foreach ($command->getReplacementAcrissIds() as $acrissId) {
-                $replacementAcrissCollection->add(new Acriss(intval($acrissId)));
+                $replacementAcrissCollection->add(Acriss::create(intval($acrissId)));
             }
         }
 
@@ -69,75 +69,93 @@ class StoreParameterSettingCommandHandler
         if ($command->getBranchIds()) {
             $branchCollection = new BranchCollection([]);
             foreach ($command->getBranchIds() as $branchId) {
-                $branchCollection->add(new Branch(intval($branchId)));
+                $branchCollection->add(Branch::create(intval($branchId)));
             }
-        }else  if ($command->getAreaIds()) {
+        } else if ($command->getAreaIds()) {
             $areaCollection = new AreaCollection([]);
 
             foreach ($command->getAreaIds() as $areaId) {
-                $areaCollection->add(new Area(intval($areaId)));
+                $areaCollection->add(Area::create(intval($areaId)));
             }
         } else if ($command->getRegionIds()) {
             $regionCollection = new RegionCollection([]);
             foreach ($command->getRegionIds() as $regionId) {
-                $regionCollection->add(new Region(intval($regionId), ''));
+                $regionCollection->add(Region::create(intval($regionId), ''));
             }
         }
-
 
         if ($command->getPartnerIds()) {
             $partnerCollection = new PartnerCollection([]);
             foreach ($command->getPartnerIds() as $partnerId) {
-                $partnerCollection->add(new Partner(intval($partnerId), ''));
-            }
-        }
-         if($command->getStartDate() && $command->getEndDate() && $command->getAcrissIds()) {
-            $response = $this->parameterSettingRepository->getBy(
-                new ParameterSettingCriteria(
-                    new FilterCollection([
-                        new Filter('ACRISSIDIN', new FilterOperator(FilterOperator::IN), $command->getAcrissIds()),
-                        new Filter('INITDATE', new FilterOperator(FilterOperator::GREATER_EQUAL_THAN), Utils::formatStringDateTimeToOdataDate($command->getStartDate())),
-                        new Filter('ENDDATE', new FilterOperator(FilterOperator::LESS_EQUAL_THAN), Utils::formatStringDateTimeToOdataDate($command->getEndDate())),
-                        new Filter('ACTIVE', new FilterOperator(FilterOperator::EQUAL), 1)  
-                    ])
-                )
-            );
-        
-            $totalRows = $response->getTotalRows();
-            $parameterSettingCollection = $response->getCollection();
-            
-            if ($totalRows > 0) {
-                // Obtener los nombres de los ACRISS existentes
-                $existingAcrissNames = [];
-                foreach ($parameterSettingCollection as $existingSetting) {
-                    foreach ($existingSetting->getAcrissCollection() as $acriss) {
-                        $existingAcrissNames[] = $acriss->getName();
-                    }
-                }
-                
-                // Eliminar duplicados y crear la cadena de nombres
-                $uniqueAcrissNames = array_unique($existingAcrissNames);
-                $acrissNamesString = implode(', ', $uniqueAcrissNames);
-                
-                $startDate = $command->getStartDate();
-                $endDate = $command->getEndDate();
-                
-                if ($command->getIsOverride() == false) {
-                    throw new Exception("Ya existe un(s) parámetro(s) para el ACRISS $acrissNamesString entre el periodo $startDate - $endDate");
-                } else {
-                    // Si es override, borramos los parámetros existentes
-                    foreach ($parameterSettingCollection as $existingSetting) {
-                        $this->parameterSettingRepository->delete($existingSetting->getId());
-                    }
-                }
+                $partnerCollection->add(Partner::create(intval($partnerId), ''));
             }
         }
 
-        $parameterSetting = new ParameterSetting(
+        /* Comprobar parámetros activos que tengan asociados algún ACRISS de los seleccionados en el periodo de fechas seleccionadas */
+        if ($command->getStartDate() && $command->getEndDate() && $command->getAcrissIds()) {
+            $response = $this->parameterSettingRepository->getBy(
+                new ParameterSettingCriteria(
+                    new FilterCollection([
+                        new Filter('BRANCHIDIN', new FilterOperator(FilterOperator::IN), $command->getBranchIds()),
+                        new Filter('ACRISSIDIN', new FilterOperator(FilterOperator::IN), $command->getAcrissIds()),
+                        new Filter('STARTDATEFROM', new FilterOperator(FilterOperator::GREATER_EQUAL_THAN), Utils::formatDateToFirstMinuteDateTime($command->getStartDate())),
+                        new Filter('ENDDATETO', new FilterOperator(FilterOperator::LESS_EQUAL_THAN), Utils::formatDateToLastMinuteDateTime($command->getEndDate())),
+                        new Filter('ACTIVE', new FilterOperator(FilterOperator::EQUAL), 1)
+                    ])
+                )
+            );
+
+            $totalRows = $response->getTotalRows();
+            $parameterSettingCollection = $response->getCollection();
+
+            if ($totalRows > 0) {
+                // Obtener los nombres de los ACRISS existentes
+                $existingAcriss = array_map(function ($parameterSetting) {
+                    return $parameterSetting->getAcrissCollection()->toArray();
+                }, $parameterSettingCollection->toArray());
+                $existingAcriss = array_merge(...$existingAcriss);
+                $existingAcrissNames = array_map(function ($acriss) {
+                    return $acriss->getName();
+                }, array_filter($existingAcriss, function ($acriss) use ($command) {
+                    return in_array($acriss->getId(), $command->getAcrissIds());
+                }));
+                // Eliminar duplicados
+                $existingAcrissNames = array_unique($existingAcrissNames);
+
+                // Obtener los nombres de las delegaciones existentes
+                $existingBranch = array_map(function ($parameterSetting) {
+                    return $parameterSetting->getBranchCollection()->toArray();
+                }, $parameterSettingCollection->toArray());
+                $existingBranch = array_merge(...$existingBranch);
+                $existingBranchNames = array_map(function ($branch) {
+                    return $branch->getName();
+                }, array_filter($existingBranch, function ($branch) use ($command) {
+                    return in_array($branch->getId(), $command->getBranchIds());
+                }));
+                // Eliminar duplicados
+                $existingBranchNames = array_unique($existingBranchNames);
+
+                if ($command->getIsOverride() === false) {
+                    $message = $totalRows > 1 ? "Ya existen parámetros para el/los ACRISS '%s' y delegación/es '%s' para el periodo %s - %s" : "Ya existe un parámetro para el/los ACRISS '%s' y delegación/es '%s' para el periodo %s - %s";
+                    throw new Exception(sprintf($message, implode(', ', $existingAcrissNames), implode(', ', $existingBranchNames), $command->getStartDate(), $command->getEndDate()));
+                }
+
+                // Si es override, borramos los parámetros existentes
+                foreach ($parameterSettingCollection as $existingSetting) {
+                    $deleteResponse = $this->parameterSettingRepository->delete($existingSetting->getId());
+                    if (!$deleteResponse->getOperationResponse()->wasSuccess()) {
+                        throw new Exception(sprintf("Error al eliminar el parámetro existente con ID %d: %s", $existingSetting->getId(), $deleteResponse->getOperationResponse()->getMessage()));
+                    }
+                }
+            }
+        }
+        /* */
+
+        $parameterSetting = ParameterSetting::create(
             null,
             $command->getStartDate() ? DateValueObject::createFromString($command->getStartDate()) : null,
             $command->getEndDate() ? DateValueObject::createFromString($command->getEndDate()) : null,
-            new ParameterSettingType($command->getType()),
+            ParameterSettingType::create($command->getType()),
             $command->getParameter(),
             null,
             $acrissCollection,

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\ParameterSetting\Domain;
 
 final class Branch
@@ -23,10 +21,8 @@ final class Branch
      * @param integer $id
      * @param string|null $name
      */
-    public function __construct(
-        int $id,
-        ?string $name = null
-    ) {
+    private function __construct(int $id, ?string $name = null)
+    {
         $this->id = $id;
         $this->name = $name;
     }
@@ -46,6 +42,19 @@ final class Branch
     public function getName()
     {
         return $this->name;
+    }
+
+
+    /**
+     * @param integer $id
+     * @param string|null $name
+     */
+    public static function create(
+        int $id,
+        ?string $name = null
+    ): self {
+        $branch = new self($id, $name);
+        return $branch;
     }
 
 

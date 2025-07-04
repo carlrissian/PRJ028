@@ -1,37 +1,30 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller\Acriss;
 
 use App\Controller\Controller;
+use Distribution\Acriss\Application\EditAcriss\EditAcrissQuery;
+use Distribution\Acriss\Application\EditAcriss\EditAcrissQueryHandler;
 use Symfony\Component\HttpFoundation\Response;
-use Distribution\Acriss\Application\Details\DetailsAcrissQuery;
-use Distribution\Acriss\Application\Details\DetailsAcrissQueryHandler;
 
 class EditAcrissController extends Controller
 {
-    /**
-     * @var DetailsAcrissQueryHandler
-     */
-    private $handler;
 
-    /**
-     * @param DetailsAcrissQueryHandler $handler
-     */
-    public function __construct(DetailsAcrissQueryHandler $handler)
+    public function edit(int $id, EditAcrissQueryHandler $editAcrissCommandHandler): Response
     {
-        $this->handler = $handler;
-    }
+        $response = $editAcrissCommandHandler->handle(new EditAcrissQuery($id));
 
-    /**
-     * @param integer $id
-     * @return Response
-     */
-    public function __invoke(int $id): Response
-    {
-        $response = $this->handler->handle(new DetailsAcrissQuery($id));
-        return $this->render('pages/acriss/edit.html.twig', ['acriss' => $this->json([
-            "data" => $response->getAcriss(),
-            "branchTranslations" => $response->getBranchTranslations(),
-        ])->getContent()]);
+        $responseJson = $this->json([
+            'acriss' => $response->getAcriss(),
+            'branchTranslations' => $response->getBranchTranslations(),
+            'carClassList' => $response->getCarClassList(),
+            'typeList' => $response->getAcrissTypeList(),
+            'gearBoxList' => $response->getGearBoxList(),
+            'motorizationList' => $response->getMotorizationList(),
+            'branchList' => $response->getBranchList(),
+        ]);
+        return $this->render('pages/acriss/edit.html.twig', ['acrissData' => $responseJson->getContent()]);
+
     }
 }

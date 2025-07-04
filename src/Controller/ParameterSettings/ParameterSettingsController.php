@@ -14,7 +14,6 @@ use Distribution\ParameterSetting\Application\CreateParameterSetting\CreateParam
 use Distribution\ParameterSetting\Application\DeleteParameterSetting\DeleteParameterSettingCommand;
 use Distribution\ParameterSetting\Application\DeleteParameterSetting\DeleteParameterSettingCommandHandler;
 use Distribution\ParameterSetting\Application\StoreParameterSetting\StoreParameterSettingCommandHandler;
-use App\Constants\ConnectedVehicleConstants;
 
 class ParameterSettingsController extends Controller
 {
@@ -24,12 +23,8 @@ class ParameterSettingsController extends Controller
      */
     public function create(CreateParameterSettingQueryHandler $handler): Response
     {
-        // TODO se va a filtrar por país (?)
-        $countryId = $this->get('session')->get('countryId') ?: 1;
-
-        $query = new CreateParameterSettingQuery($countryId);
+        $query = new CreateParameterSettingQuery();
         $response = $handler->handle($query);
-
         
         return $this->render('pages/parameter_settings/create.html.twig', [
             'selectList' => $this->json($response->getSelectList())->getContent(),
@@ -58,13 +53,7 @@ class ParameterSettingsController extends Controller
                 $request->get('partnerIds'),
                 $request->get('startTime'),
                 $request->get('endTime'),
-                $request->get('connectedVehicle') !== null
-                    ? (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_YES
-                        ? true
-                        : (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_NO
-                            ? false
-                            : null))
-                    : false,
+                boolval($request->get('connectedVehicle')),
                 filter_var($request->get('isOverride', false), FILTER_VALIDATE_BOOLEAN)
     
             );

@@ -12,5 +12,4 @@ twig:
         locationConstants: '@App\Constants\LocationConstants'
         movementConstants: '@App\Constants\MovementConstants'
         movementCategoryConstants: '@App\Constants\MovementCategoryConstants'
-        parameterTypeConstants: '@App\Constants\ParameterTypeConstants'
         transportMethodConstants: '@App\Constants\TransportMethodConstants'

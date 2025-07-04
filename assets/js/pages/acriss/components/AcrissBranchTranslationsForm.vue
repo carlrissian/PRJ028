@@ -14,15 +14,27 @@
                 :url="routing.generate('branch.selectList')"
                 returnObject
             />
-            <button
-                @click="addTab"
-                type="button"
-                class="btn btn-icon btn-dark kt-label-bg-color-4"
-                :title="txt.form.addBranch"
-                :disabled="!selectedBranch"
-            >
-                <i class="la la-plus"></i>
-            </button>
+            <div class="d-flex ">
+                <button
+                    @click="addTab"
+                    type="button"
+                    class="btn btn-icon btn-dark kt-label-bg-color-4"
+                    :title="txt.form.addBranch"
+                    :disabled="!selectedBranch"
+                >
+                    <i class="la la-plus"></i>
+                </button>
+
+                <button
+                    @click="openModalCopyBranch"
+                    type="button"
+                    class="btn btn-icon btn-dark kt-label-bg-color-4 ml-2"
+                    :title="txt.form.copyBranch"
+                    :disabled="!selectedBranch"
+                >
+                    <i class="la la-copy"></i>
+                </button>
+            </div>
         </div>
 
         <div id="branchTranslationsList" class="d-flex flex-column">
@@ -266,6 +278,11 @@
                 </div>
             </div>
         </div>
+        <modal-copy-branch-selector
+            v-if="showModalCopyBranchSelector"
+            :onConfirm="handleCopyConfirm"
+            @cancel="handleCopyCancel"
+        />
     </fragment>
 </template>
 
@@ -276,6 +293,7 @@ import { isValidURL } from "../../../../SharedAssets/js/utils";
 import CheckBox from "../../../../SharedAssets/vue/components/base/inputs/CheckBox.vue";
 import InputBase from "../../../../SharedAssets/vue/components/base/inputs/InputBase.vue";
 import SingleSelectPicker from "../../../../SharedAssets/vue/components/base/inputs/SingleSelectPicker.vue";
+import ModalCopyBranchSelector from "../components/ModalCopyBranchSelector.vue";
 
 export default {
     name: "AcrissBranchTranslationsForm",
@@ -283,6 +301,7 @@ export default {
         CheckBox,
         InputBase,
         SingleSelectPicker,
+        ModalCopyBranchSelector,
     },
     props: {
         translations: {
@@ -299,6 +318,7 @@ export default {
             branchTranslations: [],
             selectedBranch: null,
             languageList: [],
+            showModalCopyBranchSelector: false,
         };
     },
     created() {
@@ -567,6 +587,137 @@ export default {
                     }
                 });
         },
+        openModalCopyBranch() {
+            
+            if (!this.selectedBranch) {
+                return window.swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: this.txt.form.selectBranchToCopy,
+                });
+            }
+            this.showModalCopyBranchSelector = true;
+            this.$nextTick(() => {
+                $('#modal-copy-branch-selector').modal('show');
+            });
+           
+        },
+        async handleCopyConfirm(branches) {
+            if (!branches?.length) {
+                return window.swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text:  this.txt.form.selectBranchesToCopy,
+                });
+            }
+
+            if (!this.selectedBranch) {
+                $('#modal-copy-branch-selector').modal('hide');
+                return window.swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: this.txt.form.selectBranchFormCopy,
+                });
+            }
+
+            const targets = branches.filter(b => b.id !== this.selectedBranch.id);
+
+            const conflicts = targets.filter(target => {
+                const existing = this.branchTranslations.find(b => b.branch.id === target.id);
+                return existing && (existing.imageLines?.length || existing.translations?.length);
+            });
+
+           
+
+            if (conflicts.length) {
+                await window.swal.fire({
+                    icon: 'warning',
+                    title:  this.txt.form.branchAlreadyHasData,
+                    html:  this.txt.form.confirmOverwrite,
+                    showCancelButton: true,
+                    confirmButtonText: this.txt.form.overrideAndSave,
+                    cancelButtonText: this.txt.form.cancel,
+                    confirmButtonColor: '#48465b',
+                    cancelButtonColor: '#d33',
+                        }).then(result => {
+                            if (result.value) {
+                            
+                                this.copyBranchData({
+                                    sourceBranch: this.selectedBranch,
+                                    targets,
+                                });
+                            
+                        }
+                });
+                    
+
+            } else {
+                this.copyBranchData({
+                    sourceBranch: this.selectedBranch,
+                    targets,
+                });
+            }
+
+            
+        },
+        copyBranchData({ sourceBranch, targets }) {
+                const success = [];
+                const failed = [];
+                const originalBranch = this.branchTranslations.find(
+                            item => Number(item.branch?.id) === Number(sourceBranch.id)
+                );
+
+                if (!originalBranch) {
+                    return window.swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: this.txt.form.sourceBranchNotFound,
+                    });
+                }
+                
+                targets.forEach(target => {
+                    try {
+                          
+                        const newBranch = {
+                            branch: target,
+                            byDefault: false,
+                            selectedLanguage: originalBranch.selectedLanguage || null,
+                            imageLines: originalBranch.imageLines || [],
+                            translations: originalBranch.translations || []
+                        };
+
+                        // Aseguramos que ambos valores sean números para evitar errores de comparación
+                        const index = this.branchTranslations.findIndex(
+                            item => Number(item.branch?.id) === Number(target.id)
+                        );
+                        if (index !== -1) {
+                            this.branchTranslations.splice(index, 1, newBranch); // reemplazar
+                        } else {
+                            this.branchTranslations.push(newBranch); // agregar nuevo
+                        }
+
+                        success.push(target.branchIATA || `ID ${target.id}`);
+                    } catch (e) {
+                        failed.push(target.branchIATA || `ID ${target.id}`);
+                    }
+                });
+
+                window.swal.fire({
+                    icon: failed.length ? 'warning' : 'success',
+                    title: failed.length ? this.txt.form.titleError : this.txt.form.titleSuccess,
+                    text: failed.length ? this.txt.form.messageError : this.txt.form.messageSuccess,
+                }).then(() => {
+                    this.handleCopyCancel();
+                });
+
+                return { success, failed };
+            },
+
+            handleCopyCancel() {
+                this.selectedBranch = null;
+                this.showModalCopyBranchSelector = false;
+                $('#modal-copy-branch-selector').modal('hide');
+            },
     },
 };
 </script>

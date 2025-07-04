@@ -289,7 +289,7 @@
                             :label="txt.fields.state"
                             :placeholder="txt.form.selectAnOption"
                             :value="driver.state"
-                            :required="requireDriverLocation"
+                            required
                             return-object
                             :options="stateListFiltered"
                         />
@@ -303,7 +303,7 @@
                             div-class="form-group col-md-3"
                             :label="txt.fields.postalCode"
                             :value="driver.postalCode"
-                            :required="requireDriverLocation"
+                            required
                         />
                         <!--  -->
 
@@ -477,12 +477,6 @@ export default {
         this.driver.provider = {};
         this.driver.provider.id = this.providerId;
         this.assignBranch();
-    },
-    computed: {
-        requireDriverLocation() {
-            const name = this.driver.country?.name;
-            return name === "España" || name === "Islas Canarias";
-        },
     },
     methods: {
         assignBranch() {
@@ -727,12 +721,6 @@ export default {
         providerId() {
             if (this.driver.provider === null) this.driver.provider = {};
             this.driver.provider.id = this.providerId;
-        },
-        'driver.country'() {
-            if (!this.requireDriverLocation) {
-                this.driver.state = '';
-                this.driver.postalCode = '';
-            }
         },
     },
 };

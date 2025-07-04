@@ -111,7 +111,7 @@ class ShowAcrissQueryHandler
         }
 
 
-        $acrissName = str_split($acriss->getName());
+        $acrissName = str_split($acriss->getAcrissName());
 
         $acrissArray = [
             'id' => $acriss->getId(),

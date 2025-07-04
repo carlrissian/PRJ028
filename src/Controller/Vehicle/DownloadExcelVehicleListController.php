@@ -32,6 +32,24 @@ class DownloadExcelVehicleListController extends AbstractController
     public function __invoke(Request $request): StreamedResponse
     {
         try {
+              $areasIn = $request->get('areasId') ?
+                (is_numeric($request->get('areasId')) ?
+                    [intval($request->get('areasId'))]
+                    : json_decode($request->get('areasId', '[]'))
+                ) : null;
+
+             $branchsIn = $request->get('branchId') ?
+                (is_numeric($request->get('branchId')) ?
+                    [intval($request->get('branchId'))]
+                    : json_decode($request->get('branchId', '[]'))
+                ) : null;
+
+            $locationIn = $request->get('locationId') ?
+                (is_numeric($request->get('locationId')) ?
+                    [intval($request->get('locationId'))]
+                    : json_decode($request->get('locationId', '[]'))
+                ) : null;
+
             $providerIn = $request->get('providerId') ?
             (is_numeric($request->get('providerId')) ?
                 [intval($request->get('providerId'))]
@@ -116,22 +134,16 @@ class DownloadExcelVehicleListController extends AbstractController
                 }
             }
             /* */
-            $providerIn = $request->get('providerId') ?
-            (is_numeric($request->get('providerId')) ?
-                [intval($request->get('providerId'))]
-                : json_decode($request->get('providerId', '[]'))
-            ) : null;
-            
 
             $query = new FilterVehicleQuery(
                 null,
                 null,
                 null,
                 null,
-                $request->get('regionId') ? intval($request->get('regionId')) : null,
-                $request->get('areaId') ? intval($request->get('areaId')) : null,
-                $request->get('branchId') ? intval($request->get('branchId')) : null,
-                $request->get('locationId') ? intval($request->get('locationId')) : null,
+                null, //regionId
+                $areasIn,
+                $branchsIn,
+                $locationIn,
                 $request->get('brandId') ? intval($request->get('brandId')) : null,
                 $request->get('modelId') ? intval($request->get('modelId')) : null,
                 $request->get('trimId') ? intval($request->get('trimId')) : null,
@@ -144,10 +156,12 @@ class DownloadExcelVehicleListController extends AbstractController
                 $motorizationTypeIn,
                 $gearBoxIn,
                 $vehicleStatusIn,
-                $request->get('kmFrom') ? intval($request->get('kmFrom')) : null,
-                $request->get('kmTo') ? intval($request->get('kmTo')) : null,
+                $request->get('actualKmsFrom') ? intval($request->get('actualKmsFrom')) : null,
+                $request->get('actualKmsTo') ? intval($request->get('actualKmsTo')) : null,
                 $request->get('deliverynDateFrom'),
                 $request->get('deliverynDateTo'),
+                $request->get('intDeliveryDateFrom'),
+                $request->get('intDeliveryDateTo'),
                 $request->get('firstRentDateFrom'),
                 $request->get('firstRentDateTo'),
                 $request->get('rentingEndDateFrom'),
@@ -162,17 +176,18 @@ class DownloadExcelVehicleListController extends AbstractController
                 $request->get('creationDateTo'),
                 $request->get('registrationDateFrom'),
                 $request->get('registrationDateTo'),
-                $request->get('startBlockageDateFrom'),
-                $request->get('startBlockageDateTo'),
-                $request->get('endBlockageDateFrom'),
-                $request->get('endBlockageDateTo'),
+                null,
+                null,
+                null,
+                null,
                 $request->get('actualUnloadDateFrom'),
                 $request->get('actualUnloadDateTo'),
                 $request->get('actualLoadDateFrom'),
                 $request->get('actualLoadDateTo'),
                 $vehicleTypeIn,
                 $connectedVehicleIn,
-                $formattedColumns
+                $formattedColumns,
+                $request->get('cleanVehicle') ? intval($request->get('cleanVehicle')) : null
             );
 
             $response = $this->handler->handle($query, true);

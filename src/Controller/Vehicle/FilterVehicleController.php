@@ -31,6 +31,23 @@ class FilterVehicleController extends AbstractController
     public function __invoke(Request $request): JsonResponse
     {
         try {
+            $areasIn = $request->get('areasId') ?
+                (is_numeric($request->get('areasId')) ?
+                    [intval($request->get('areasId'))]
+                    : json_decode($request->get('areasId', '[]'))
+                ) : null;
+            $branchsIn = $request->get('branchId') ?
+                (is_numeric($request->get('branchId')) ?
+                    [intval($request->get('branchId'))]
+                    : json_decode($request->get('branchId', '[]'))
+                ) : null;
+
+            $locationIn = $request->get('locationId') ?
+                (is_numeric($request->get('locationId')) ?
+                    [intval($request->get('locationId'))]
+                    : json_decode($request->get('locationId', '[]'))
+                ) : null;
+
             $providerIn = $request->get('providerId') ?
                 (is_numeric($request->get('providerId')) ?
                     [intval($request->get('providerId'))]
@@ -97,20 +114,23 @@ class FilterVehicleController extends AbstractController
                     : json_decode($request->get('connectedVehicle', '[]'))
                 ) : null;
 
+            $columns = $request->get('columns', null);
+
+            $cleanVehicle = $request->get('cleanVehicle', null); // string|null
+
             $sortOptions = VehicleColumns::getSortOptions();
             $sortOptions['default'] = 'CREATIONDATE';
             $sortOptions['undefined'] = 'CREATIONDATE';
-
 
             $query = new FilterVehicleQuery(
                 intval($request->get('limit', 10)),
                 intval($request->get('offset', 0)),
                 $sortOptions[$request->get('sort', 'default')],
                 $request->get('order'),
-                $request->get('regionId') ? intval($request->get('regionId')) : null,
-                $request->get('areaId') ? intval($request->get('areaId')) : null,
-                $request->get('branchId') ? intval($request->get('branchId')) : null,
-                $request->get('locationId') ? intval($request->get('locationId')) : null,
+                 null,//regionId
+                $areasIn,
+                $branchsIn,
+                $locationIn,
                 $request->get('brandId') ? intval($request->get('brandId')) : null,
                 $request->get('modelId') ? intval($request->get('modelId')) : null,
                 $request->get('trimId') ? intval($request->get('trimId')) : null,
@@ -123,10 +143,12 @@ class FilterVehicleController extends AbstractController
                 $motorizationTypeIn,
                 $gearBoxIn,
                 $vehicleStatusIn,
-                $request->get('kmFrom') ? intval($request->get('kmFrom')) : null,
-                $request->get('kmTo') ? intval($request->get('kmTo')) : null,
-                $request->get('deliverynDateFrom'),
-                $request->get('deliverynDateTo'),
+                $request->get('actualKmsFrom'),
+                $request->get('actualKmsTo'),
+                $request->get('deliveryDateFrom'),
+                $request->get('deliveryDateTo'),
+                $request->get('intDeliveryDateFrom'),
+                $request->get('intDeliveryDateTo'),
                 $request->get('firstRentDateFrom'),
                 $request->get('firstRentDateTo'),
                 $request->get('rentingEndDateFrom'),
@@ -141,16 +163,18 @@ class FilterVehicleController extends AbstractController
                 $request->get('creationDateTo'),
                 $request->get('registrationDateFrom'),
                 $request->get('registrationDateTo'),
-                $request->get('startBlockageDateFrom'),
-                $request->get('startBlockageDateTo'),
-                $request->get('endBlockageDateFrom'),
-                $request->get('endBlockageDateTo'),
+                null,
+                null,
+                null,
+                null,
                 $request->get('actualUnloadDateFrom'),
                 $request->get('actualUnloadDateTo'),
                 $request->get('actualLoadDateFrom'),
                 $request->get('actualLoadDateTo'),
                 $vehicleTypeIn,
-                $connectedVehicleIn
+                $connectedVehicleIn,
+                $columns,
+                $cleanVehicle
             );
 
             $response = $this->handler->handle($query);

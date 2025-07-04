@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Distribution\UpdateData\Application\ProcessFileUpdateData;
 
 use DateTime;
-use Exception;
-use SplFileInfo;
 use Shared\Domain\Criteria\Filter;
 use Distribution\Vehicle\Domain\Vehicle;
 use Distribution\Location\Domain\Location;
@@ -133,7 +131,6 @@ class ProcessFileUpdateDataCommandHandler
      */
     final public function handle(ProcessFileUpdateDataCommand $command): ProcessFileUpdateDataResponse
     {
-        // $this->excelBody = $this->checkExcelFile($command->getFile());
         [$this->excelHeaders, $excelBody] = $this->fileRepository->import($command->getFile());
 
         $this->checkHeaders();
@@ -328,7 +325,7 @@ class ProcessFileUpdateDataCommandHandler
                      * @var VehicleToUpdate $vehicle
                      */
                     $vehicle = $this->vehicleCollection->getByProperty(strtoupper($vehicleData[VehicleExcelConstants::LICENSE_PLATE]), 'licensePlate');
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     if (isset($vehicleData[VehicleExcelConstants::VIN])) {
                         $this->excelErrors[] = sprintf(
                             "El vehículo con %s '%s' y %s '%s' no existe en el sístema.",
@@ -352,7 +349,7 @@ class ProcessFileUpdateDataCommandHandler
                      * @var VehicleToUpdate $vehicle
                      */
                     $vehicle = $this->vehicleCollection->getByProperty($vehicleData[VehicleExcelConstants::VIN], 'vin');
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     if (isset($vehicleData[VehicleExcelConstants::LICENSE_PLATE])) {
                         $this->excelErrors[] = sprintf(
                             "El vehículo con %s '%s' y %s '%s' no existe en el sístema.",
@@ -421,24 +418,6 @@ class ProcessFileUpdateDataCommandHandler
                 }
 
                 // Comprobación fecha de devolución
-                // INFO: lógica suprimida: https://recordgo.atlassian.net/browse/P28-2822?focusedCommentId=46507
-                // if (isset($vehicleData[VehicleExcelConstants::CHECK_IN_DATE]) && $vehicle->getPurchaseMethod()) {
-                //     if ($vehicle->getPurchaseMethod()->getId() !== intval(ConstantsJsonFile::getValue('PURCHASEMETHOD_RISK'))) {
-                //         $this->excelErrors[] = sprintf("El vehículo con %s '%s' y %s '%s' no es de tipo de compra RISK.", strtolower(VehicleExcelConstants::TITLE_LICENSE_PLATE), $vehicle->getLicensePlate(), strtolower(VehicleExcelConstants::TITLE_VIN), $vehicle->getVin());
-                //     } elseif (!isset($vehicleData[VehicleExcelConstants::RENTING_END_DATE]) && $vehicle->getRentingEndDate() && $vehicle->getRentingEndDate()->getValue()->getTimestamp() > $vehicleData[VehicleExcelConstants::CHECK_IN_DATE]->getTimestamp()) {
-                //         $this->excelErrors[] = sprintf(
-                //             "El vehículo con %s '%s' y %s '%s' tiene una %s superior a la %s insertada. %s: '%s'",
-                //             strtolower(VehicleExcelConstants::TITLE_LICENSE_PLATE),
-                //             $vehicle->getLicensePlate(),
-                //             strtolower(VehicleExcelConstants::TITLE_VIN),
-                //             $vehicle->getVin(),
-                //             strtolower(VehicleExcelConstants::TITLE_RENTING_END_DATE),
-                //             strtolower(VehicleExcelConstants::TITLE_CHECK_IN_DATE),
-                //             VehicleExcelConstants::TITLE_RENTING_END_DATE,
-                //             $vehicle->getRentingEndDate()
-                //         );
-                //     }
-                // }
                 if (isset($vehicleData[VehicleExcelConstants::CHECK_IN_DATE]) && !isset($vehicleData[VehicleExcelConstants::RENTING_END_DATE]) && $vehicle->getRentingEndDate() && $vehicle->getRentingEndDate()->getValue()->getTimestamp() > $vehicleData[VehicleExcelConstants::CHECK_IN_DATE]->getTimestamp()) {
                     $this->excelErrors[] = sprintf(
                         "El vehículo con %s '%s' y %s '%s' tiene una %s superior a la %s insertada. %s: '%s'",
@@ -456,26 +435,52 @@ class ProcessFileUpdateDataCommandHandler
                 // Comprobación de estados
                 if (isset($vehicleData[VehicleExcelConstants::STATUS]) && !is_null($vehicleData[VehicleExcelConstants::STATUS])) {
                     switch ($vehicle->getVehicleStatus()->getId()) {
-                            // En depósito a Libre disponible
-                        case intval(ConstantsJsonFile::getValue('CARSTATUS_FIRST_RENTAL_PREPARATION')):
-                            if ($vehicleData[VehicleExcelConstants::STATUS]->getId() !== intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE'))) {
-                                $this->excelErrors[] = sprintf(
-                                    "El vehículo con %s '%s' y %s '%s' no se puede cambiar de estado '%s' a '%s'",
-                                    strtolower(VehicleExcelConstants::TITLE_LICENSE_PLATE),
-                                    $vehicle->getLicensePlate(),
-                                    strtolower(VehicleExcelConstants::TITLE_VIN),
-                                    $vehicle->getVin(),
-                                    $vehicle->getVehicleStatus()->getName(),
-                                    $vehicleData[VehicleExcelConstants::STATUS]->getName()
-                                ) .
-                                    sprintf(
-                                        "<br>Sólo se permite el cambio de estado '%s' a '%s'",
-                                        $vehicle->getVehicleStatus()->getName(),
-                                        $this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()
-                                    );
+                        /**
+                         * 'Nueva matriculación' a 'En depósito'
+                         * 'Nueva matriculación' a 'Libre disponible'
+                         */
+                        case intval(ConstantsJsonFile::getValue('CARSTATUS_NEW_VIN')):
+                            if (!in_array($vehicleData[VehicleExcelConstants::STATUS]->getId(), [intval(ConstantsJsonFile::getValue('CARSTATUS_FIRST_RENTAL_PREPARATION')), intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE'))])) {
+                                $this->excelErrors[] = "El vehículo con matrícula {$vehicle->getLicensePlate()} y bastidor {$vehicle->getVin()} no se puede cambiar de estado '{$vehicle->getVehicleStatus()->getName()}' a '{$vehicleData[VehicleExcelConstants::STATUS]->getName()}'.
+                                                <br>Transiciones admitidas:
+                                                <ul>
+                                                    <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_FIRST_RENTAL_PREPARATION')), 'id')->getName()}'.</li>
+                                                    <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()}'.</li>
+                                                </ul>
+                                ";
                             }
                             break;
-                            // Parada bajo reserva a Libre disponible
+                        /**
+                         * 'En depósito' a 'Nueva matriculación'
+                         * 'En depósito' a 'Libre disponible'
+                         */
+                        case intval(ConstantsJsonFile::getValue('CARSTATUS_FIRST_RENTAL_PREPARATION')):
+                            if (!in_array($vehicleData[VehicleExcelConstants::STATUS]->getId(), [intval(ConstantsJsonFile::getValue('CARSTATUS_NEW_VIN')), intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE'))])) {
+                                $this->excelErrors[] = "El vehículo con matrícula {$vehicle->getLicensePlate()} y bastidor {$vehicle->getVin()} no se puede cambiar de estado '{$vehicle->getVehicleStatus()->getName()}' a '{$vehicleData[VehicleExcelConstants::STATUS]->getName()}'.
+                                                <br>Transiciones admitidas:
+                                                <ul>
+                                                    <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_NEW_VIN')), 'id')->getName()}'.</li>
+                                                    <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()}'.</li>
+                                                </ul>
+                                ";
+                            }
+                            break;
+                        /**
+                         * 'Parada definitiva' a 'Pdte venta'
+                         * 'Parada definitiva' a 'Libre disponible'
+                         */
+                        case intval(ConstantsJsonFile::getValue('CARSTATUS_SALE')):
+                            if (!in_array($vehicleData[VehicleExcelConstants::STATUS]->getId(), [intval(ConstantsJsonFile::getValue('CARSTATUS_PENDING_WS_SALE')), intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE'))])) {
+                                $this->excelErrors[] = "El vehículo con matrícula {$vehicle->getLicensePlate()} y bastidor {$vehicle->getVin()} no se puede cambiar de estado '{$vehicle->getVehicleStatus()->getName()}' a '{$vehicleData[VehicleExcelConstants::STATUS]->getName()}'.
+                                                <br>Transiciones admitidas:
+                                                <ul>
+                                                    <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_PENDING_WS_SALE')), 'id')->getName()}'.</li>
+                                                    <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()}'.</li>
+                                                </ul>
+                                ";
+                            }
+                            break;
+                        // 'Parada bajo reserva' a 'Libre disponible'
                         case intval(ConstantsJsonFile::getValue('CARSTATUS_STOCK')):
                             if ($vehicleData[VehicleExcelConstants::STATUS]->getId() !== intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE'))) {
                                 $this->excelErrors[] = sprintf(
@@ -494,7 +499,7 @@ class ProcessFileUpdateDataCommandHandler
                                     );
                             }
                             break;
-                            // Trabajo interno a Libre disponible
+                        // 'Trabajo interno' a 'Libre disponible'
                         case intval(ConstantsJsonFile::getValue('INTERNAL_MOVEMENT')):
                             if ($vehicleData[VehicleExcelConstants::STATUS]->getId() !== intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE'))) {
                                 $this->excelErrors[] = sprintf(
@@ -513,54 +518,40 @@ class ProcessFileUpdateDataCommandHandler
                                     );
                             }
                             break;
-                            // Pdte venta a Parada definitiva
-                        case intval(ConstantsJsonFile::getValue('CARSTATUS_PENDING_WS_SALE')):
-                            if ($vehicleData[VehicleExcelConstants::STATUS]->getId() !== intval(ConstantsJsonFile::getValue('CARSTATUS_SALE'))) {
-                                $this->excelErrors[] = sprintf(
-                                    "El vehículo con %s '%s' y %s '%s' no se puede cambiar de estado '%s' a '%s'",
-                                    strtolower(VehicleExcelConstants::TITLE_LICENSE_PLATE),
-                                    $vehicle->getLicensePlate(),
-                                    strtolower(VehicleExcelConstants::TITLE_VIN),
-                                    $vehicle->getVin(),
-                                    $vehicle->getVehicleStatus()->getName(),
-                                    $vehicleData[VehicleExcelConstants::STATUS]->getName()
-                                ) .
-                                    sprintf(
-                                        "<br>Sólo se permite el cambio de estado '%s' a '%s'",
-                                        $vehicle->getVehicleStatus()->getName(),
-                                        $this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_SALE')), 'id')->getName()
-                                    );
-                            }
-                            break;
-                            // Parada definitiva a Libre disponible, Parada definitiva a Pdte venta
-                        case intval(ConstantsJsonFile::getValue('CARSTATUS_SALE')):
-                            if (!in_array($vehicleData[VehicleExcelConstants::STATUS]->getId(), [intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), intval(ConstantsJsonFile::getValue('CARSTATUS_PENDING_WS_SALE'))])) {
-                                $this->excelErrors[] = sprintf(
-                                    "El vehículo con %s '%s' y %s '%s' no se puede cambiar de estado '%s' a '%s'",
-                                    strtolower(VehicleExcelConstants::TITLE_LICENSE_PLATE),
-                                    $vehicle->getLicensePlate(),
-                                    strtolower(VehicleExcelConstants::TITLE_VIN),
-                                    $vehicle->getVin(),
-                                    $vehicle->getVehicleStatus()->getName(),
-                                    $vehicleData[VehicleExcelConstants::STATUS]->getName()
-                                ) .
-                                    sprintf(
-                                        "<br>Sólo se permite el cambio de estado '%s' a '%s'",
-                                        $vehicle->getVehicleStatus()->getName(),
-                                        $this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()
-                                    );
-                            }
-                            break;
-                            // Libre disponible a Parada definitiva, Libre disponible a en deposito, Libre disponible a Parada bajo reserva, Libre disponible a Trabajo interno
+                        /**
+                         * 'Libre disponible' a 'Parada definitiva'
+                         * 'Libre disponible' a 'Pdte venta'
+                         * 'Libre disponible' a 'Nueva matriculación'
+                         * 'Libre disponible' a 'En depósito'
+                         * 'Libre disponible' a 'Parada bajo reserva'
+                         * 'Libre disponible' a 'Trabajo interno'
+                         */
                         case intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')):
-                            if (!in_array($vehicleData[VehicleExcelConstants::STATUS]->getId(), [ConstantsJsonFile::getValue('CARSTATUS_SALE'), ConstantsJsonFile::getValue('CARSTATUS_FIRST_RENTAL_PREPARATION'), ConstantsJsonFile::getValue('CARSTATUS_STOCK'), ConstantsJsonFile::getValue('CARSTATUS_INTERNAL_MOVEMENT')])) {
+                            if (!in_array($vehicleData[VehicleExcelConstants::STATUS]->getId(), [ConstantsJsonFile::getValue('CARSTATUS_SALE'), ConstantsJsonFile::getValue('CARSTATUS_PENDING_WS_SALE'), ConstantsJsonFile::getValue('CARSTATUS_NEW_VIN'), ConstantsJsonFile::getValue('CARSTATUS_FIRST_RENTAL_PREPARATION'), ConstantsJsonFile::getValue('CARSTATUS_STOCK'), ConstantsJsonFile::getValue('CARSTATUS_INTERNAL_MOVEMENT')])) {
                                 $this->excelErrors[] = "El vehículo con matrícula {$vehicle->getLicensePlate()} y bastidor {$vehicle->getVin()} no se puede cambiar de estado '{$vehicle->getVehicleStatus()->getName()}' a '{$vehicleData[VehicleExcelConstants::STATUS]->getName()}'.
                                                 <br>Transiciones admitidas:
                                                 <ul>
                                                     <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_SALE')), 'id')->getName()}'.</li>
+                                                    <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_PENDING_WS_SALE')), 'id')->getName()}'.</li>
+                                                    <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_NEW_VIN')), 'id')->getName()}'.</li>
                                                     <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_FIRST_RENTAL_PREPARATION')), 'id')->getName()}'.</li>
                                                     <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_STOCK')), 'id')->getName()}'.</li>
                                                     <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_INTERNAL_MOVEMENT')), 'id')->getName()}'.</li>
+                                                </ul>
+                                ";
+                            }
+                            break;
+                        /**
+                         * 'Pdte venta' a 'Parada definitiva'
+                         * 'Pdte venta' a 'Libre disponible'
+                         */
+                        case intval(ConstantsJsonFile::getValue('CARSTATUS_PENDING_WS_SALE')):
+                            if (!in_array($vehicleData[VehicleExcelConstants::STATUS]->getId(), [intval(ConstantsJsonFile::getValue('CARSTATUS_SALE')), intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE'))])) {
+                                $this->excelErrors[] = "El vehículo con matrícula {$vehicle->getLicensePlate()} y bastidor {$vehicle->getVin()} no se puede cambiar de estado '{$vehicle->getVehicleStatus()->getName()}' a '{$vehicleData[VehicleExcelConstants::STATUS]->getName()}'.
+                                                <br>Transiciones admitidas:
+                                                <ul>
+                                                    <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_SALE')), 'id')->getName()}'.</li>
+                                                    <li>'{$vehicle->getVehicleStatus()->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()}'.</li>
                                                 </ul>
                                 ";
                             }
@@ -569,11 +560,15 @@ class ProcessFileUpdateDataCommandHandler
                             $this->excelErrors[] = "El vehículo con matrícula {$vehicle->getLicensePlate()} y bastidor {$vehicle->getVin()} no se puede cambiar de estado '{$vehicle->getVehicleStatus()->getName()}' a '{$vehicleData[VehicleExcelConstants::STATUS]->getName()}'.
                                                 <br>Transiciones admitidas:
                                                 <ul>
-                                                    <li>'{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_SALE')), 'id')->getName()}', y viceversa.</li>
+                                                    <li>'{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_NEW_VIN')), 'id')->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_FIRST_RENTAL_PREPARATION')), 'id')->getName()}', y viceversa.</li>
+                                                    <li>'{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_NEW_VIN')), 'id')->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()}', y viceversa.</li>
                                                     <li>'{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_FIRST_RENTAL_PREPARATION')), 'id')->getName()}', y viceversa.</li>
+                                                    <li>'{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_SALE')), 'id')->getName()}', y viceversa.</li>
                                                     <li>'{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_STOCK')), 'id')->getName()}', y viceversa.</li>
                                                     <li>'{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_INTERNAL_MOVEMENT')), 'id')->getName()}', y viceversa.</li>
-                                                    <li>'{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_SALE')), 'id')->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_PENDING_WS_SALE')), 'id')->getName()}', y viceversa.</li>
+                                                    <li>'{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_SALE')), 'id')->getName()}', y viceversa.</li>
+                                                    <li>'{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_AVAILABLE')), 'id')->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_PENDING_WS_SALE')), 'id')->getName()}', y viceversa.</li>
+                                                    <li>'{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_PENDING_WS_SALE')), 'id')->getName()}' a '{$this->vehicleStatusCollection->getByProperty(intval(ConstantsJsonFile::getValue('CARSTATUS_SALE')), 'id')->getName()}', y viceversa.</li>
                                                 </ul>
                             ";
                             break;
@@ -686,7 +681,7 @@ class ProcessFileUpdateDataCommandHandler
 
                 $updated = $this->vehicleRepository->update($vehicle);
                 if ($updated) $this->managedVehicles['updated'][] = "{$vehicle->getLicensePlate()} / {$vehicle->getVin()}";
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->managedVehicles['notUpdated'][] = "Error en la actualización de datos del vehículo con matrícula '{$vehicle->getLicensePlate()}' y bastidor '{$vehicle->getVin()}'. <br>Motivo: {$e->getMessage()}";
             }
         }
@@ -723,174 +718,4 @@ class ProcessFileUpdateDataCommandHandler
             return null;
         }
     }
-
-
-
-
-    // FUNCIONES PARA CSV, no eliminar por si se solicita de nuevo
-    /**
-     * Comprobación de los datos introducidos en el archivo excel (CSV)
-     *
-     * @param SplFileInfo $file
-     * @return array
-     */
-    // private function checkExcelFile(SplFileInfo $file): array
-    // {
-    //     $countHeaders = 0;
-    //     $headers = [];
-    //     $updateData = [];
-
-    //     $fp = fopen($file->getRealPath(), 'rb');
-
-    //     while ($row = fgetcsv($fp, 1000, ';')) {
-    //         if ($countHeaders === 0) {
-    //             $headers = $this->checkHeaders($row);
-    //             if (count($headers) === 0 || count($this->excelErrors) > 0) {
-    //                 break;
-    //             }
-    //         } else {
-    //             $body = $this->checkBody($row, $headers, $countHeaders);
-
-    //             if (count($body) === 0) {
-    //                 break;
-    //             }
-
-    //             $updateData[] = $body;
-    //         }
-
-    //         $countHeaders++;
-    //     }
-
-    //     fclose($fp);
-
-    //     if ($countHeaders == 1) {
-    //         $this->excelErrors[] = "No se han introducido datos de vehículos.";
-    //     }
-    //     if (count($headers) === 0) {
-    //         $this->excelErrors[] = 'El archivo excel (CSV) no puede estar vacío.';
-    //     }
-
-    //     return $updateData;
-    // }
-
-    // private function checkHeaders(array $headers): array
-    // {
-    //     $finalHeaders = [];
-    //     // Primero eliminamos caracreteres especiales y comillas
-    //     $headers = array_map(function ($value) {
-    //         return str_replace("\"", '', str_replace("\xEF\xBB\xBF", '', $value));
-    //     }, $headers);
-
-    //     // Luego filtramos campos vacíos y nulos. Si no se hace así, array_filter devuelve un array con un string vacío.
-    //     $headers = array_filter($headers, function ($value) {
-    //         return $value !== "" && !is_null($value);
-    //     });
-
-    //     foreach ($headers as $position => $headerName) {
-    //         if (!in_array($headerName, $this->headers, true)) {
-    //             $this->excelErrors[] = "La columna '$headerName' no es correcta";
-    //         } else if (array_search($headerName, $this->headers, true) !== $position) {
-    //             $this->excelErrors[] = "La columna '$headerName' no se puede cambiar de posición";
-    //         }
-
-    //         $finalHeaders[] = VehicleExcelConstants::getHeader($headerName);
-    //     }
-
-    //     $requiredHeaders = [
-    //         VehicleExcelConstants::TITLE_LICENSE_PLATE,
-    //         VehicleExcelConstants::TITLE_VIN,
-    //     ];
-
-    //     foreach ($requiredHeaders as $field) {
-    //         if (!in_array($field, $headers, true)) {
-    //             $this->excelErrors[] = sprintf('Las siguientes columnas son obligatorias: %s', implode(', ', array_map(function ($header) {
-    //                 return "'$header'";
-    //             }, $requiredHeaders)));
-    //             break;
-    //         }
-    //     }
-
-    //     return $finalHeaders;
-    // }
-
-    // private function checkBody($row, $headers, $countHeaders): array
-    // {
-    //     $dataColumn = [];
-    //     $vehicleStatus = null;
-
-    //     foreach ($headers as $key => $head) {
-    //         if ($row[$key] !== '') {
-    //             $dataColumn[$head] = trim($row[$key]);
-    //         }
-    //     }
-
-    //     // Matrícula y bastidor
-    //     if (!array_key_exists(VehicleExcelConstants::LICENSE_PLATE, $dataColumn) && !array_key_exists(VehicleExcelConstants::VIN, $dataColumn)) {
-    //         $this->excelErrors[] = sprintf('Debes insertar la %s o el %s del vehículo en la fila %d', strtolower(VehicleExcelConstants::TITLE_LICENSE_PLATE), strtolower(VehicleExcelConstants::TITLE_VIN), ($countHeaders + 1));
-    //     } elseif ((!array_key_exists(VehicleExcelConstants::LICENSE_PLATE, $dataColumn) || !array_key_exists(VehicleExcelConstants::VIN, $dataColumn)) && (count($dataColumn) < 2)) {
-    //         $this->excelErrors[] = sprintf('Debes insertar la %s y/o el %s del vehículo, y otro campo como mínimo en la fila %d', strtolower(VehicleExcelConstants::TITLE_LICENSE_PLATE), strtolower(VehicleExcelConstants::TITLE_VIN), ($countHeaders + 1));
-    //     }
-
-    //     // Estado
-    //     if (array_key_exists(VehicleExcelConstants::STATUS, $dataColumn)) {
-    //         $vehicleStatus = (is_numeric($dataColumn[VehicleExcelConstants::STATUS])) ?
-    //             $this->checkVehicleStatus(intval($dataColumn[VehicleExcelConstants::STATUS]), 'id', false)
-    //             : $this->checkVehicleStatus($dataColumn[VehicleExcelConstants::STATUS], 'name', false);
-    //         if (is_null($vehicleStatus)) $this->excelErrors[] = sprintf('El %s del vehículo insertado en la fila %d no es correcto', strtolower(VehicleExcelConstants::TITLE_STATUS), ($countHeaders + 1));
-    //     }
-
-    //     // Fechas alquiler
-    //     if (array_key_exists(VehicleExcelConstants::RENTING_INIT_DATE, $dataColumn) && array_key_exists(VehicleExcelConstants::RENTING_END_DATE, $dataColumn)) {
-    //         if (strtotime(str_replace('/', '-', $dataColumn[VehicleExcelConstants::RENTING_INIT_DATE])) > strtotime(str_replace('/', '-', $dataColumn[VehicleExcelConstants::RENTING_END_DATE]))) {
-    //             $this->excelErrors[] = sprintf('La %s es mayor a la %s en la fila %d', strtolower(VehicleExcelConstants::TITLE_RENTING_INIT_DATE), strtolower(VehicleExcelConstants::TITLE_RENTING_END_DATE), ($countHeaders + 1));
-    //         }
-    //     }
-
-    //     // Fechas bloqueo
-    //     if (
-    //         (array_key_exists(VehicleExcelConstants::DATE_BLOCKAGE_START, $dataColumn) && !array_key_exists(VehicleExcelConstants::DATE_BLOCKAGE_END, $dataColumn)) ||
-    //         (array_key_exists(VehicleExcelConstants::DATE_BLOCKAGE_END, $dataColumn) && !array_key_exists(VehicleExcelConstants::DATE_BLOCKAGE_START, $dataColumn))
-    //     ) {
-    //         $this->excelErrors[] = sprintf('Debes insertar ambas fechas de inicio y fin de bloqueo en la fila %d', ($countHeaders + 1));
-    //     }
-    //     if (array_key_exists(VehicleExcelConstants::DATE_BLOCKAGE_START, $dataColumn) && array_key_exists(VehicleExcelConstants::DATE_BLOCKAGE_END, $dataColumn)) {
-    //         if (strtotime(str_replace('/', '-', $dataColumn[VehicleExcelConstants::DATE_BLOCKAGE_START])) > strtotime(str_replace('/', '-', $dataColumn[VehicleExcelConstants::DATE_BLOCKAGE_END]))) {
-    //             $this->excelErrors[] = sprintf('La %s es mayor a la %s en la fila %d', strtolower(VehicleExcelConstants::TITLE_DATE_BLOCKAGE_START), strtolower(VehicleExcelConstants::TITLE_DATE_BLOCKAGE_END), ($countHeaders + 1));
-    //         }
-    //     }
-    //     if (array_key_exists(VehicleExcelConstants::DATE_BLOCKAGE_START, $dataColumn) && array_key_exists(VehicleExcelConstants::DATE_BLOCKAGE_END, $dataColumn) && !array_key_exists(VehicleExcelConstants::BLOCKAGE_COMMENTS, $dataColumn)) {
-    //         $this->excelErrors[] = sprintf('Debes insertar un %s en la fila %d', strtolower(VehicleExcelConstants::TITLE_BLOCKAGE_COMMENTS), ($countHeaders + 1));
-    //     }
-
-    //     // Fecha devolución
-    //     if (array_key_exists(VehicleExcelConstants::RENTING_END_DATE, $dataColumn) && array_key_exists(VehicleExcelConstants::CHECK_IN_DATE, $dataColumn)) {
-    //         if (strtotime(str_replace('/', '-', $dataColumn[VehicleExcelConstants::RENTING_END_DATE])) > strtotime(str_replace('/', '-', $dataColumn[VehicleExcelConstants::CHECK_IN_DATE]))) {
-    //             $this->excelErrors[] = sprintf('La %s es mayor a la %s en la fila %d', VehicleExcelConstants::TITLE_RENTING_END_DATE, VehicleExcelConstants::TITLE_CHECK_IN_DATE, ($countHeaders + 1));
-    //         }
-    //     }
-
-
-    //     if (!empty($dataColumn[VehicleExcelConstants::LICENSE_PLATE]) || !empty($dataColumn[VehicleExcelConstants::VIN])) {
-    //         foreach ($dataColumn as $column => $value) {
-    //             switch ($column) {
-    //                 case VehicleExcelConstants::STATUS:
-    //                     $dataColumn[$column] = $vehicleStatus;
-    //                     break;
-    //                 case VehicleExcelConstants::RENTING_INIT_DATE:
-    //                 case VehicleExcelConstants::RENTING_END_DATE:
-    //                 case VehicleExcelConstants::CHECK_IN_DATE:
-    //                 case VehicleExcelConstants::DATE_BLOCKAGE_START:
-    //                 case VehicleExcelConstants::DATE_BLOCKAGE_END:
-    //                     $dataColumn[$column] = $this->verifyDateValid($column, $value);
-    //                     break;
-    //                 case VehicleExcelConstants::BLOCKAGE_COMMENTS:
-    //                     $dataColumn[$column] = ((preg_match('//u', $row[8]) !== 1) ? iconv('ISO-8859-1', 'UTF-8', $value) : $value);
-    //                     break;
-    //             }
-    //         }
-    //     }
-
-    //     return $dataColumn;
-    // }
-
 }

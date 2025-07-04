@@ -6,6 +6,7 @@ namespace Distribution\Movement\Application\ProcessFileAssignVehicle;
 
 use SplFileInfo;
 use Shared\Domain\Criteria\Filter;
+use Shared\Domain\OperationResponse;
 use Distribution\Vehicle\Domain\Vehicle;
 use Distribution\Movement\Domain\Movement;
 use Shared\Domain\Criteria\FilterOperator;
@@ -17,6 +18,7 @@ use Distribution\Movement\Domain\MovementCriteria;
 use Distribution\Vehicle\Domain\VehicleCollection;
 use Distribution\Vehicle\Domain\VehicleRepository;
 use Distribution\Movement\Domain\MovementRepository;
+use Distribution\Vehicle\Domain\VehicleGetByResponse;
 use Distribution\SaleMethod\Domain\SaleMethodCriteria;
 use Shared\Constants\Infrastructure\ConstantsJsonFile;
 use Distribution\Movement\Domain\Vehicle\VehicleStatus;
@@ -71,7 +73,7 @@ class ProcessFileAssignVehicleMovementCommandHandler
     /**
      * @var array|null
      */
-    private ?array $vehiclesExcel;
+    private ?array $vehiclesFromExcel;
 
     /**
      * @var VehicleCollection
@@ -136,7 +138,7 @@ class ProcessFileAssignVehicleMovementCommandHandler
             throw new AssignVehicleExcelException('', $this->errors, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        $this->vehiclesExcel = $this->checkExcelFile($command->getFile());
+        $this->vehiclesFromExcel = $this->checkExcelFile($command->getFile());
 
         if (empty($this->errors)) {
             $this->verifyVehicles();
@@ -261,15 +263,25 @@ class ProcessFileAssignVehicleMovementCommandHandler
 
     private function verifyVehicles(): void
     {
-        $licensePlateList = array_map('strtoupper', array_column($this->vehiclesExcel, AssignVehicleConstants::LICENSE_PLATE));
-        $vinList = array_map('strtoupper', array_column($this->vehiclesExcel, AssignVehicleConstants::VIN));
+        $licensePlateList = array_map('strtoupper', array_column($this->vehiclesFromExcel, AssignVehicleConstants::LICENSE_PLATE));
+        $vinList = array_map('strtoupper', array_column($this->vehiclesFromExcel, AssignVehicleConstants::VIN));
         $filterCollection = new FilterCollection([]);
         if (!empty($licensePlateList)) $filterCollection->add(new Filter('LICENSEPLATEIN', new FilterOperator(FilterOperator::IN), $licensePlateList));
         if (!empty($vinList)) $filterCollection->add(new Filter('VININ', new FilterOperator(FilterOperator::IN), $vinList));
-        $vehicleCollection = $this->vehicleRepository->getVehiclesToAssignBy(new VehicleToAssignCriteria($filterCollection))->getCollection();
+        $vehicleGetByResponse = $this->vehicleRepository->getVehiclesToAssignBy(new VehicleToAssignCriteria($filterCollection));
+        $vehicleCollection = ($vehicleGetByResponse instanceof VehicleGetByResponse) ? $vehicleGetByResponse->getCollection() : new VehicleCollection([]);
+
+        if ($vehicleGetByResponse instanceof OperationResponse) {
+            $this->errors[] = "Error durante la búsqueda de matrículas/bastidores.";
+            throw new AssignVehicleExcelException('', $this->errors, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        if ($vehicleCollection->count() === 0) {
+            $this->errors[] = "No se han encontrado vehículos con las matrículas/bastidores introducidos.";
+        }
 
         // Datos de vehículo
-        foreach ($this->vehiclesExcel as $vehicleData) {
+        foreach ($this->vehiclesFromExcel as $vehicleData) {
             $vehicle = null;
 
             if (isset($vehicleData[AssignVehicleConstants::LICENSE_PLATE])) {
@@ -326,61 +338,67 @@ class ProcessFileAssignVehicleMovementCommandHandler
                 $this->vehiclesToAssign->add($vehicle);
             }
         }
+
+        // liberamos memoria después de procesar los vehículos del excel
+        $this->vehiclesFromExcel = null;
     }
 
     private function manageVehicles(): void
     {
-        $movementCarrierVehicles = [];
+        $movementVehicles = [];
         $vehicleLineCollection =  $this->movement->getVehicleLineCollection() ?? new VehicleLineCollection([]);
 
-        // Obtenemos movimientos por transportista no finalizados/cancelados
-        if ($this->movement->getMovementType()->getId() === intval(ConstantsJsonFile::getValue('TRANSPORTTYPE_CARRIER'))) {
+        if (
+            $this->movement->getMovementType()->getId() === intval(ConstantsJsonFile::getValue('TRANSPORTTYPE_CARRIER')) &&
+            $this->movement->getTransportMethod()->getId() === intval(ConstantsJsonFile::getValue('TRANSPORTMETHOD_ROAD')) &&
+            $this->movement->getVehicleLineCollection()->count() > 0 && ($this->movement->getVehicleLineCollection()->count() + $this->vehiclesToAssign->count()) > 10
+        ) {
+            $this->errors[] = 'El límite máximo de vehículos a asignar para movimientos con método de transporte por carretera es de 10 unidades';
+            throw new AssignVehicleExcelException('', $this->errors, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+
+        // Obtenemos movimientos no finalizados/cancelados
+        try {
             $movementCriteria = new MovementCriteria(
                 new FilterCollection([
-                    new Filter('TRANSPORTTYPEID', new FilterOperator(FilterOperator::EQUAL), intval(ConstantsJsonFile::getValue('TRANSPORTTYPE_CARRIER'))),
                     new Filter('TRANSPORTSTATUSID', new FilterOperator(FilterOperator::IN), [intval(ConstantsJsonFile::getValue('TRANSPORTSTATUS_PENDING')), intval(ConstantsJsonFile::getValue('TRANSPORTSTATUS_IN_PROGRESS'))])
                 ])
             );
-            try {
-                $movementCarrierCollection = $this->movementRepository->getBy($movementCriteria)->getCollection();
-            } catch (\Exception $e) {
-                $this->errors[] = "Se ha producido un error durante la obtención de movimientos por transportista existentes en el sistema.";
-                throw new AssignVehicleExcelException('', $this->errors, Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
+            $pendingInProgressMovementCollection = $this->movementRepository->getBy($movementCriteria)->getCollection();
+        } catch (\Exception $e) {
+            $this->errors[] = "Se ha producido un error durante la obtención de movimientos por transportista existentes en el sistema.";
+            throw new AssignVehicleExcelException('', $this->errors, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
-            if ($movementCarrierCollection->count() > 0) {
-                // Eliminamos el movimiento actual de la colección, por si acaso y nos lo devuelven en la consulta
-                $movementCarrierCollection->removeByProperty($this->movement->getId(), 'id');
-                // Recogemos los ID´s de los  movimientos
-                $movementCarrierIds = array_map(function ($movement) {
-                    return $movement->getId();
-                }, $movementCarrierCollection->toArray());
+        if ($pendingInProgressMovementCollection->count() > 0) {
+            // Eliminamos el movimiento actual de la colección, por si acaso y nos lo devuelven en la consulta
+            $pendingInProgressMovementCollection->removeByProperty($this->movement->getId(), 'id');
+            // Recogemos los ID´s de los  movimientos
+            $pendingInProgressMovementIds = array_map(function ($movement) {
+                return $movement->getId();
+            }, $pendingInProgressMovementCollection->toArray());
+            // Liberamos memoria tras recoger los ID's de movimientos
+            // $pendingInProgressMovementCollection = null;
 
-                // Recogemos los ID´s de los vehículos asignados a los movimientos
-                foreach ($movementCarrierIds as $movementId) {
-                    try {
-                        $movementVehicleLineCollection = $this->movementRepository->getAssignedVehicles($movementId, new MovementCriteria())->getCollection();
-                        if ($movementVehicleLineCollection->count() > 0) {
-                            $movementCarrierVehicles[] = [
-                                'id' => $movementId,
-                                'vehicleIds' => array_map(function ($line) {
-                                    return $line->getVehicle()->getId();
-                                }, $movementVehicleLineCollection->toArray())
-                            ];
-                        }
-                    } catch (\Exception $e) {
-                        $this->errors[] = "Se ha producido un error durante la obtención de los vehículos asignados de los movimientos por transportista existentes en el sistema.";
-                        throw new AssignVehicleExcelException('', $this->errors, Response::HTTP_INTERNAL_SERVER_ERROR);
+            // Recogemos los ID´s de los vehículos asignados a los movimientos
+            foreach ($pendingInProgressMovementIds as $movementId) {
+                try {
+                    $movementVehicleLineCollection = $this->movementRepository->getAssignedVehicles($movementId, new MovementCriteria())->getCollection();
+                    if ($movementVehicleLineCollection->count() > 0) {
+                        $movementVehicles[] = [
+                            'id' => $movementId,
+                            'vehicleIds' => array_map(function ($line) {
+                                return $line->getVehicle()->getId();
+                            }, $movementVehicleLineCollection->toArray())
+                        ];
                     }
+                    // Liberamos memoria tras recoger los datos de los vehículos asignados a los movimientos
+                    $movementVehicleLineCollection = null;
+                } catch (\Exception $e) {
+                    $this->errors[] = "Se ha producido un error durante la obtención de los vehículos asignados de los movimientos por transportista existentes en el sistema.";
+                    throw new AssignVehicleExcelException('', $this->errors, Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
-            }
-
-            if (
-                $this->movement->getTransportMethod()->getId() === intval(ConstantsJsonFile::getValue('TRANSPORTMETHOD_ROAD')) &&
-                $this->movement->getVehicleLineCollection()->count() > 0 && ($this->movement->getVehicleLineCollection()->count() + $this->vehiclesToAssign->count()) > 10
-            ) {
-                $this->errors[] = 'El límite máximo de vehículos a asignar para movimientos con método de transporte por carretera es de 10 unidades';
-                throw new AssignVehicleExcelException('', $this->errors, Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         }
 
@@ -417,103 +435,130 @@ class ProcessFileAssignVehicleMovementCommandHandler
                 }
             }
 
-            // Comprobaciones para movimientos por transportista
-            if ($this->movement->getMovementType()->getId() === intval(ConstantsJsonFile::getValue('TRANSPORTTYPE_CARRIER'))) {
-                // Si el vehículo ya está asignado a otro movimiento por transportista, no se puede asignar.
-                foreach ($movementCarrierVehicles as $movement) {
-                    if (in_array($vehicle->getId(), $movement['vehicleIds'], true)) {
+
+            // Si el vehículo ya está asignado a otro movimiento, comprobar que la fecha de descarga prevista no sea superior a la fecha de carga prevista del movimiento al que está asginado
+            foreach ($movementVehicles as $movement) {
+                if (
+                    in_array($vehicle->getId(), $movement['vehicleIds'], true) &&
+                    in_array($vehicle->getStatus()->getId(), [intval(ConstantsJsonFile::getValue("CARSTATUS_ON_TRANSPORT")), intval(ConstantsJsonFile::getValue("CARSTATUS_ON_TRANSPORT_SALE")), intval(ConstantsJsonFile::getValue("CARSTATUS_SOLD_ON_TRANSPORT")), intval(ConstantsJsonFile::getValue("CARSTATUS_ON_TRANSPORT_WORKSHOP"))], true)
+                ) {
+                    try {
+                        /**
+                         * @var Movement $movementFromVehicle
+                         */
+                        $movementFromVehicle = $pendingInProgressMovementCollection->getByProperty($movement['id'], 'id');
+
+                        if ($movementFromVehicle->getMovementType()->getId() === intval(ConstantsJsonFile::getValue("TRANSPORTTYPE_DRIVER"))) {
+                            array_push(
+                                $errorMessageReasons,
+                                sprintf("El vehículo no se puede asignar al movimiento porque ya está asignado a un movimiento por conductor.<br>ID del movmiento: '%d'", $movement['id'])
+                            );
+                            // Salimos del bucle, porque dos movimientos no pueden tener el mismo vehículo asignado.
+                            break;
+                        } else if (
+                            $movementFromVehicle->getExpectedUnloadDate() && $this->movement->getExpectedLoadDate() &&
+                            $movementFromVehicle->getExpectedUnloadDate()->getValue()->getTimestamp() >= $this->movement->getExpectedLoadDate()->getValue()->getTimestamp()
+                        ) {
+                            array_push(
+                                $errorMessageReasons,
+                                sprintf("El vehículo no se puede asignar al movimiento porque ya está asignado a otro movimiento y su fecha de descarga prevista es superior a la fecha de carga prevista del movimiento al que se desea asignar.<br>ID del movmiento: '%d'", $movement['id'])
+                            );
+                            // Salimos del bucle, porque dos movimientos no pueden tener el mismo vehículo asignado.
+                            break;
+                        }
+                    } catch (\Throwable $th) {
                         array_push(
                             $errorMessageReasons,
-                            sprintf("El vehículo no se puede asignar al movimiento porque ya está asignado a otro movimiento.<br>ID del movmiento: '%d'", $movement['id'])
-                        );
-                        // Salimos del bucle, porque dos movimientos no pueden tener el mismo vehículo asignado.
-                        break;
-                    }
-                }
-
-                // TODO NO MVP: 
-                /**
-                 * "Si el vehículo está en TALLER y tiene una fecha de salida prevista de taller superior a la fecha de carga prevista, tampoco se admitirá para la asignación. 
-                 * => Hasta que no esté operativo el satélite de Mantenimento no podrá ponerse este campo como obligatorio ni añadirse lógica alguna."
-                 * 
-                 * @link https://recordgo.atlassian.net/wiki/spaces/DIS/pages/733478958/Gestionar+Veh+culos+Movimientos+Transportista#Criterios-de-Aceptaci%C3%B3n-(DoD)
-                 */
-                // Si el vehículo está en taller y su fecha de salida del taller prevista es superior a la fecha de carga prevista del movimiento, no se puede asignar.
-                // if (
-                //     in_array(
-                //         $vehicle->getVehicleStatus()->getId(),
-                //         [
-                //             intval(ConstantsJsonFile::getValue('CARSTATUS_MAINTENANCE_WORKSHOP')),
-                //             intval(ConstantsJsonFile::getValue('CARSTATUS_ON_TRANSPORT_WORKSHOP')),
-                //             intval(ConstantsJsonFile::getValue('CARSTATUS_MECHANICAL_WORKSHOP')),
-                //             intval(ConstantsJsonFile::getValue('CARSTATUS_WARRANTY_WORKSHOP')),
-                //             intval(ConstantsJsonFile::getValue('CARSTATUS_BODY_WORKSHOP')),
-                //             intval(ConstantsJsonFile::getValue('CARSTATUS_WORKSHOP_SALE')),
-                //         ],
-                //         true
-                //     )
-                //     && $vehicle->getVehicleMaintenanceEndDate()
-                //     && $vehicle->getVehicleMaintenanceEndDate()->getValue()->getTimestamp() >= $this->movement->getExpectedLoadDate()->getValue()->getTimestamp()
-                // ) {
-                //     array_push(
-                //         $errorMessageReasons,
-                //         sprintf(
-                //             "El vehículo no se puede asignar al movimiento porque está en taller y su fecha de salida del taller prevista es superior a la fecha de carga prevista del movimiento.<br>Fecha de salida del taller prevista: '%s'<br>Fecha de carga prevista: '%s'",
-                //             $vehicle->getVehicleMaintenanceEndDate()->__toString(),
-                //             $this->movement->getExpectedLoadDate()->__toString()
-                //         )
-                //     );
-                // }
-
-                if ($vehicle->getSaleMethod()) {
-                    if ($this->businessUnitArticleCollection->count() === 0) {
-                        $businessUnitArticleCriteria = new BusinessUnitArticleCriteria(
-                            new FilterCollection([new Filter('U_EXO_SUBFAMILIA', new FilterOperator(FilterOperator::EQUAL), ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_U_EXO_SUBFAMILIA_CARRIER'))])
-                        );
-                        $this->businessUnitArticleCollection = $this->businessUnitArticleRepository->getBy($businessUnitArticleCriteria)->getCollection();
-                    }
-                    if ($this->saleMethodCollection->count() === 0) {
-                        $this->saleMethodCollection = $this->saleMethodRepository->getBy(new SaleMethodCriteria())->getCollection();
-                    }
-
-                    // Si el articulo es buyback y el método de venta no, no se puede asignar
-                    if (
-                        $this->movement->getBusinessUnitArticle()->getId() === ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_TRANSPORT_BUYBACK')
-                        && $vehicle->getSaleMethod()->getId() !== intval(ConstantsJsonFile::getValue('PURCHASEMETHOD_BUYBACK'))
-                    ) {
-                        $businessunitArticleName = $this->businessUnitArticleCollection->getByProperty(ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_TRANSPORT_BUYBACK'), 'id')->getName();
-                        $saleMethodName = $this->saleMethodCollection->getByProperty(intval(ConstantsJsonFile::getValue('PURCHASEMETHOD_BUYBACK')), 'id')->getName();
-                        $vehicleSaleMethodName = $this->saleMethodCollection->getByProperty($vehicle->getSaleMethod()->getId(), 'id')->getName();
-                        array_push(
-                            $errorMessageReasons,
-                            sprintf(
-                                "El vehículo no se puede asignar al movimiento porque el articulo de unidad de negocio es '%s' y el método de venta del vehículo no es '%s'.<br>Método de venta del vehículo: '%s'",
-                                $businessunitArticleName,
-                                $saleMethodName,
-                                $vehicleSaleMethodName
-                            )
-                        );
-                    }
-
-                    // Si el artículo es venta B2B o B2C y el método de venta no es risk, no se puede asignar
-                    if (
-                        in_array($this->movement->getBusinessUnitArticle()->getId(), [ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_TRANSPORT_B2B'), ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_TRANSPORT_B2C')])
-                        && $vehicle->getSaleMethod()->getId() !== intval(ConstantsJsonFile::getValue('PURCHASEMETHOD_RISK'))
-                    ) {
-                        $businessunitArticleName = $this->businessUnitArticleCollection->getByProperty($this->movement->getBusinessUnitArticle()->getId(), 'id')->getName();
-                        $saleMethodName = $this->saleMethodCollection->getByProperty(intval(ConstantsJsonFile::getValue('PURCHASEMETHOD_RISK')), 'id')->getName();
-                        $vehicleSaleMethodName = $this->saleMethodCollection->getByProperty($vehicle->getSaleMethod()->getId(), 'id')->getName();
-                        array_push(
-                            $errorMessageReasons,
-                            sprintf(
-                                "El vehículo no se puede asignar al movimiento porque el articulo de unidad de negocio es '%s' y el método de venta no es '%s'.<br>Método de venta del vehículo: '%s'",
-                                $businessunitArticleName,
-                                $saleMethodName,
-                                $vehicleSaleMethodName
-                            )
+                            sprintf("El vehículo no se puede asignar al movimiento debido a problemas de búsqueda de datos del movimiento al que ya está asginado.<br>ID del movmiento: '%d'", $movement['id'])
                         );
                     }
                 }
+            }
+
+            // TODO NO MVP (se implementará más adelante):
+            /**
+             * "Si el vehículo está en TALLER y tiene una fecha de salida prevista de taller superior a la fecha de carga prevista, tampoco se admitirá para la asignación. 
+             * => Hasta que no esté operativo el satélite de Mantenimento no podrá ponerse este campo como obligatorio ni añadirse lógica alguna."
+             * 
+             * @link https://recordgo.atlassian.net/wiki/spaces/DIS/pages/733478958/Gestionar+Veh+culos+Movimientos+Transportista#Criterios-de-Aceptaci%C3%B3n-(DoD)
+             */
+            // Si el vehículo está en taller y su fecha de salida del taller prevista es superior a la fecha de carga prevista del movimiento, no se puede asignar.
+            // if (
+            //     in_array(
+            //         $vehicle->getVehicleStatus()->getId(),
+            //         [
+            //             intval(ConstantsJsonFile::getValue('CARSTATUS_MAINTENANCE_WORKSHOP')),
+            //             intval(ConstantsJsonFile::getValue('CARSTATUS_ON_TRANSPORT_WORKSHOP')),
+            //             intval(ConstantsJsonFile::getValue('CARSTATUS_MECHANICAL_WORKSHOP')),
+            //             intval(ConstantsJsonFile::getValue('CARSTATUS_WARRANTY_WORKSHOP')),
+            //             intval(ConstantsJsonFile::getValue('CARSTATUS_BODY_WORKSHOP')),
+            //             intval(ConstantsJsonFile::getValue('CARSTATUS_WORKSHOP_SALE')),
+            //         ],
+            //         true
+            //     )
+            //     && $vehicle->getVehicleMaintenanceEndDate()
+            //     && $vehicle->getVehicleMaintenanceEndDate()->getValue()->getTimestamp() >= $this->movement->getExpectedLoadDate()->getValue()->getTimestamp()
+            // ) {
+            //     array_push(
+            //         $errorMessageReasons,
+            //         sprintf(
+            //             "El vehículo no se puede asignar al movimiento porque está en taller y su fecha de salida del taller prevista es superior a la fecha de carga prevista del movimiento.<br>Fecha de salida del taller prevista: '%s'<br>Fecha de carga prevista: '%s'",
+            //             $vehicle->getVehicleMaintenanceEndDate()->__toString(),
+            //             $this->movement->getExpectedLoadDate()->__toString()
+            //         )
+            //     );
+            // }
+
+            // Comprobaciones en base al método de venta
+            if ($vehicle->getSaleMethod()) {
+                if ($this->businessUnitArticleCollection->count() === 0) {
+                    $businessUnitArticleCriteria = new BusinessUnitArticleCriteria(
+                        new FilterCollection([new Filter('U_EXO_SUBFAMILIA', new FilterOperator(FilterOperator::EQUAL), ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_U_EXO_SUBFAMILIA_CARRIER'))])
+                    );
+                    $this->businessUnitArticleCollection = $this->businessUnitArticleRepository->getBy($businessUnitArticleCriteria)->getCollection();
+                }
+                if ($this->saleMethodCollection->count() === 0) {
+                    $this->saleMethodCollection = $this->saleMethodRepository->getBy(new SaleMethodCriteria())->getCollection();
+                }
+
+                // Si el articulo es buyback y el método de venta no, no se puede asignar
+                if (
+                    $this->movement->getBusinessUnitArticle()->getId() === ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_TRANSPORT_BUYBACK')
+                    && $vehicle->getSaleMethod()->getId() !== intval(ConstantsJsonFile::getValue('PURCHASEMETHOD_BUYBACK'))
+                ) {
+                    $businessunitArticleName = $this->businessUnitArticleCollection->getByProperty(ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_TRANSPORT_BUYBACK'), 'id')->getName();
+                    $saleMethodName = $this->saleMethodCollection->getByProperty(intval(ConstantsJsonFile::getValue('PURCHASEMETHOD_BUYBACK')), 'id')->getName();
+                    $vehicleSaleMethodName = $this->saleMethodCollection->getByProperty($vehicle->getSaleMethod()->getId(), 'id')->getName();
+                    array_push(
+                        $errorMessageReasons,
+                        sprintf(
+                            "El vehículo no se puede asignar al movimiento porque el articulo de unidad de negocio es '%s' y el método de venta del vehículo no es '%s'.<br>Método de venta del vehículo: '%s'",
+                            $businessunitArticleName,
+                            $saleMethodName,
+                            $vehicleSaleMethodName
+                        )
+                    );
+                }
+
+                // Si el artículo es venta B2B o B2C y el método de venta no es risk, no se puede asignar
+                if (
+                    in_array($this->movement->getBusinessUnitArticle()->getId(), [ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_TRANSPORT_B2B'), ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_TRANSPORT_B2C')])
+                    && $vehicle->getSaleMethod()->getId() !== intval(ConstantsJsonFile::getValue('PURCHASEMETHOD_RISK'))
+                ) {
+                    $businessunitArticleName = $this->businessUnitArticleCollection->getByProperty($this->movement->getBusinessUnitArticle()->getId(), 'id')->getName();
+                    $saleMethodName = $this->saleMethodCollection->getByProperty(intval(ConstantsJsonFile::getValue('PURCHASEMETHOD_RISK')), 'id')->getName();
+                    $vehicleSaleMethodName = $this->saleMethodCollection->getByProperty($vehicle->getSaleMethod()->getId(), 'id')->getName();
+                    array_push(
+                        $errorMessageReasons,
+                        sprintf(
+                            "El vehículo no se puede asignar al movimiento porque el articulo de unidad de negocio es '%s' y el método de venta no es '%s'.<br>Método de venta del vehículo: '%s'",
+                            $businessunitArticleName,
+                            $saleMethodName,
+                            $vehicleSaleMethodName
+                        )
+                    );
+                }
+            }
 
                 // Si las fechas de inicio/fin de bloqueo del vehículo están dentro del rango de fechas del movimiento, no se puede asignar.
                 if ($vehicle->getInitBlockageDate() && $vehicle->getEndBlockageDate()) {
@@ -533,25 +578,26 @@ class ProcessFileAssignVehicleMovementCommandHandler
                     }
                 }
 
-                // Si el artículo es distribución y su fecha de fin de alquiler es inferior a la fecha de carga prevista del movimiento, no se puede asignar.
-                if (
-                    $this->movement->getBusinessUnitArticle()->getId() === ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_TRANSPORT_DISTRIBUTION')
-                    && $vehicle->getRentingEndDate()
-                    && $vehicle->getRentingEndDate()->getValue()->getTimestamp() <= $this->movement->getExpectedLoadDate()->getValue()->getTimestamp()
-                ) {
-                    $businessunitArticleName = $this->businessUnitArticleCollection->getByProperty(ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_TRANSPORT_DISTRIBUTION'), 'id')->getName();
-                    array_push(
-                        $errorMessageReasons,
-                        sprintf(
-                            "El vehículo no se puede asignar al movimiento porque el artículo de unidad de negocio es '%s' y la fecha de fin de alquiler del vehículo es inferior a la fecha de carga prevista del movimiento.<br>Fecha fin de alquiler: '%s'<br>Fecha de carga prevista: '%s'",
-                            $businessunitArticleName,
-                            $vehicle->getRentingEndDate()->__toString(),
-                            $this->movement->getExpectedLoadDate()->__toString()
-                        )
-                    );
-                }
+            // Si el artículo es distribución y su fecha de fin de alquiler es inferior a la fecha de carga prevista del movimiento, no se puede asignar.
+            if (
+                $this->movement->getBusinessUnitArticle()->getId() === ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_TRANSPORT_DISTRIBUTION')
+                && $vehicle->getRentingEndDate()
+                && $vehicle->getRentingEndDate()->getValue()->getTimestamp() <= $this->movement->getExpectedLoadDate()->getValue()->getTimestamp()
+            ) {
+                $businessunitArticleName = $this->businessUnitArticleCollection->getByProperty(ConstantsJsonFile::getValue('BUSINESSUNITARTICLE_TRANSPORT_DISTRIBUTION'), 'id')->getName();
+                array_push(
+                    $errorMessageReasons,
+                    sprintf(
+                        "El vehículo no se puede asignar al movimiento porque el artículo de unidad de negocio es '%s' y la fecha de fin de alquiler del vehículo es inferior a la fecha de carga prevista del movimiento.<br>Fecha fin de alquiler: '%s'<br>Fecha de carga prevista: '%s'",
+                        $businessunitArticleName,
+                        $vehicle->getRentingEndDate()->__toString(),
+                        $this->movement->getExpectedLoadDate()->__toString()
+                    )
+                );
             }
 
+
+            /* Comprobaciones por localización */
             $originLocationName = ($this->movement->getOriginLocation() ? $this->movement->getOriginLocation()->getName() : (($this->movement->getOriginExternalLocation()) ? $this->movement->getOriginExternalLocation()->getName() : null));
             // Si el vehículo no tiene localización, no se puede asignar.
             if ($vehicle->getLocation() === null) {
@@ -568,23 +614,7 @@ class ProcessFileAssignVehicleMovementCommandHandler
                     sprintf("El vehículo no se puede asignar al movimiento porque pertenece a una localización distinta a la localización de origen del movimiento.<br>Localización: '%s'", $vehicle->getLocation()->getName())
                 );
             }
-
-
-            // Si el vehículo está alquilado y su fecha de fin de contrato es superior a la fecha de carga prevista del movimiento, no se puede asignar.
-            if (
-                $vehicle->getStatus()->getId() === intval(ConstantsJsonFile::getValue('CARSTATUS_ON_RENT'))
-                && $vehicle->getRentalAgreementDropOffDate()
-                && $vehicle->getRentalAgreementDropOffDate()->getValue()->getTimestamp() >= $this->movement->getExpectedLoadDate()->getValue()->getTimestamp()
-            ) {
-                array_push(
-                    $errorMessageReasons,
-                    sprintf(
-                        "El vehículo no se puede asignar al movimiento porque está alquilado y su fecha fin de contrato prevista es superior a la fecha de carga prevista del movimiento.<br>Fecha fin de contrato prevista: '%s'<br>Fecha de carga prevista: '%s'",
-                        $vehicle->getReturnDate()->__toString(),
-                        $this->movement->getExpectedLoadDate()->__toString()
-                    )
-                );
-            }
+            /*  */
 
 
             if (count($errorMessageReasons) === 0) {

@@ -9,7 +9,6 @@ use Distribution\StopSale\Domain\StopSaleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Distribution\StopSale\Application\FilterStopSale\FilterStopSaleQuery;
 use Distribution\StopSale\Application\FilterStopSale\FilterStopSaleQueryHandler;
-use App\Constants\ConnectedVehicleConstants;
 
 class FilterStopSaleController extends AbstractController
 {
@@ -63,13 +62,7 @@ class FilterStopSaleController extends AbstractController
                 $request->get('productsId') ? json_decode($request->get('productsId')) : null,
                 $request->get('stopSaleTypeId') ? json_decode($request->get('stopSaleTypeId')) : null,
                 is_numeric($request->get('stopSaleStatusId')) ? intval($request->get('stopSaleStatusId')) : null,
-                $request->get('connectedVehicle') !== null
-                    ? (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_YES
-                        ? true
-                        : (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_NO
-                            ? false
-                            : null))
-                    : null,
+                filter_var($request->get('connectedVehicle'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
                 $request->get('creationDateFrom'),
                 $request->get('creationDateTo')
             );

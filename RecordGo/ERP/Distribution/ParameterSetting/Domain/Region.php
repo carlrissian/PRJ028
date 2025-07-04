@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\ParameterSetting\Domain;
 
 class Region
@@ -21,7 +19,7 @@ class Region
      * @param int $id
      * @param string|null $name
      */
-    public function __construct(int $id, ?string $name = null)
+    private function __construct(int $id, ?string $name)
     {
         $this->id = $id;
         $this->name = $name;
@@ -41,6 +39,17 @@ class Region
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+
+    /**
+     * @param int $id
+     * @param string|null $name
+     */
+    public static function create(int $id, ?string $name = null): self
+    {
+        $region = new self($id, $name);
+        return $region;
     }
 
 

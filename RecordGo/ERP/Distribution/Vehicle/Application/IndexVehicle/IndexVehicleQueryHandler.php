@@ -37,6 +37,7 @@ use Distribution\CarClass\Domain\CarClassRepository;
 use Distribution\CarGroup\Domain\CarGroupRepository;
 use Distribution\Location\Domain\LocationRepository;
 use Distribution\Acriss\Domain\InvalidAcrissException;
+use Distribution\Area\Domain\AreaException;
 use Distribution\SaleMethod\Domain\SaleMethodCriteria;
 use Distribution\SaleMethod\Domain\SaleMethodRepository;
 use Distribution\VehicleType\Domain\VehicleTypeCriteria;
@@ -197,10 +198,10 @@ class IndexVehicleQueryHandler
         //     throw new RegionException('Error getting region');
         // }
 
-        // $areaCollection = $this->areaRepository->getBy(new AreaCriteria())->getCollection();
-        // if (empty($areaCollection)) {
-        //     throw new AreaException('Error getting area');
-        // }
+        $areaCollection = $this->areaRepository->getBy(new AreaCriteria())->getCollection();
+        if (empty($areaCollection)) {
+            throw new AreaException('Error getting area');
+        }
 
         $branchCollection = $this->branchRepository->getBy(new BranchCriteria())->getCollection();
         if (empty($branchCollection)) {
@@ -274,7 +275,7 @@ class IndexVehicleQueryHandler
 
 
         // $regionList = Utils::createSelect($regionCollection);
-        // $areaList = Utils::createSelect($areaCollection);
+        $areaList = Utils::createSelect($areaCollection);
         $branchList = Utils::createSelect($branchCollection);
         $locationList = Utils::createSelect($locationCollection);
         $brandList = Utils::createSelect($brandCollection);
@@ -300,6 +301,7 @@ class IndexVehicleQueryHandler
             // 'logisticsList' => Utils::createSelect($x->getCollection()),
             // 'assumedCostByList' => Utils::createSelect($y->getCollection()),
             /**/
+            'areaList' => $areaList,
             'branchList' => $branchList,
             'locationList' => $locationList,
             'brandList' => $brandList,

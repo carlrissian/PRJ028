@@ -7,8 +7,6 @@
                     <option v-for="item in branchSelect" :value="item.id" v-text="item.name" :key="item.id"></option>
                 </erp-select-static>
                 <button type="button" style="display: inline-block" class="btn btn-primary" @click="addBranch(branchIdSelected)">{{ translations.addBranch }}</button>
-                <button type="button" style="display: inline-block" class="btn btn-primary" @click="openModalCopyBranch(branchIdSelected)">{{ translations.copyBranch }}</button>
-
             </div>
         </div>
         <div class="kt-portlet__head">
@@ -50,7 +48,7 @@
                                 </label>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="form-group row">
                         <div class="col">
@@ -68,16 +66,7 @@
                 </div>
             </div>
          </div>
-         <modal-copy-branch-selector
-            :branch-list="branchSelect"
-            :source-branch-id="sourceBranchId"
-            :onConfirm="handleCopyConfirm"
-            @cancel="handleCopyCancel"
-        />
-
     </div>
-        
-
 </template>
 <script>
 
@@ -87,11 +76,10 @@
     import ErpInputFilter from "../../../../components/filter/form/ErpInputFilter";
     import Axios from "axios";
     import Loading from "../../../../../assets/js/utilities";
-    import ModalCopyBranchSelector from "./ModalCopyBranchSelector.vue";
 
     export default {
         name: "EditBranchTranslations",
-        components: {ErpInputFilter, ErpSelectStatic, EditAcrissImageLines, EditTranslations,ModalCopyBranchSelector},
+        components: {ErpInputFilter, ErpSelectStatic, EditAcrissImageLines, EditTranslations},
         props:{
             branchTranslations: {},
             branchSelect: {},
@@ -103,9 +91,6 @@
                 branchIdSelected: '',
                 languageList: [],
                 defaultBranchId: '',
-                delegationsToCopy: [],
-                sourceBranchId: null,
-
             }
         },
         mounted() {
@@ -123,147 +108,19 @@
             this.$nextTick(function (){
                 this.disableCheckbox();
             });
-
         },
         async created() {
             let resp = await Axios.get(this.routing.generate('language.select.list'));
             this.languageList = resp.data;
         },
-         methods: {
-            async handleCopyConfirm(selectedBranches) {
-                if (!selectedBranches?.length) {
-                    return window.swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text:  this.translations.selectBranchesToCopy,
-                    });
-                }
-
-                if (!this.sourceBranchId) {
-                    $('#modal-copy-branch-selector').modal('hide');
-                    return window.swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: this.translations.selectBranchFormCopy,
-                    });
-                }
-
-                const sourceId = Number(this.sourceBranchId);
-                const sourceBranch = this.branchList.find(branch => branch.branchId === sourceId);
-
-                if (!sourceBranch) {
-                    $('#modal-copy-branch-selector').modal('hide');
-                    return window.swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: this.translations.branchNotFound,
-                    });
-                }
-
-                const targets = selectedBranches.filter(b => b.id !== sourceId);
-
-                const conflicts = targets.filter(target => {
-                    const existing = this.branchList.find(b => b.branchId === target.id);
-                    return existing && (existing.imageLines?.length || existing.translations?.length);
-                });
-
-                if (conflicts.length) {
-                     await window.swal.fire({
-                    icon: 'warning',
-                    title: this.translations.branchAlreadyHasData,
-                    html:  this.translations.confirmOverwrite,
-                    showCancelButton: true,
-                    confirmButtonText: this.translations.overrideAndSave,
-                    cancelButtonText: this.translations.cancel,
-                    confirmButtonColor: '#48465b',
-                    cancelButtonColor: '#d33',
-                     }).then(result => {
-                         if (result.value) {
-                            
-                             this.copyBranchData({
-                                 sourceBranch,
-                                 targets,
-                                 branchList: this.branchList,
-                             });
-                            
-                        }
-                    });
-                        
-
-                } else {
-                    this.copyBranchData({
-                        sourceBranch,
-                        targets,
-                        branchList: this.branchList,
-                    });
-                }
-
-                
-            },
-            copyBranchData({ sourceBranch, targets, branchList }) {
-                const success = [];
-                const failed = [];
-
-                targets.forEach(target => {
-                    try {
-                    const index = branchList.findIndex(branch => branch.branchId === target.id);
-
-                    const newBranch = {
-                        ...JSON.parse(JSON.stringify(sourceBranch)),
-                        branchId: target.id,
-                        branchIATA: target.branchIATA || '',
-                        commercialName: target.commercialName || '',
-                        default: false,
-                        imageLines: sourceBranch.imageLines?.map((line, i) => ({
-                        ...line,
-                        id: '',
-                        branchId: target.id,
-                        index: i + 1,
-                        })) || [],
-                        translations: sourceBranch.translations?.map(t => ({
-                        ...t,
-                        id: '',
-                        branchId: target.id,
-                        })) || [],
-                    };
-
-                    if (index !== -1) {
-                        branchList.splice(index, 1, newBranch);
-                    } else {
-                        branchList.push(newBranch);
-                    }
-
-                    success.push(target.branchIATA || `ID ${target.id}`);
-                    } catch (e) {
-                    failed.push(target.branchIATA || `ID ${target.id}`);
-                    }
-                });
-
-                window.swal.fire({
-                    icon: failed.length ? 'warning' : 'success',
-                    title: failed.length ? this.translations.titleError : this.translations.titleSuccess,
-                    text: failed.length ? this.translations.messageError : this.translations.messageSuccess,
-                }).then(() => {
-                    this.handleCopyCancel();
-                });
-
-                return { success, failed };
-             },
-            handleCopyCancel() {
-                this.sourceBranchId = null;
-                $('#modal-copy-branch-selector').modal('hide');
-            },
+        methods: {
             selectBranch(e){
                 this.branchIdSelected = e.target.value;
             },
             addBranch(branchId){
 
                 if(branchId == ''){
-                     window.swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: this.translations.selectBranchToAdd
-                    });
+                    alert(this.translations.selectBranchToAdd);
                     return;
                 }else{
 
@@ -271,11 +128,8 @@
                        return arr.branchId == branchId;
                     });
                     if(branchIdExists.length>0){
-                         window.swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: this.translations.branchAlreadyExists
-                        });
+                        alert(this.translations.branchAlreadyExists);
+                        return;
                     }else{
                           let branchToAdd = this.branchSelect.filter(function(arr){
                               return arr.id == branchId;
@@ -306,21 +160,7 @@
                           });
                     }
                 }
-            },
-            openModalCopyBranch(branchId) {
-                if (!branchId) {
-                    return window.swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: this.translations.selectBranchToCopy,
-                    });
-                }
-                this.sourceBranchId = Number(branchId);
-                this.$nextTick(() => {
-                    $('#modal-copy-branch-selector').modal('show');
-                });
-            },
-            onBranchDefaultChange(e){
+            },onBranchDefaultChange(e){
 
                 this.defaultBranchId = e.target.value;
                 this.$nextTick(function () {

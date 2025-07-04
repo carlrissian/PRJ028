@@ -17,6 +17,7 @@ use Distribution\Movement\Domain\MovementRepository;
 use Distribution\Vehicle\Domain\VehicleGetByResponse;
 use Distribution\Vehicle\Domain\VehicleToAssignCriteria;
 use Distribution\Vehicle\Domain\VehicleNotFoundException;
+use Shared\Constants\Infrastructure\ConstantsJsonFile;
 
 class FilterVehicleToAssignQueryHandler
 {
@@ -53,7 +54,6 @@ class FilterVehicleToAssignQueryHandler
     public function handle(FilterVehicleToAssignQuery $query, bool $excel): FilterVehicleToAssignResponse
     {
         $response = $this->vehicleRepository->getVehiclesToAssignBy($this->setCriteria($query));
-
         /**
          * @var VehicleGetByResponse $response
          */
@@ -147,7 +147,6 @@ class FilterVehicleToAssignQueryHandler
         // localizacion origen/destino del movimiento
         if ($query->getMovementId()) {
             $movement = $this->movementRepository->getById($query->getMovementId());
-
             $originLocationId = [];
             if ($movement->getOriginLocation()) {
                 $originLocationId[] = $movement->getOriginLocation()->getId();
@@ -167,6 +166,18 @@ class FilterVehicleToAssignQueryHandler
                     $filterCollection->add(new Filter('LOCATIONIDIN', new FilterOperator(FilterOperator::IN), $originLocationId));
                 }
             }
+
+            if ($movement->getMovementType()->getId() === intval(ConstantsJsonFile::getValue('MOVEMENTTYPE_OPERATIONS'))) {
+                $expectedLoadDateFormatted = Utils::formatStringDateTimeToOdataDate($movement->getExpectedLoadDate()->__toString());
+            
+                // Este filtro aplica solo a ON_RENT. El repositorio ya gestiona que se aplique a ese estado.
+                $filterCollection->add(new Filter(
+                    'rentingEndDateTo',
+                    new FilterOperator(FilterOperator::LESS_EQUAL_THAN),
+                    $expectedLoadDateFormatted
+                ));
+            }
+            
         }
 
         $sortCollection = null;

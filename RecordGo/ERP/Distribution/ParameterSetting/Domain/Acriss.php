@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\ParameterSetting\Domain;
 
 /**
@@ -25,18 +23,13 @@ class Acriss
      */
     private ?string $vehicleGroupName;
 
-
     /**
      * @param int|null $id
      * @param string|null $name
      * @param string|null $vehicleGroupName
      */
-    public function __construct(
-        ?int $id,
-        ?string $name = null,
-        ?string $vehicleGroupName = null
-
-    ) {
+    private function __construct(?int $id, ?string $name, ?string $vehicleGroupName)
+    {
         $this->id = $id;
         $this->name = $name;
         $this->vehicleGroupName = $vehicleGroupName;
@@ -64,6 +57,22 @@ class Acriss
     public function getVehicleGroupName(): ?string
     {
         return $this->vehicleGroupName;
+    }
+
+
+    /**
+     * @param int|null $id
+     * @param string|null $name
+     * @param string|null $vehicleGroupName
+     */
+    public static function create(
+        ?int $id,
+        ?string $name = null,
+        ?string $vehicleGroupName = null
+
+    ): self {
+        $acriss = new self($id, $name, $vehicleGroupName);
+        return $acriss;
     }
 
 

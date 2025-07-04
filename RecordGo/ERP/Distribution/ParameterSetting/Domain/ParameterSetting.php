@@ -1,15 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\ParameterSetting\Domain;
 
-use Shared\Constants\Infrastructure\ConstantsJsonFile;
-use Shared\Domain\User;
 use Shared\Utils\Utils;
+use Shared\Domain\User as SharedUser;
 use Shared\Domain\ValueObject\DateValueObject;
 use Shared\Domain\ValueObject\TimeValueObject;
 use Shared\Domain\ValueObject\DateTimeValueObject;
+use Shared\Constants\Infrastructure\ConstantsJsonFile;
 use Distribution\ParameterSettingType\Domain\ParameterSettingType;
 
 class ParameterSetting
@@ -95,23 +93,44 @@ class ParameterSetting
     private bool $active;
 
     /**
-     * @var User|null
+     * @var SharedUser|null
      */
-    private ?User $creationUser;
+    private ?SharedUser $creationUser;
 
     /**
      * @var DateTimeValueObject|null
      */
     private ?DateTimeValueObject $creationDate;
 
-
-    public function __construct(
+    /**
+     * ParameterSetting constructor.
+     *
+     * @param integer|null $id
+     * @param DateValueObject $startDate
+     * @param DateValueObject $endDate
+     * @param ParameterSettingType $type
+     * @param integer $parameter
+     * @param CarGroupCollection|null $carGroupCollection
+     * @param AcrissCollection $acrissCollection
+     * @param AcrissCollection|null $replacementAcrissCollection
+     * @param RegionCollection|null $regionCollection
+     * @param AreaCollection|null $areaCollection
+     * @param BranchCollection|null $branchCollection
+     * @param PartnerCollection $partnerCollection
+     * @param TimeValueObject|null $startTime
+     * @param TimeValueObject|null $endTime
+     * @param boolean $connectedVehicle
+     * @param boolean $active
+     * @param SharedUser|null $creationUser
+     * @param DateTimeValueObject|null $creationDate
+     */
+    private function __construct(
         ?int $id,
         DateValueObject $startDate,
         DateValueObject $endDate,
         ParameterSettingType $type,
         int $parameter,
-        ?CarGroupCollection $carGroupCollection = null,
+        ?CarGroupCollection $carGroupCollection,
         AcrissCollection $acrissCollection,
         ?AcrissCollection $replacementAcrissCollection,
         ?RegionCollection $regionCollection,
@@ -122,8 +141,8 @@ class ParameterSetting
         ?TimeValueObject $endTime,
         bool $connectedVehicle,
         bool $active,
-        ?User $creationUser = null,
-        ?DateTimeValueObject $creationDate = null
+        ?SharedUser $creationUser,
+        ?DateTimeValueObject $creationDate
     ) {
         $this->id = $id;
         $this->startDate = $startDate;
@@ -274,9 +293,9 @@ class ParameterSetting
     }
 
     /**
-     * @return User|null
+     * @return SharedUser|null
      */
-    public function getCreationUser(): ?User
+    public function getCreationUser(): ?SharedUser
     {
         return $this->creationUser;
     }
@@ -289,6 +308,132 @@ class ParameterSetting
         return $this->creationDate;
     }
 
+
+    /**
+     * @param integer|null $id
+     * @param DateValueObject $startDate
+     * @param DateValueObject $endDate
+     * @param ParameterSettingType $type
+     * @param integer $parameter
+     * @param CarGroupCollection|null $carGroupCollection
+     * @param AcrissCollection $acrissCollection
+     * @param AcrissCollection|null $replacementAcrissCollection
+     * @param RegionCollection|null $regionCollection
+     * @param AreaCollection|null $areaCollection
+     * @param BranchCollection|null $branchCollection
+     * @param PartnerCollection $partnerCollection
+     * @param TimeValueObject|null $startTime
+     * @param TimeValueObject|null $endTime
+     * @param boolean $connectedVehicle
+     * @param boolean $active
+     * @param SharedUser|null $creationUser
+     * @param DateTimeValueObject|null $creationDate
+     */
+    public static function create(
+        ?int $id,
+        DateValueObject $startDate,
+        DateValueObject $endDate,
+        ParameterSettingType $type,
+        int $parameter,
+        ?CarGroupCollection $carGroupCollection = null,
+        AcrissCollection $acrissCollection,
+        ?AcrissCollection $replacementAcrissCollection,
+        ?RegionCollection $regionCollection,
+        ?AreaCollection $areaCollection,
+        ?BranchCollection $branchCollection,
+        PartnerCollection $partnerCollection,
+        ?TimeValueObject $startTime,
+        ?TimeValueObject $endTime,
+        bool $connectedVehicle,
+        bool $active,
+        ?SharedUser $creationUser = null,
+        ?DateTimeValueObject $creationDate = null
+    ): self {
+        $parameterSetting = new self(
+            $id,
+            $startDate,
+            $endDate,
+            $type,
+            $parameter,
+            $carGroupCollection,
+            $acrissCollection,
+            $replacementAcrissCollection,
+            $regionCollection,
+            $areaCollection,
+            $branchCollection,
+            $partnerCollection,
+            $startTime,
+            $endTime,
+            $connectedVehicle,
+            $active,
+            $creationUser,
+            $creationDate
+        );
+        return $parameterSetting;
+    }
+
+    /**
+     * @param array|null $parameterSettingArray
+     * @return self
+     */
+    public static function createFromArray(?array $parameterSettingArray): self
+    {
+        $acrissCollection = new AcrissCollection([]);
+        foreach ($parameterSettingArray['ACRISSARRAY'] as $acrissArray) {
+            $acrissCollection->add(Acriss::create(intval($acrissArray['ID']), $acrissArray['ACRISSCODE'], $acrissArray['VEHICLEGROUPNAME']));
+        }
+
+        $replacementAcrissCollection = new AcrissCollection([]);
+        foreach ($parameterSettingArray['REPLACEMENTACRISSARRAY'] as $acrissArray) {
+            $replacementAcrissCollection->add(Acriss::create(intval($acrissArray['ID']), $acrissArray['ACRISSCODE'], $acrissArray['VEHICLEGROUPNAME']));
+        }
+
+        $regionCollection = new RegionCollection([]);
+        foreach ($parameterSettingArray['REGIONARRAY'] as $region) {
+            $regionCollection->add(Region::create(intval($region['ID']), $region['NAME']));
+        }
+
+        $areaCollection = new AreaCollection([]);
+        foreach ($parameterSettingArray['AREAARRAY'] as $area) {
+            $areaCollection->add(Area::create(intval($area['ID']), $area['AREANAME']));
+        }
+
+        $brancheCollection = new BranchCollection([]);
+        foreach ($parameterSettingArray['BRANCHARRAY'] as $branch) {
+            $brancheCollection->add(Branch::create(intval($branch['ID']), $branch['BRANCHINTNAME']));
+        }
+
+        $partnerCollection = new PartnerCollection([]);
+        foreach ($parameterSettingArray['PARTNERARRAY'] as $partner) {
+            $partnerCollection->add(Partner::create(intval($partner['ID']), $partner['NAMESOCIAL']));
+        }
+
+
+        return ParameterSetting::create(
+            intval($parameterSettingArray['ID']),
+            isset($parameterSettingArray['INITDATE']) ? new DateValueObject(Utils::convertOdataDateToDateTime($parameterSettingArray['INITDATE'])) : null,
+            isset($parameterSettingArray['ENDDATE']) ? new DateValueObject(Utils::convertOdataDateToDateTime($parameterSettingArray['ENDDATE'])) : null,
+            isset($parameterSettingArray['TYPE']) ?
+                ParameterSettingType::create(
+                    intval($parameterSettingArray['TYPE']['ID']),
+                    $parameterSettingArray['TYPE']['NAME']
+                ) : null,
+            intval($parameterSettingArray['PARAMETERLIMIT']),
+            null,
+            $acrissCollection,
+            $replacementAcrissCollection,
+            $regionCollection,
+            $areaCollection,
+            $brancheCollection,
+            $partnerCollection,
+            isset($parameterSettingArray['INITTIME']) ? new TimeValueObject(Utils::convertOdataTimeToMinutes($parameterSettingArray['INITTIME'])) : null,
+            isset($parameterSettingArray['ENDTIME']) ? new TimeValueObject(Utils::convertOdataTimeToMinutes($parameterSettingArray['ENDTIME'])) : null,
+            isset($parameterSettingArray['CONNECTED']) ? boolval($parameterSettingArray['CONNECTED']) : null,
+            isset($parameterSettingArray['ACTIVE']) ? boolval($parameterSettingArray['ACTIVE']) : null,
+            isset($parameterSettingArray['CREATIONUSER']) ? SharedUser::createFromArray($parameterSettingArray['CREATIONUSER']) : null,
+            isset($parameterSettingArray['CREATIONDATE']) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($parameterSettingArray['CREATIONDATE'])) : null,
+        );
+    }
 
     /**
      * @return array

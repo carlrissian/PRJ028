@@ -159,6 +159,7 @@ class ListStopSaleQueryHandler
         }
         usort($acrissList, fn($a, $b) => strcasecmp($a['name'], $b['name']));
 
+        usort($acrissList, fn($a, $b) => strcasecmp($a['name'], $b['name']));
         $regionList = Utils::createSelect($regionCollection);
         $areaList = Utils::createSelect($areaCollection);
         $branchList = Utils::createSelect($branchCollection);

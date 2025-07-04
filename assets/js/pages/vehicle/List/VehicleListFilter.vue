@@ -8,29 +8,29 @@
             :options="selectList.regionList"
         /> -->
 
-        <!-- <single-select-picker
-            name="area"
-            id="area"
+        <multiple-select-picker
+            name="areasId"
+            id="areasId"
             div-class="col-md-3 form-group"
             :label="txt.fields.area"
             :options="selectList.areaList"
-        /> -->
+        />
 
-        <single-select-picker
+         <multiple-select-picker
             name="branchId"
             id="branchId"
             div-class="col-md-3 form-group"
             :label="txt.fields.branch"
             :options="selectList.branchList"
         />
-
-        <single-select-picker
+         <multiple-select-picker
             name="locationId"
             id="locationId"
             div-class="col-md-3 form-group"
             :label="txt.fields.location"
             :options="selectList.locationList"
         />
+
 
         <single-select-picker
             name="brandId"
@@ -64,15 +64,15 @@
             :options="selectList.providerList"
         />
 
-        <single-select-picker
-            name="purchaseMethod"
-            id="purchaseMethod"
+        <multiple-select-picker
+            name="purchaseMethodId"
+            id="purchaseMethodId"
             div-class="col-md-3 form-group"
             :label="txt.fields.purchaseMethod"
-            :options="selectList.purchaseMethodList"
+            :options="selectList.saleMethodList"
         />
 
-        <single-select-picker
+        <multiple-select-picker
             name="saleMethodId"
             id="saleMethodId"
             div-class="col-md-3 form-group"
@@ -129,7 +129,7 @@
         />
 
         <!-- KM desde/hasta -->
-        <input-number
+        <!-- <input-number
             @updatedInputNumber="vehicleFilters.kmFrom = $event"
             name="kmFrom"
             id="kmFrom"
@@ -146,94 +146,110 @@
             :label="txt.fields.kmTo"
             :value="vehicleFilters.kmTo"
             :min="vehicleFilters.kmFrom ? parseInt(vehicleFilters.kmFrom) : undefined"
+        /> -->
+        <!-- KM desde/hasta -->
+        <date-range-picker
+            :nameFrom="vehicleFilters.actualKmsFrom"
+            :nameTo="vehicleFilters.actualKmsTo"
+            idFrom="actualKmsFrom"
+            idTo="actualKmsTo"
+            :valueFrom="vehicleFilters.actualKmsFrom"
+            :valueTo="vehicleFilters.actualKmsTo"
+            mode="number"
+            :min="0"
+            :max="999999"
+            label="Kms actuales"
+            div-class="col-md-3 form-group"
+            @updatedForm="vehicleFilters.actualKmsFrom = $event"
+            @updatedTo="vehicleFilters.actualKmsTo = $event"
+        />
+
+
+        <!--  -->
+
+
+        <!-- Fecha entrega desde/hasta -->
+        <date-range-picker
+            :nameFrom="vehicleFilters.deliveryDateFrom"
+            :nameTo="vehicleFilters.deliveryDateTo"
+            idFrom="deliveryDateFrom"
+            idTo="deliveryDateTo"
+            :valueFrom="vehicleFilters.deliveryDateFrom"
+            :valueTo="vehicleFilters.deliveryDateTo"
+            mode="date"
+            :limitEndDay="vehicleFilters.deliveryDateTo"
+            :label="txt.fields.deliveryDateFrom"
+            div-class="col-md-3 form-group"
+            @updatedForm="vehicleFilters.deliveryDateFrom = $event"
+            @updatedTo="vehicleFilters.deliveryDateTo = $event"
         />
         <!--  -->
 
         <!-- Fecha recepción desde/hasta -->
-        <date-picker
-            @updatedDatePicker="vehicleFilters.deliveryDateFrom = $event"
-            name="deliveryDateFrom"
-            id="deliveryDateFrom"
+        <date-range-picker
+            :nameFrom="vehicleFilters.intDeliveryDateFrom"
+            :nameTo="vehicleFilters.intDeliveryDateTo"
+            idFrom="intDeliveryDateFrom"
+            idTo="intDeliveryDateTo"
+            :valueFrom="vehicleFilters.intDeliveryDateFrom"
+            :valueTo="vehicleFilters.intDeliveryDateTo"
+            mode="date"
+            :limitEndDay="vehicleFilters.intDeliveryDateTo"
+            :label="txt.fields.intDeliveryDateFrom"
             div-class="col-md-3 form-group"
-            :limit-end-day="vehicleFilters.deliveryDateTo"
-            :label="txt.fields.deliveryDateFrom"
-            :value="vehicleFilters.deliveryDateFrom"
-        />
-
-        <date-picker
-            @updatedDatePicker="vehicleFilters.deliveryDateTo = $event"
-            name="deliveryDateTo"
-            id="deliveryDateTo"
-            div-class="col-md-3 form-group"
-            :limit-start-day="vehicleFilters.deliveryDateFrom"
-            :label="txt.fields.deliveryDateTo"
-            :value="vehicleFilters.deliveryDateTo"
+            @updatedForm="vehicleFilters.intDeliveryDateFrom = $event"
+            @updatedTo="vehicleFilters.intDeliveryDateTo = $event"
         />
         <!--  -->
 
         <!-- Fecha inicio alquiler desde/hasta -->
-        <date-picker
-            @updatedDatePicker="vehicleFilters.firstRentDateFrom = $event"
-            name="firstRentDateFrom"
-            id="firstRentDateFrom"
-            div-class="col-md-3 form-group"
-            :limit-end-day="vehicleFilters.firstRentDateTo"
+        <date-range-picker
+            :nameFrom="vehicleFilters.firstRentDateFrom"
+            :nameTo="vehicleFilters.firstRentDateTo"
+            idFrom="firstRentDateFrom"
+            idTo="firstRentDateTo"
+            :valueFrom="vehicleFilters.firstRentDateFrom"
+            :valueTo="vehicleFilters.firstRentDateTo"
+            mode="date"
+            :limitEndDay="vehicleFilters.firstRentDateTo"
             :label="txt.fields.firstRentDateFrom"
-            :value="vehicleFilters.firstRentDateFrom"
-        />
-
-        <date-picker
-            @updatedDatePicker="vehicleFilters.firstRentDateTo = $event"
-            name="firstRentDateTo"
-            id="firstRentDateTo"
             div-class="col-md-3 form-group"
-            :limit-start-day="vehicleFilters.firstRentDateFrom"
-            :label="txt.fields.firstRentDateTo"
-            :value="vehicleFilters.firstRentDateTo"
+            @updatedForm="vehicleFilters.firstRentDateFrom = $event"
+            @updatedTo="vehicleFilters.firstRentDateTo = $event"
         />
         <!--  -->
 
-        <!-- Fecha fin alquiler desde/hasta -->
-        <date-picker
-            @updatedDatePicker="vehicleFilters.rentingEndDateFrom = $event"
-            name="rentingEndDateFrom"
-            id="rentingEndDateFrom"
-            div-class="col-md-3 form-group"
-            :limit-end-day="vehicleFilters.rentingEndDateTo"
+      <!-- Fecha fin alquiler desde/hasta -->
+        <date-range-picker
+            :nameFrom="vehicleFilters.rentingEndDateFrom"
+            :nameTo="vehicleFilters.rentingEndDateTo"
+            idFrom="rentingEndDateFrom"
+            idTo="rentingEndDateTo"
+            :valueFrom="vehicleFilters.rentingEndDateFrom"
+            :valueTo="vehicleFilters.rentingEndDateTo"
+            mode="date"
+            :limitEndDay="vehicleFilters.rentingEndDateTo"
             :label="txt.fields.rentingEndDateFrom"
-            :value="vehicleFilters.rentingEndDateFrom"
-        />
-
-        <date-picker
-            @updatedDatePicker="vehicleFilters.rentingEndDateTo = $event"
-            name="rentingEndDateTo"
-            id="rentingEndDateTo"
             div-class="col-md-3 form-group"
-            :limit-start-day="vehicleFilters.rentingEndDateFrom"
-            :label="txt.fields.rentingEndDateTo"
-            :value="vehicleFilters.rentingEndDateTo"
+            @updatedForm="vehicleFilters.rentingEndDateFrom = $event"
+            @updatedTo="vehicleFilters.rentingEndDateTo = $event"
         />
-        <!--  -->
+      <!--  -->
 
         <!-- Fecha salida instalaciones desde/hasta -->
-        <date-picker
-            @updatedDatePicker="vehicleFilters.byeByeDateFrom = $event"
-            name="byeByeDateFrom"
-            id="byeByeDateFrom"
-            div-class="col-md-3 form-group"
-            :limit-end-day="vehicleFilters.byeByeDateTo"
+        <date-range-picker
+            :nameFrom="vehicleFilters.byeByeDateFrom"
+            :nameTo="vehicleFilters.byeByeDateTo"
+            idFrom="byeByeDateFrom"
+            idTo="byeByeDateTo"
+            :valueFrom="vehicleFilters.byeByeDateFrom"
+            :valueTo="vehicleFilters.byeByeDateTo"
+            mode="date"
+            :limitEndDay="vehicleFilters.byeByeDateTo"
             :label="txt.fields.byeByeDateFrom"
-            :value="vehicleFilters.byeByeDateFrom"
-        />
-
-        <date-picker
-            @updatedDatePicker="vehicleFilters.byeByeDateTo = $event"
-            name="byeByeDateTo"
-            id="byeByeDateTo"
             div-class="col-md-3 form-group"
-            :limit-start-day="vehicleFilters.byeByeDateFrom"
-            :label="txt.fields.byeByeDateTo"
-            :value="vehicleFilters.byeByeDateTo"
+            @updatedForm="vehicleFilters.byeByeDateFrom = $event"
+            @updatedTo="vehicleFilters.byeByeDateTo = $event"
         />
         <!--  -->
 
@@ -257,24 +273,19 @@
         <!--  -->
 
         <!-- Fecha devolución desde/hasta -->
-        <date-picker
-            @updatedDatePicker="vehicleFilters.returnDateFrom = $event"
-            name="returnDateFrom"
-            id="returnDateFrom"
-            div-class="col-md-3 form-group"
-            :limit-end-day="vehicleFilters.returnDateTo"
+        <date-range-picker
+            :nameFrom="vehicleFilters.returnDateFrom"
+            :nameTo="vehicleFilters.returnDateTo"
+            idFrom="returnDateFrom"
+            idTo="returnDateTo"
+            :valueFrom="vehicleFilters.returnDateFrom"
+            :valueTo="vehicleFilters.returnDateTo"
+            mode="date"
+            :limitEndDay="vehicleFilters.returnDateTo"
             :label="txt.fields.returnDateFrom"
-            :value="vehicleFilters.returnDateFrom"
-        />
-
-        <date-picker
-            @updatedDatePicker="vehicleFilters.returnDateTo = $event"
-            name="returnDateTo"
-            id="returnDateTo"
             div-class="col-md-3 form-group"
-            :limit-start-day="vehicleFilters.returnDateFrom"
-            :label="txt.fields.returnDateTo"
-            :value="vehicleFilters.returnDateTo"
+            @updatedForm="vehicleFilters.returnDateFrom = $event"
+            @updatedTo="vehicleFilters.returnDateTo = $event"
         />
         <!--  -->
 
@@ -301,70 +312,22 @@
         <!--  -->
 
         <!-- Fecha matriculación desde/hasta -->
-        <date-picker
-            @updatedDatePicker="vehicleFilters.registrationDateFrom = $event"
-            name="registrationDateFrom"
-            id="registrationDateFrom"
-            div-class="col-md-3 form-group"
-            :limit-end-day="vehicleFilters.registrationDateTo"
+        <date-range-picker
+            :nameFrom="vehicleFilters.registrationDateFrom"
+            :nameTo="vehicleFilters.registrationDateTo"
+            idFrom="registrationDateFrom"
+            idTo="registrationDateTo"
+            :valueFrom="vehicleFilters.registrationDateFrom"
+            :valueTo="vehicleFilters.registrationDateTo"
+            mode="date"
+            :limitEndDay="vehicleFilters.registrationDateTo"
             :label="txt.fields.registrationDateFrom"
-            :value="vehicleFilters.registrationDateFrom"
-        />
-
-        <date-picker
-            @updatedDatePicker="vehicleFilters.registrationDateTo = $event"
-            name="registrationDateTo"
-            id="registrationDateTo"
             div-class="col-md-3 form-group"
-            :limit-start-day="vehicleFilters.registrationDateFrom"
-            :label="txt.fields.registrationDateTo"
-            :value="vehicleFilters.registrationDateTo"
+            @updatedForm="vehicleFilters.registrationDateFrom = $event"
+            @updatedTo="vehicleFilters.registrationDateTo = $event"
         />
         <!--  -->
 
-        <!-- Fecha inicio bloqueo desde/hasta -->
-        <date-picker
-            @updatedDatePicker="vehicleFilters.startBlockageDateFrom = $event"
-            name="startBlockageDateFrom"
-            id="startBlockageDateFrom"
-            div-class="col-md-3 form-group"
-            :limit-end-day="vehicleFilters.startBlockageDateTo"
-            :label="txt.fields.startBlockageDateFrom"
-            :value="vehicleFilters.startBlockageDateFrom"
-        />
-
-        <date-picker
-            @updatedDatePicker="vehicleFilters.startBlockageDateTo = $event"
-            name="startBlockageDateTo"
-            id="startBlockageDateTo"
-            div-class="col-md-3 form-group"
-            :limit-start-day="vehicleFilters.startBlockageDateFrom"
-            :label="txt.fields.startBlockageDateTo"
-            :value="vehicleFilters.startBlockageDateTo"
-        />
-        <!--  -->
-
-        <!-- Fecha fin bloqueo desde/hasta -->
-        <date-picker
-            @updatedDatePicker="vehicleFilters.endBlockageDateFrom = $event"
-            name="endBlockageDateFrom"
-            id="endBlockageDateFrom"
-            div-class="col-md-3 form-group"
-            :limit-end-day="vehicleFilters.endBlockageDateTo"
-            :label="txt.fields.endBlockageDateFrom"
-            :value="vehicleFilters.endBlockageDateFrom"
-        />
-
-        <date-picker
-            @updatedDatePicker="vehicleFilters.endBlockageDateTo = $event"
-            name="endBlockageDateTo"
-            id="endBlockageDateTo"
-            div-class="col-md-3 form-group"
-            :limit-start-day="vehicleFilters.endBlockageDateFrom"
-            :label="txt.fields.endBlockageDateTo"
-            :value="vehicleFilters.endBlockageDateTo"
-        />
-        <!--  -->
 
         <!-- Fecha de carga real desde/hasta -->
         <!-- <date-picker
@@ -418,6 +381,17 @@
             :options="selectList.vehicleTypeList"
         />
 
+        <single-select-picker
+            name="cleanVehicle"
+            id="cleanVehicle"
+            div-class="col-md-3 form-group"
+            :label="txt.fields.cleanVehicle"
+            :options="[
+                { id: '', name: 'Todos' },
+                { id: '1', name: 'Sí' },
+                { id: '0', name: 'No' }
+            ]"
+        />
         <!-- <multiple-select-picker
             name="connectedVehicle"
             id="connectedVehicle"
@@ -442,6 +416,7 @@
 import Loading from "../../../../assets/js/utilities";
 import ErpFilterVehicleColumn from "./ErpFilterVehicleColumn.vue";
 import DatePicker from "../../../../SharedAssets/vue/components/base/inputs/DatePicker.vue";
+import DateRangePicker from "../../../../SharedAssets/vue/components/base/inputs/DateRangePicker.vue";
 import InputNumber from "../../../../SharedAssets/vue/components/base/inputs/InputNumber.vue";
 import MultipleSelectPicker from "../../../../SharedAssets/vue/components/base/inputs/MultipleSelectPicker.vue";
 import SingleSelectPicker from "../../../../SharedAssets/vue/components/base/inputs/SingleSelectPicker.vue";
@@ -454,16 +429,21 @@ export default {
         InputNumber,
         MultipleSelectPicker,
         SingleSelectPicker,
+        DateRangePicker,
     },
     data() {
         return {
             txt: {},
             selectList: {},
             vehicleFilters: {
-                kmFrom: null,
-                kmTo: null,
+                branchs: null,
+                locations:null,
+                actualKmsFrom: null,
+                actualKmsTo: null,
                 deliveryDateFrom: null,
                 deliveryDateTo: null,
+                intDeliveryDateFrom: null,
+                intDeliveryDateTo: null,
                 firstRentDateFrom: null,
                 firstRentDateTo: null,
                 rentingEndDateFrom: null,
@@ -476,14 +456,11 @@ export default {
                 firstRegistrationDateTo: null,
                 registrationDateFrom: null,
                 registrationDateTo: null,
-                startBlockageDateFrom: null,
-                startBlockageDateTo: null,
-                endBlockageDateFrom: null,
-                endBlockageDateTo: null,
                 actualLoadDateFrom: null,
                 actualLoadDateTo: null,
                 actualUnloadDateFrom: null,
                 actualUnloadDateTo: null,
+                cleanVehicle: 'all',
                 columns: null,
             },
         };
@@ -512,6 +489,7 @@ export default {
         sendSearch() {
             this.$emit("sendSearch");
         },
+
     },
 };
 </script>
