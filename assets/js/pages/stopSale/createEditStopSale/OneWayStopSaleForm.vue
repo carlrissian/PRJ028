@@ -37,6 +37,13 @@
                                         v-model="stopSale.stopSaleTypeId"
                                     />
 
+                                    <input
+                                        type="hidden"
+                                        name="regionPickUpId[]"
+                                        id="regionPickUpId"
+                                        v-model="stopSale.regionPickUpId"
+                                    />
+
                                     <div class="row">
                                         <!-- Init date -->
                                         <erp-date-picker-static-filter
@@ -140,7 +147,7 @@
                                             :label="txt.fields.destinyRegion"
                                             :data-for-ajax="regionList"
                                             :value="stopSale.regionDropOffId"
-                                            v-bind:style="[this.canBeEditCreated === true ? styleObjectNo : styleObject]"
+                                            style="display:none"
                                         />
                                         <!--  -->
 
@@ -294,6 +301,7 @@ export default {
                 carGroupsId: [],
                 acrissId: [],
                 regionDropOffId: [],
+                regionPickUpId: [],
                 areaPickUpId: [],
                 areaDropOffId: [],
                 branchPickUpId: [],
@@ -573,12 +581,9 @@ export default {
             if (validated) {
                 let formData = new FormData();
                 let stopSaleData = { ...this.stopSale };
-                if (stopSaleData.connectedVehicle !== null && stopSaleData.connectedVehicle !== undefined) {
-                    if (parseInt(stopSaleData.connectedVehicle) === 1) {
-                        stopSaleData.connectedVehicle = true;
-                    } else if (parseInt(stopSaleData.connectedVehicle) === 2) {
-                        stopSaleData.connectedVehicle = false;
-                    }
+                if (typeof stopSaleData.connectedVehicle === "string") {
+                    stopSaleData.connectedVehicle =
+                        stopSaleData.connectedVehicle === "true";
                 }
                 formData.set("stopSale", JSON.stringify(stopSaleData));
 
