@@ -220,8 +220,8 @@
                                               @onChangeSelectPicker="canSubmit = true"
                                               @updatedSelectPicker="stopSale.connectedVehicle = $event"
                                           >
-                                              <option :value="true">{{ txt.form.yes }}</option>
-                                              <option :value="false">{{ txt.form.no }}</option>
+                                              <option :value="1">{{ txt.form.yes }}</option>
+                                              <option :value="2">{{ txt.form.no }}</option>
                                           </single-select-picker>
                                         <!--  -->
 
@@ -581,9 +581,15 @@ export default {
             if (validated) {
                 let formData = new FormData();
                 let stopSaleData = { ...this.stopSale };
-                if (typeof stopSaleData.connectedVehicle === "string") {
-                    stopSaleData.connectedVehicle =
-                        stopSaleData.connectedVehicle === "true";
+                if (
+                    stopSaleData.connectedVehicle !== null &&
+                    stopSaleData.connectedVehicle !== undefined
+                ) {
+                    if (parseInt(stopSaleData.connectedVehicle) === 1) {
+                        stopSaleData.connectedVehicle = true;
+                    } else if (parseInt(stopSaleData.connectedVehicle) === 2) {
+                        stopSaleData.connectedVehicle = false;
+                    }
                 }
                 formData.set("stopSale", JSON.stringify(stopSaleData));
 
