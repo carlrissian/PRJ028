@@ -87,25 +87,13 @@
                                         />
                                         <!--  -->
 
-                                        <!-- Stop Sale Type -->
-                                        <single-select-picker
-                                            v-if="false" @onChangeSelectPicker="canSubmit = true"
-                                            @updatedSelectPicker="stopSale.stopSaleTypeId = $event"
+                                        <!-- Stop Sale Type (hidden) -->
+                                        <input
+                                            type="hidden"
                                             name="stopSaleTypeId"
                                             id="stopSaleTypeId"
-                                            :label="this.txt.fields.stopSaleType"
-                                            :required="true"
-                                            :value="stopSale.stopSaleTypeId"
-                                            v-bind:style="[this.canBeEditCreated !== true ? styleObjectNo : styleObject]"
-                                        >
-                                            <option
-                                                v-for="item in this.selectList.stopSaleTypeList"
-                                                :key="item.id"
-                                                :value="item.id"
-                                            >
-                                                {{ item.name }}
-                                            </option>
-                                        </single-select-picker>
+                                            v-model="stopSale.stopSaleTypeId"
+                                        />
                                         <!--  -->
                                     </div>
 
@@ -113,6 +101,7 @@
                                     <div class="row">
                                         <!-- Regions -->
                                         <erp-multiple-select-static-filter
+                                            style="display: none"
                                             @changeSelectMultiple="onChangeRegionPickUp()"
                                             name="regionPickUpId[]"
                                             id="regionPickUpId"
@@ -156,6 +145,7 @@
                                     <div class="row">
                                         <!-- Regions -->
                                         <erp-multiple-select-static-filter
+                                            style="display: none"
                                             @changeSelectMultiple="onChangeRegionDropOff()"
                                             name="regionDropOffId[]"
                                             id="regionDropOffId"
@@ -227,18 +217,18 @@
                                       <!-- Connected Vehicle (solo One-Way) -->
                                           <single-select-picker
                                               @onChangeSelectPicker="canSubmit = true"
-                                              @updatedSelectPicker="stopSale.connectedVehicle = $event"
+                                              @updatedSelectPicker="stopSale.connectedVehicle = $event == 1"
                                               name="connectedVehicle"
                                               id="connectedVehicle"
-                                              :label="'Vehículo conectado'"
+                                              :label="'Vehículos conectados'"
                                               required
-                                              :value="stopSale.connectedVehicle"
+                                              :value="stopSale.connectedVehicle === null ? null : (stopSale.connectedVehicle ? 1 : 2)"
                                               :style="!canBeEditCreated ? styleObjectNo : styleObject"
                                             >
-                                            <option :value="true">{{ txt.form.yes }}</option>
-                                            <option :value="false">{{ txt.form.no }}</option>
+                                            <option :value="1">{{ txt.form.yes }}</option>
+                                            <option :value="2">{{ txt.form.no }}</option>
                                           </single-select-picker>
-                                        <!--  -->
+                                          <!--  -->
 
                                         <!--Notes-->
                                         <div
@@ -348,7 +338,7 @@ export default {
         this.txt = txtTrans;
         this.constants = constants;
     
-        this.stopSale.stopSaleTypeId = parseInt(this.constants.STOPSALETYPE_TOTAL, 10);
+        this.stopSale.stopSaleTypeId = 1;
 },
     mounted() {
         this.canBeEditCreated = this.selectList.canBeEditCreated;
