@@ -220,7 +220,7 @@
                                               @updatedSelectPicker="stopSale.connectedVehicle = $event == 1"
                                               name="connectedVehicle"
                                               id="connectedVehicle"
-                                              :label="'Vehículos conectados'"
+                                              :label="txt.fields.connectedVehicle"
                                               required
                                               :value="stopSale.connectedVehicle === null ? null : (stopSale.connectedVehicle ? 1 : 2)"
                                               :style="!canBeEditCreated ? styleObjectNo : styleObject"
@@ -307,7 +307,7 @@ export default {
                 areaPiDropOffId: [],
                 branchPickUpId: [],
                 branchDropOffId: [],
-                stopSaleTypeId: null,
+                stopSaleTypeId: 1,
                 minDaysRent: null,
                 maxDaysRent: null,
                 connectedVehicle: null,
@@ -337,8 +337,6 @@ export default {
     created() {
         this.txt = txtTrans;
         this.constants = constants;
-    
-        this.stopSale.stopSaleTypeId = 1;
 },
     mounted() {
         this.canBeEditCreated = this.selectList.canBeEditCreated;
@@ -384,7 +382,6 @@ export default {
             $("#areaDropOffId").selectpicker("refresh");
             $("#branchPickUpId").selectpicker("refresh");
             $("#branchDropOffId").selectpicker("refresh");
-            $("#stopSaleTypeId").selectpicker("refresh");
             $("#connectedVehicle").selectpicker("refresh");
         });
     },
@@ -401,9 +398,6 @@ export default {
                 actionsBox: true,
             };
 
-            // stopSaleTypeId
-            let stopSaleTypeId = $("#stopSaleTypeId");
-            stopSaleTypeId.selectpicker(config);
             // connectedVehicle
             let connectedVehicle = $("#connectedVehicle");
             connectedVehicle.selectpicker(config);

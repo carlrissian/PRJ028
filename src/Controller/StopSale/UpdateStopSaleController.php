@@ -35,6 +35,7 @@ class UpdateStopSaleController extends AbstractController
     {
         try {
             $stopSale = json_decode($request->get('stopSale'), true);
+            $stopSale['stopSaleTypeId'] = $stopSale['stopSaleTypeId'] ?? 1;
 
             $command = new UpdateStopSaleCommand(
                 $id,
