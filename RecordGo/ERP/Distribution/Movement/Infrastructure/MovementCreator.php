@@ -157,7 +157,7 @@ class MovementCreator
                 $deliveryNoteCollection->add(
                     new DeliveryNote(
                         $deliveryNoteArray['ID'] ?? null,
-                        $deliveryNoteArray['PUDOCTYPEID'],
+                        $deliveryNoteArray['PUDODOCTYPEID'],
                         $deliveryNoteArray['PUDODOCTYPE'],
                         $deliveryNoteArray['PUDOPDF'],
                         $deliveryNoteArray['CREATIONDATE'] ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($deliveryNoteArray['CREATIONDATE'])) : null,

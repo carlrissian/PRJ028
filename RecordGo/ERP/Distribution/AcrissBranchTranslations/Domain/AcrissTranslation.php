@@ -1,16 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\AcrissBranchTranslations\Domain;
-
-use Shared\Utils\DataValidation;
 
 /**
  * Class AcrissTranslation
  * @package Distribution\AcrissTranslations\Domain
  */
-class AcrissTranslation
+final class AcrissTranslation
 {
     /**
      * @var integer|null
@@ -28,9 +24,9 @@ class AcrissTranslation
     private Language $language;
 
     /**
-     * @var bool
+     * @var bool|null
      */
-    private bool $byDefault;
+    private ?bool $byDefault;
 
     /**
      * AcrissTranslation constructor
@@ -38,13 +34,13 @@ class AcrissTranslation
      * @param integer|null $id
      * @param string $name
      * @param Language $language
-     * @param boolean $byDefault
+     * @param bool|null $byDefault
      */
-    public function __construct(
+    private function __construct(
         ?int $id,
         string $name,
         Language $language,
-        bool $byDefault
+        ?bool $byDefault
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -53,8 +49,6 @@ class AcrissTranslation
     }
 
     /**
-     * Get the value of id
-     *
      * @return integer|null
      */
     public function getId(): ?int
@@ -63,8 +57,6 @@ class AcrissTranslation
     }
 
     /**
-     * Get the value of name
-     *
      * @return string
      */
     public function getName(): string
@@ -73,8 +65,6 @@ class AcrissTranslation
     }
 
     /**
-     * Get the value of language
-     *
      * @return Language
      */
     public function getLanguage(): Language
@@ -83,29 +73,45 @@ class AcrissTranslation
     }
 
     /**
-     * Get the value of byDefault
-     *
-     * @return bool
+     * @return bool|null
      */
-    public function isByDefault(): bool
+    public function isByDefault(): ?bool
     {
         return $this->byDefault;
     }
 
 
     /**
-     * @param array|null $acrissTranslationArray
-     * @return AcrissTranslation
+     * @param integer|null $id
+     * @param string $name
+     * @param Language $language
+     * @param boolean $byDefault
      */
-    public static function createFromArray(?array $acrissTranslationArray): AcrissTranslation
-    {
-        $helper = new DataValidation();
-
+    public static function create(
+        ?int $id,
+        string $name,
+        Language $language,
+        ?bool $byDefault = null
+    ): self {
         return new self(
-            $helper->intOrNull($helper->arrayExistOrNull($acrissTranslationArray, 'ID')),
-            $helper->arrayExistOrNull($acrissTranslationArray, 'ACRISSTRANSNAME'),
-            (isset($acrissTranslationArray['LANGUAGE'])) ? Language::createFromArray($acrissTranslationArray['LANGUAGE']) : null,
-            $helper->boolOrNull($helper->arrayExistOrNull($acrissTranslationArray, 'BYDEFAULT'))
+            $id,
+            $name,
+            $language,
+            $byDefault
+        );
+    }
+
+    /**
+     * @param array|null $acrissTranslationArray
+     * @return self
+     */
+    public static function createFromArray(?array $acrissTranslationArray): self
+    {
+        return self::create(
+            intval($acrissTranslationArray['ID']),
+            $acrissTranslationArray['ACRISSTRANSNAME'],
+            isset($acrissTranslationArray['LANGUAGE']) ? Language::createFromArray($acrissTranslationArray['LANGUAGE']) : null,
+            isset($acrissTranslationArray['BYDEFAULT']) ? filter_var($acrissTranslationArray['BYDEFAULT'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : false
         );
     }
 
@@ -118,7 +124,7 @@ class AcrissTranslation
             'ID' => $this->getId(),
             'ACRISSTRANSNAME' => $this->getName(),
             'LANGUAGE' => $this->getLanguage()->toArray(),
-            'BYDEFAULT' => $this->isByDefault() ? 1 : 0,
+            'BYDEFAULT' => $this->isByDefault() !== null ? ($this->isByDefault() ? 1 : 0) : null,
         ];
     }
 }

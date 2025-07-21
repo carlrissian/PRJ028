@@ -82,6 +82,12 @@ export default {
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
+                    field: "regionPickUp",
+                    title: txtTrans.fields.regionPickUp,
+                    sortable: true,
+                    formatter: (value) => Formatter.trimArray(value),
+                },
+                {
                     field: "areaPickUp",
                     title: txtTrans.fields.areaPickUp,
                     sortable: true,
@@ -90,6 +96,12 @@ export default {
                 {
                     field: "branchPickUp",
                     title: txtTrans.fields.branchPickUp,
+                    sortable: true,
+                    formatter: (value) => Formatter.trimArray(value),
+                },
+                {
+                    field: "regionDropOff",
+                    title: txtTrans.fields.regionDropOff,
                     sortable: true,
                     formatter: (value) => Formatter.trimArray(value),
                 },

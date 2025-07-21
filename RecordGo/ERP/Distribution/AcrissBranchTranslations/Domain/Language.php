@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\AcrissBranchTranslations\Domain;
 
 /**
  * Class Language
  * @package Distribution\AcrissTranslations\Domain
  */
-class Language
+final class Language
 {
     /**
      * @var integer
@@ -23,23 +21,23 @@ class Language
     /**
      * @var string
      */
-    private string $code;
+    private string $iso;
 
     /**
      * Language constrcutor.
      *
      * @param integer $id
      * @param string $name
-     * @param string $code
+     * @param string $iso
      */
     public function __construct(
         int $id,
         string $name,
-        string $code
+        string $iso
     ) {
         $this->id = $id;
         $this->name = $name;
-        $this->code = $code;
+        $this->iso = $iso;
     }
 
     /**
@@ -61,9 +59,9 @@ class Language
     /**
      * @return string
      */
-    public function getCode(): string
+    public function getISO(): string
     {
-        return $this->code;
+        return $this->iso;
     }
 
 
@@ -87,8 +85,8 @@ class Language
     {
         return [
             'ID' => $this->getId(),
-            'LANGUAGESDESCRIPTION' => $this->getCode(),
             'LANGUAGESNAME' => $this->getName(),
+            'LANGUAGESDESCRIPTION' => $this->getISO(),
         ];
     }
 }

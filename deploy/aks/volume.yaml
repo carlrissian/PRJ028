@@ -1,12 +1,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: prj028-logistics-shared-claim
+  name: __KubernetesNamespace__-shared-claim
   namespace: __KubernetesNamespace__
 spec:
   accessModes:
-    - ReadWriteMany
-  storageClassName: my-azurefile
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: __storage__

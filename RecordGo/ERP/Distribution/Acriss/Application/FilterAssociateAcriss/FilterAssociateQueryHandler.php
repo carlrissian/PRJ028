@@ -48,7 +48,7 @@ class FilterAssociateQueryHandler
 
             $acrissId = $acriss->getId();
 
-            $acrissName  = $acriss->getAcrissName()->__toString();
+            $acrissName  = $acriss->getName()->__toString();
 
             $acrissChilds = $acriss->getAcrissInferiorCollection();
 

@@ -9,16 +9,16 @@ use Shared\Domain\Criteria\FilterOperator;
 use Shared\Domain\Criteria\FilterCollection;
 use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslation;
 use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsCriteria;
-use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepository;
+use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepositoryInterface;
 
 class FilterAcrissBranchQueryHandler
 {
     /**
-     * @var AcrissBranchTranslationsRepository
+     * @var AcrissBranchTranslationsRepositoryInterface
      */
-    private AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository;
+    private AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository;
 
-    public function __construct(AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository)
+    public function __construct(AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository)
     {
         $this->acrissBranchTranslationsRepository = $acrissBranchTranslationsRepository;
     }

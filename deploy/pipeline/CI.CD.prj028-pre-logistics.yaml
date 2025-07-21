@@ -12,6 +12,16 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
+  - name: replicas
+    value: '1'
+  - name: maxSurge
+    value: '0'
+  - name: maxUnavailable
+    value: '1'
+  - name: storage
+    value: '2Gi'
+  - name: domainIngress
+    value: 'pre-logistics.recordgo.cloud'
   - name: KubernetesNamespace
     value: 'prj028-pre-logistics'
   - group: 'Azure Configuration'
@@ -28,22 +38,23 @@ stages:
             persistCredentials: true
 
           - task: Docker@2
-            displayName: 'Build prj028-pre-logistics image'
+            displayName: 'Build $(KubernetesNamespace) image'
             inputs:
               containerRegistry: $(DockerRegistryServiceConnection)
-              repository: 'prj028-pre-logistics-app'
+              repository: '$(KubernetesNamespace)-app'
               command: 'build'
               tags: $(Build.BuildId)
-              Dockerfile: '$(Build.SourcesDirectory)/Dockerfile-pre'
+              Dockerfile: 'deploy/docker/Dockerfile-PRE'
+              buildContext: '$(Build.SourcesDirectory)'
             condition: succeeded()
             env:
               DOCKER_BUILDKIT: 1
 
           - task: Docker@2
-            displayName: 'Push prj028-pre-logistics image'
+            displayName: 'Push $(KubernetesNamespace) image'
             inputs:
               containerRegistry: $(DockerRegistryServiceConnection)
-              repository: 'prj028-pre-logistics-app'
+              repository: '$(KubernetesNamespace)-app'
               command: 'push'
               tags: $(Build.BuildId)
             condition: succeeded()
@@ -58,7 +69,7 @@ stages:
           - task: replacetokens@5
             displayName: Replace Tokens
             inputs:
-              rootDirectory: '$(Build.SourcesDirectory)/deploy/pre-aks'
+              rootDirectory: '$(Build.SourcesDirectory)/deploy/aks'
               targetFiles: '**/*.yaml'
               encoding: 'auto'
               tokenPattern: 'rm'
@@ -77,23 +88,23 @@ stages:
             inputs:
               secureFile: kubeconfig-recordgo.yaml
 
+          - script: |
+              export KUBECONFIG=$(DownloadKubeconfig.secureFilePath)
+              echo "Configuration, service and deployment"
+              kubectl apply -f $(Build.SourcesDirectory)/deploy/aks/namespace.yaml -f $(Build.SourcesDirectory)/deploy/aks/configuration.yaml -f $(Build.SourcesDirectory)/deploy/aks/volume.yaml -f $(Build.SourcesDirectory)/deploy/aks/service.yaml -f $(Build.SourcesDirectory)/deploy/aks/deployment.yaml
+            displayName: 'Configuration, service and deployment'
+
             # Aplicar todos los manifiestos
           - script: |
               export KUBECONFIG=$(DownloadKubeconfig.secureFilePath)
               echo "Aplicando manifiestos..."
-              kubectl apply -f $(Build.SourcesDirectory)/deploy/pre-aks/
+              kubectl apply -f $(Build.SourcesDirectory)/deploy/aks/
             displayName: 'Aplicar manifiestos al clúster'
 
           - script: |
               export KUBECONFIG=$(DownloadKubeconfig.secureFilePath)
-              echo "Configuration, service and deployment"
-              kubectl apply -f $(Build.SourcesDirectory)/deploy/pre-aks/namespace.yaml -f $(Build.SourcesDirectory)/deploy/pre-aks/configuration.yaml -f $(Build.SourcesDirectory)/deploy/pre-aks/volume.yaml -f $(Build.SourcesDirectory)/deploy/pre-aks/service.yaml -f $(Build.SourcesDirectory)/deploy/pre-aks/deployment.yaml
-            displayName: 'Configuration, service and deployment'
-
-          - script: |
-              export KUBECONFIG=$(DownloadKubeconfig.secureFilePath)
               echo "Ingress...."
-              kubectl apply -f $(Build.SourcesDirectory)/deploy/pre-aks/ingress.yaml
+              kubectl apply -f $(Build.SourcesDirectory)/deploy/aks/ingress.yaml
             displayName: 'Ingress'
 
             # Reaplicar TLS secret
@@ -110,7 +121,7 @@ stages:
                 | sed '/- apiVersion/d' \
                 | sed '/kind: SecretProviderClassPodStatus/{N;d;}' \
                 | sed '/kind: ReplicaSet/{N;d;}' \
-                | sed '/uid/d' > $(Build.SourcesDirectory)/deploy/pre-aks/tls-secret-csi.yaml
+                | sed '/uid/d' > $(Build.SourcesDirectory)/deploy/aks/tls-secret-csi.yaml
               
-              kubectl apply -f $(Build.SourcesDirectory)/deploy/pre-aks/tls-secret-csi.yaml -n $(KubernetesNamespace)
+              kubectl apply -f $(Build.SourcesDirectory)/deploy/aks/tls-secret-csi.yaml -n $(KubernetesNamespace)
             displayName: 'Reaplicar TLS secret'

@@ -5,16 +5,6 @@ namespace Distribution\Acriss\Application\FilterAcriss;
 class FilterAcrissQuery
 {
     /**
-     * @var int|null
-     */
-    private ?int $limit;
-
-    /**
-     * @var int|null
-     */
-    private ?int $offset;
-
-    /**
      * @var string|null
      */
     private ?string $sort;
@@ -23,6 +13,16 @@ class FilterAcrissQuery
      * @var string|null
      */
     private ?string $order;
+
+    /**
+     * @var int|null
+     */
+    private ?int $offset;
+
+    /**
+     * @var int|null
+     */
+    private ?int $limit;
 
     /**
      * @var array|null
@@ -62,10 +62,10 @@ class FilterAcrissQuery
     /**
      * FilterAcrissQuery constructor.
      *
-     * @param integer|null $limit
-     * @param integer|null $offset
      * @param string|null $sort
      * @param string|null $order
+     * @param integer|null $offset
+     * @param integer|null $limit
      * @param array|null $commercialGroupIds
      * @param array|null $carGroupIds
      * @param array|null $carClassIds
@@ -75,10 +75,10 @@ class FilterAcrissQuery
      * @param boolean|null $acrissStatus
      */
     public function __construct(
-        ?int $limit,
-        ?int $offset,
         ?string $sort,
         ?string $order,
+        ?int $offset,
+        ?int $limit,
         ?array $commercialGroupIds,
         ?array $carGroupIds,
         ?array $carClassIds,
@@ -87,10 +87,10 @@ class FilterAcrissQuery
         ?array $gearBoxIds,
         ?bool $acrissStatus
     ) {
-        $this->limit = $limit;
-        $this->offset = $offset;
         $this->sort = $sort;
         $this->order = $order;
+        $this->offset = $offset;
+        $this->limit = $limit;
         $this->commercialGroupIds = $commercialGroupIds;
         $this->carGroupIds = $carGroupIds;
         $this->carClassIds = $carClassIds;
@@ -100,22 +100,6 @@ class FilterAcrissQuery
         $this->acrissStatus = $acrissStatus;
     }
     
-
-    /**
-     * @return int|null
-     */
-    public function getLimit(): ?int
-    {
-        return $this->limit;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getOffset(): ?int
-    {
-        return $this->offset;
-    }
 
     /**
      * @return string|null
@@ -131,6 +115,22 @@ class FilterAcrissQuery
     public function getOrder(): ?string
     {
         return $this->order;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getOffset(): ?int
+    {
+        return $this->offset;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLimit(): ?int
+    {
+        return $this->limit;
     }
 
     /**

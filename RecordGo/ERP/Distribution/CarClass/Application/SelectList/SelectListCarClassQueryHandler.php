@@ -29,6 +29,6 @@ class SelectListCarClassQueryHandler
     public function handle(): SelectListCarClassResponse
     {
         $carClassCollection = $this->carClassRepository->getBy(new CarClassCriteria())->getCollection();
-        return new SelectListCarClassResponse(Utils::createSelectWithFormattedName($carClassCollection, 'id', 'name', 'acrissLetter', [], 'name'));
+        return new SelectListCarClassResponse(Utils::createCustomSelectList($carClassCollection, 'id', 'name', 'acrissLetter'));
     }
 }

@@ -33,7 +33,7 @@ class EORequestHelper implements RequestHelperInterface
     }
 
 
-    function request($method, $functionName, $body, $newUrl = null)
+    function request($method, $functionName, $body, $newUrl = null, $headersOptional = [])
     {
         $url = $newUrl ?? $this->url;
         $completeUrl = $url . $functionName;
@@ -47,10 +47,21 @@ class EORequestHelper implements RequestHelperInterface
             throw new \Exception("SAP Session expired", 401);
         }
 
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        $headers = array(
             $headerCookie,
-            "Content-Type:application/json",
-        ));
+            "Content-Type:application/json"
+        );
+
+        $headers = array_merge($headers, $headersOptional);
+        $headers = array_values($headers);
+
+        $country = $_SESSION['target-schema-country'] ?? $_SESSION['SELECTED_COUNTRY_ISO'] ?? null;
+        if ($country) {
+            $headers[] = 'target_schema_country:' . $country;
+            unset($_SESSION['target-schema-country']);
+        }
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
         return $this->curlRequest($body, $ch, $method, $completeUrl);
     }

@@ -1,10 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\AcrissBranchTranslations\Domain;
-
-use Shared\Utils\DataValidation;
 
 final class Branch
 {
@@ -31,10 +27,10 @@ final class Branch
      * @param string|null $name
      * @param string|null $branchIATA
      */
-    public function __construct(
+    private function __construct(
         int $id,
-        ?string $name = null,
-        ?string $branchIATA = null
+        ?string $name,
+        ?string $branchIATA
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -42,8 +38,6 @@ final class Branch
     }
 
     /**
-     * Get the value of id
-     *
      * @return integer
      */
     public function getId(): int
@@ -53,8 +47,6 @@ final class Branch
 
 
     /**
-     * Get the value of name
-     *
      * @return string|null
      */
     public function getName(): ?string
@@ -63,8 +55,6 @@ final class Branch
     }
 
     /**
-     * Get the value of branchIATA
-     *
      * @return string|null
      */
     public function getBranchIATA(): ?string
@@ -74,17 +64,32 @@ final class Branch
 
 
     /**
-     * @param array|null $branchArray
-     * @return Branch
+     * @param integer $id
+     * @param string|null $name
+     * @param string|null $branchIATA
      */
-    public static function createFromArray(?array $branchArray): Branch
-    {
-        $helper = new DataValidation();
-
+    public static function create(
+        int $id,
+        ?string $name = null,
+        ?string $branchIATA = null
+    ): self {
         return new self(
-            $helper->intOrNull($helper->arrayExistOrNull($branchArray, 'ID')),
-            $helper->arrayExistOrNull($branchArray, 'BRANCHINTNAME'),
-            $helper->arrayExistOrNull($branchArray, 'BRANCHIATA')
+            $id,
+            $name,
+            $branchIATA
+        );
+    }
+
+    /**
+     * @param array|null $branchArray
+     * @return self
+     */
+    public static function createFromArray(?array $branchArray): self
+    {
+        return self::create(
+            intval($branchArray['ID']),
+            $branchArray['BRANCHINTNAME'] ?? null,
+            $branchArray['BRANCHIATA'] ?? null
         );
     }
 

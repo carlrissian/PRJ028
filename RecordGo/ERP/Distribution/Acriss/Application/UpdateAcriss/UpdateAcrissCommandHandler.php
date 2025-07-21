@@ -5,17 +5,19 @@ declare(strict_types=1);
 namespace Distribution\Acriss\Application\UpdateAcriss;
 
 use Shared\Domain\Criteria\Filter;
+use Distribution\Acriss\Domain\Acriss;
 use Distribution\Acriss\Domain\GearBox;
 use Distribution\Acriss\Domain\CarClass;
 use Distribution\Acriss\Domain\AcrissType;
 use Shared\Domain\Criteria\FilterOperator;
+use Distribution\Acriss\Domain\VehicleSeats;
 use Shared\Domain\Criteria\FilterCollection;
 use Shared\Domain\ValueObject\DateValueObject;
 use Distribution\Acriss\Domain\AcrissRepository;
 use Distribution\Acriss\Domain\MotorizationType;
-use Distribution\Shared\Domain\RepositoryException;
 use Distribution\AcrissBranchTranslations\Domain\Branch;
 use Distribution\AcrissBranchTranslations\Domain\Language;
+use Distribution\Acriss\Domain\Exception\AcrissNotFoundException;
 use Distribution\AcrissBranchTranslations\Domain\AcrissImageLine;
 use Distribution\AcrissBranchTranslations\Domain\AcrissTranslation;
 use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslation;
@@ -23,7 +25,7 @@ use Distribution\AcrissBranchTranslations\Domain\AcrissImageLineCollection;
 use Distribution\AcrissBranchTranslations\Domain\AcrissTranslationCollection;
 use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsCriteria;
 use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationCollection;
-use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepository;
+use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepositoryInterface;
 
 /**
  * Class UpdateAcrissCommandHandler
@@ -37,17 +39,17 @@ class UpdateAcrissCommandHandler
     private AcrissRepository $acrissRepository;
 
     /**
-     * @var AcrissBranchTranslationsRepository
+     * @var AcrissBranchTranslationsRepositoryInterface
      */
-    private AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository;
+    private AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository;
 
     /**
      * @param AcrissRepository $acrissRepository
-     * @param AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository
+     * @param AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository
      */
     public function __construct(
         AcrissRepository $acrissRepository,
-        AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository
+        AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository
     ) {
         $this->acrissRepository = $acrissRepository;
         $this->acrissBranchTranslationsRepository = $acrissBranchTranslationsRepository;
@@ -56,17 +58,14 @@ class UpdateAcrissCommandHandler
     /**
      * @param UpdateAcrissCommand $command
      * @return UpdateAcrissResponse
-     * @throws RepositoryException
      */
     final public function handle(UpdateAcrissCommand $command): UpdateAcrissResponse
     {
         $acriss = $this->acrissRepository->getById($command->getId());
 
-        if ($command->getCarClassId() !== $acriss->getCarClass()->getId()) $acriss->setCarClass(new CarClass($command->getCarClassId()));
-        if ($command->getAcrissTypeId() !== $acriss->getAcrissType()->getId()) $acriss->setAcrissType(new AcrissType($command->getAcrissTypeId()));
-        if ($command->getGearBoxId() !== $acriss->getGearBox()->getId()) $acriss->setGearBox(new GearBox($command->getGearBoxId()));
-        if ($command->getMotorizationTypeId() !== $acriss->getMotorizationType()->getId()) $acriss->setMotorizationType(new MotorizationType($command->getMotorizationTypeId()));
-        // if ($command->getCarGroupId() !== $acriss->getCarGroup()->getId()) $acriss->setCarGroup(new CarGroup($command->getCarGroupId()));
+        if (empty($acriss)) {
+            throw new AcrissNotFoundException("No se encontró un ACRISS con el ID: {$command->getId()}");
+        }
 
         $acrissInferiorCollection = null;
         // TODO PARA V2 EDITAR ACRISS INFERIOR
@@ -107,34 +106,15 @@ class UpdateAcrissCommandHandler
         //         }
         //     }
         // }
-        if ($acrissInferiorCollection !== $acriss->getAcrissInferiorCollection()) $acriss->setAcrissInferiorCollection($acrissInferiorCollection);
+        // if ($acrissInferiorCollection !== $acriss->getAcrissInferiorCollection()) $acriss->setAcrissInferiorCollection($acrissInferiorCollection);
 
-        if ($command->getNumberOfSuitcases() !== $acriss->getNumberOfSuitcases()) $acriss->setNumberOfSuitcases($command->getNumberOfSuitcases());
-        if ($command->getNumberOfSeats() !== $acriss->getNumberOfSeats()) $acriss->setNumberOfSeats($command->getNumberOfSeats());
-        if ($command->getCommercialVehicle() !== $acriss->getCommercialVehicle()) $acriss->setCommercialVehicle($command->getCommercialVehicle());
-        if ($command->getMediumTerm() !== $acriss->getMediumTerm()) $acriss->setMediumTerm($command->getMediumTerm());
 
-        if ($command->getStartDate()) {
-            $startDate = DateValueObject::createFromString($command->getStartDate());
-            if ($startDate !== $acriss->getStartDate()) $acriss->setStartDate($startDate);
-        } else {
-            $acriss->setStartDate(null);
-        }
-        if ($command->getEndDate()) {
-            $startDate = DateValueObject::createFromString($command->getEndDate());
-            if ($startDate !== $acriss->getEndDate()) $acriss->setEndDate($startDate);
-        } else {
-            $acriss->setEndDate(null);
-        }
+        $carClass = ($command->getCarClassId() !== $acriss->getCarClass()->getId()) ? new CarClass($command->getCarClassId()) : $acriss->getCarClass();
+        $acrissType = ($command->getAcrissTypeId() !== $acriss->getAcrissType()->getId()) ? new AcrissType($command->getAcrissTypeId()) : $acriss->getAcrissType();
+        $gearBox = ($command->getGearBoxId() !== $acriss->getGearBox()->getId()) ? new GearBox($command->getGearBoxId()) : $acriss->getGearBox();
+        $motorizationType = ($command->getMotorizationTypeId() !== $acriss->getMotorizationType()->getId()) ? new MotorizationType($command->getMotorizationTypeId()) : $acriss->getMotorizationType();
 
-        $acriss->setIsDriverLicenseClassB($command->hasDriverLicenseClassB());
-        $acriss->setIsDriverLicenseClassA($command->hasDriverLicenseClassA());
-        $acriss->setIsDriverLicenseClassA1($command->hasDriverLicenseClassA1());
-        $acriss->setIsDriverLicenseClassA2($command->hasDriverLicenseClassA2());
-        $acriss->setMinAgeExperienceDriverLicenseClassB($command->getMinAgeExperienceDriverLicenseClassB());
-        $acriss->setMinAgeExperienceDriverLicenseClassA($command->getMinAgeExperienceDriverLicenseClassA());
-        $acriss->setMinAgeExperienceDriverLicenseClassA1($command->getMinAgeExperienceDriverLicenseClassA1());
-        $acriss->setMinAgeExperienceDriverLicenseClassA2($command->getMinAgeExperienceDriverLicenseClassA2());
+        $vehicleSeats = $command->getVehicleSeatsId() ? new VehicleSeats($command->getVehicleSeatsId()) : null;
 
         // TODO V2 (?)
         // if ($command->getMinAge() !== $acriss->getMinAge()) $acriss->setMinAge($command->getMinAge());
@@ -148,7 +128,35 @@ class UpdateAcrissCommandHandler
         // if ($command->getFromTareWeight() !== $acriss->getFromTareWeight()) $acriss->setFromTareWeight($command->getFromTareWeight());
         // if ($command->getToTareWeight() !== $acriss->getToTareWeight()) $acriss->setToTareWeight($command->getToTareWeight());
 
-        $updatedAcrissId = $this->acrissRepository->update($acriss);
+        $acrissToUpdate = Acriss::create(
+            $acriss->getId(),
+            $acriss->getName(),
+            $carClass,
+            $acrissType,
+            $gearBox,
+            $motorizationType,
+            $acriss->getCarGroup(),
+            $acriss->getAcrissParentId(),
+            $acriss->getAcrissInferiorCollection(), // De momento no se va a actualizar hasta que se implemente la lógica de arriba
+            $acriss->isEnabled(),
+            $command->getNumberOfSuitcases(),
+            $vehicleSeats,
+            $command->getNumberOfDoors(),
+            $command->getCommercialVehicle(),
+            $command->getMediumTerm(),
+            $command->getStartDate() ? DateValueObject::createFromString($command->getStartDate()) : null,
+            $command->getEndDate() ? DateValueObject::createFromString($command->getEndDate()) : null,
+            $command->hasDriverLicenseClassB(),
+            $command->hasDriverLicenseClassA(),
+            $command->hasDriverLicenseClassA1(),
+            $command->hasDriverLicenseClassA2(),
+            $command->getMinAgeExperienceDriverLicenseClassB(),
+            $command->getMinAgeExperienceDriverLicenseClassA(),
+            $command->getMinAgeExperienceDriverLicenseClassA1(),
+            $command->getMinAgeExperienceDriverLicenseClassA2()
+        );
+
+        $updatedAcrissId = $this->acrissRepository->update($acrissToUpdate);
 
         // TODO V1.2 de momento no se va a crear/actualizar desde frontend
         // if ($updatedAcrissId) {
@@ -203,7 +211,6 @@ class UpdateAcrissCommandHandler
         //     } else if ($branchTranslationsCollection->count() > 0) {
         //     }
         // }
-
 
 
         return new UpdateAcrissResponse(!!$updatedAcrissId, false);

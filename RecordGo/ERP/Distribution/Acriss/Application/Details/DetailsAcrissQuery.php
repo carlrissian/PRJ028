@@ -25,3 +25,4 @@ class DetailsAcrissQuery
         return $this->id;
     }
 }
+

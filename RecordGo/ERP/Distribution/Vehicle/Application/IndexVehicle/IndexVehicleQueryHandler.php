@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Distribution\Vehicle\Application\IndexVehicle;
 
 use Shared\Utils\Utils;
-use Distribution\Acriss\Domain\Acriss;
 use Distribution\Area\Domain\AreaCriteria;
 use Distribution\Trim\Domain\TrimCriteria;
+use Distribution\Area\Domain\AreaException;
 use Distribution\Area\Domain\AreaRepository;
 use Distribution\Brand\Domain\BrandCriteria;
 use Distribution\Model\Domain\ModelCriteria;
@@ -29,6 +29,7 @@ use Distribution\CarClass\Domain\CarClassCriteria;
 use Distribution\CarGroup\Domain\CarGroupCriteria;
 use Distribution\GearBox\Domain\GearBoxRepository;
 use Distribution\Location\Domain\LocationCriteria;
+use Distribution\Supplier\Domain\SupplierCriteria;
 use Distribution\CarClass\Domain\CarClassException;
 use Distribution\CarGroup\Domain\CarGroupException;
 use Distribution\Location\Domain\LocationException;
@@ -36,8 +37,8 @@ use Distribution\Trim\Domain\TrimNotFoundException;
 use Distribution\CarClass\Domain\CarClassRepository;
 use Distribution\CarGroup\Domain\CarGroupRepository;
 use Distribution\Location\Domain\LocationRepository;
+use Distribution\Supplier\Domain\SupplierRepository;
 use Distribution\Acriss\Domain\InvalidAcrissException;
-use Distribution\Area\Domain\AreaException;
 use Distribution\SaleMethod\Domain\SaleMethodCriteria;
 use Distribution\SaleMethod\Domain\SaleMethodRepository;
 use Distribution\VehicleType\Domain\VehicleTypeCriteria;
@@ -50,8 +51,6 @@ use Distribution\VehicleType\Domain\VehicleTypeNotFoundException;
 use Distribution\MotorizationType\Domain\MotorizationTypeCriteria;
 use Distribution\MotorizationType\Domain\MotorizationTypeException;
 use Distribution\MotorizationType\Domain\MotorizationTypeRepository;
-use Distribution\Supplier\Domain\SupplierCriteria;
-use Distribution\Supplier\Domain\SupplierRepository;
 use Distribution\VehicleStatus\Domain\VehicleStatusNotFoundException;
 
 class IndexVehicleQueryHandler
@@ -275,23 +274,21 @@ class IndexVehicleQueryHandler
 
 
         // $regionList = Utils::createSelect($regionCollection);
-        $areaList = Utils::createSelect($areaCollection);
-        $branchList = Utils::createSelect($branchCollection);
-        $locationList = Utils::createSelect($locationCollection);
-        $brandList = Utils::createSelect($brandCollection);
-        $modelList = Utils::createSelect($modelCollection);
-        $trimList = Utils::createSelect($trimCollection);
-        $providerList = Utils::createSelect($providerCollection);
-        // $purchaseMethodList = Utils::createSelect($purchaseMethodCollection);
-        $purchaseMethodList = [];
-        $saleMethodList = Utils::createSelect($saleMethodCollection);
-        $carClassList = Utils::createSelect($carClassCollection);
-        $carGroupList = Utils::createSelect($carGroupCollection);
-        $acrissList = Utils::createSelect($acrissCollection);
-        $motorizationTypeList = Utils::createSelect($motorizationTypeCollection);
-        $gearBoxList = Utils::createSelect($gearBoxCollection);
-        $vehicleStatusList = Utils::createSelect($vehicleStatusCollection);
-        $vehicleTypeList = Utils::createSelect($vehicleTypeCollection);
+        $areaList = $this->sortAlphabetize(Utils::createSelect($areaCollection));
+        $branchList = $this->sortAlphabetize(Utils::createSelect($branchCollection));
+        $locationList = $this->sortAlphabetize(Utils::createSelect($locationCollection));
+        $brandList = $this->sortAlphabetize(Utils::createSelect($brandCollection));
+        $modelList = $this->sortAlphabetize(Utils::createSelect($modelCollection));
+        $trimList = $this->sortAlphabetize(Utils::createSelect($trimCollection));
+        $providerList = $this->sortAlphabetize(Utils::createSelect($providerCollection));
+        $saleMethodList = $this->sortAlphabetize(Utils::createSelect($saleMethodCollection));
+        $carClassList = $this->sortAlphabetize(Utils::createSelect($carClassCollection));
+        $carGroupList = $this->sortAlphabetize(Utils::createSelect($carGroupCollection));
+        $acrissList = $this->sortAlphabetize(Utils::createSelect($acrissCollection));
+        $motorizationTypeList = $this->sortAlphabetize(Utils::createSelect($motorizationTypeCollection));
+        $gearBoxList = $this->sortAlphabetize(Utils::createSelect($gearBoxCollection));
+        $vehicleStatusList = $this->sortAlphabetize(Utils::createSelect($vehicleStatusCollection));
+        $vehicleTypeList = $this->sortAlphabetize(Utils::createSelect($vehicleTypeCollection));
 
         $selectList = [
             // TODO ver filtros pendientes (NO MVP) https://recordgo.atlassian.net/wiki/spaces/DIS/pages/435716117/028.005.03+Listar+veh+culos
@@ -308,7 +305,7 @@ class IndexVehicleQueryHandler
             'modelList' => $modelList,
             'trimList' => $trimList,
             'providerList' => $providerList,
-            'purchaseMethodList' => $purchaseMethodList,
+            'purchaseMethodList' => $saleMethodList,
             'saleMethodList' => $saleMethodList,
             'carClassList' => $carClassList,
             'carGroupList' => $carGroupList,
@@ -321,5 +318,18 @@ class IndexVehicleQueryHandler
         ];
 
         return new IndexVehicleResponse($selectList);
+    }
+
+    /**
+     * @param array $list
+     * @return array
+     */
+    private function sortAlphabetize(array $list): array
+    {
+        usort($list, function ($a, $b) {
+            return strcmp($a['name'], $b['name']);
+        });
+
+        return $list;
     }
 }

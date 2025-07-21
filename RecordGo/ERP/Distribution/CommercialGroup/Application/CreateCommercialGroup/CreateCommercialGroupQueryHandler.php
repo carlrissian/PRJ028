@@ -46,7 +46,7 @@ class CreateCommercialGroupQueryHandler
             if($item->getAcrissParentId()!==null) {
                 continue;
             }
-            $name = $item->getAcrissName();
+            $name = $item->getName();
 
             $result[] = [
                 'id' => $item->getId(),

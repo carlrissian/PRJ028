@@ -29,6 +29,6 @@ class SelectListAcrissTypeQueryHandler
     public function handle(): SelectListAcrissTypeResponse
     {
         $acrissTypeCollection = $this->acrissTypeRepository->getBy(new AcrissTypeCriteria())->getCollection();
-        return new SelectListAcrissTypeResponse(Utils::createSelectWithFormattedName($acrissTypeCollection, 'id', 'name', 'acrissLetter', [], 'name'));
+        return new SelectListAcrissTypeResponse(Utils::createCustomSelectList($acrissTypeCollection, 'id', 'name', 'acrissLetter'));
     }
 }

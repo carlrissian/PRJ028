@@ -15,7 +15,8 @@ class DetailsAcrissResponse
     private array $branchTranslations;
 
     /**
-     * @param array $acriss
+     * @param object $acriss
+     * @param array $branchTranslations
      */
     public function __construct(object $acriss, array $branchTranslations)
     {

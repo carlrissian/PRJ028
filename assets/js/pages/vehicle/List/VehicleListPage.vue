@@ -321,6 +321,12 @@ export default {
                     formatter: (value) => Formatter.formatDate(value),
                 },
                 {
+                    field: "vehicleClean",
+                    title: txtTrans.fields.vehicleClean,
+                    sortable: true,
+                    formatter: (value) => Formatter.formatField(value),
+                },
+                {
                     field: "actions",
                     title: txtTrans.form.actions,
                     formatter: (value) => this.vehicleLinkFormatter(value, "actions"),

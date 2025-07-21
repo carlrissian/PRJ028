@@ -145,15 +145,9 @@ class FilterVehicleQueryHandler
         if ($query->getPurchaseMethodId()) $filterCollection->add(new Filter('PURCHASEMETHODID', new FilterOperator(FilterOperator::EQUAL), $query->getPurchaseMethodId()[0]));
         if ($query->getSaleMethodId()) $filterCollection->add(new Filter('RESALECODEARRAY', new FilterOperator(FilterOperator::IN), $query->getSaleMethodId()));
 
-        if ($query->getCleanVehicle() !== null && $query->getCleanVehicle() !== '') {
-            $cleanVehicle = intval($query->getCleanVehicle());
-
-            if ($cleanVehicle === 1) {
-                $filterCollection->add(new Filter('EXTERIORCLEAN', new FilterOperator(FilterOperator::EQUAL), 1));
-                $filterCollection->add(new Filter('INTERIORCLEAN', new FilterOperator(FilterOperator::EQUAL), 1));
-            } elseif ($cleanVehicle === 0) {
-                 $filterCollection->add(new Filter('EXTERIORCLEAN_OR_INTERIORCLEAN', new FilterOperator(FilterOperator::EQUAL), 0));
-            }
+        if ($query->getCleanVehicle() !== null) {
+            $cleanVehicle = filter_var($query->getCleanVehicle(), FILTER_VALIDATE_BOOLEAN);
+            $filterCollection->add(new Filter('VEHICLECLEAN', new FilterOperator(FilterOperator::EQUAL), $cleanVehicle ? 1 : 0));
         }
 
         if ($query->getCarClassIdIn()) $filterCollection->add(new Filter('CARCLASSARRAY', new FilterOperator(FilterOperator::IN), $query->getCarClassIdIn()));

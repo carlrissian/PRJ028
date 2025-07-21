@@ -52,7 +52,7 @@ class ShowCarGroupQueryHandler
 
         $acrissName = '';
         foreach ($acrissFiltered as $acriss) {
-            $acrissName .= $acriss->getAcrissName() . ', ';
+            $acrissName .= $acriss->getName() . ', ';
         }
         $acrissName = substr($acrissName, 0, -2);
 

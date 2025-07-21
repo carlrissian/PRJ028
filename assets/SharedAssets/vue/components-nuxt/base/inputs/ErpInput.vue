@@ -226,8 +226,11 @@ export default {
         },
     },
     watch: {
-        value: function (value) {
-            this.data = value;
+        value: {
+            handler: function (value) {
+                this.data = value;
+            },
+            immediate: true,
         },
         manualOptions: {
             handler: function (value) {

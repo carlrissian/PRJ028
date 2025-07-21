@@ -38,8 +38,6 @@ abstract class VehicleColumns
         [
             'id' => 'modelyear',
             'name' => 'Año de modelo',
-            'selected' => true,
-            'disabled' => true,
             'sort' => "MODELYEAR",
         ],
         [
@@ -294,6 +292,10 @@ abstract class VehicleColumns
             'id' => 'rentalAgreementDropOffTime',
             'name' => 'Hora devolución contrato',
         ],
+        [
+            'id' => 'vehicleClean',
+            'name' => 'Vehículo limpio'
+        ]
     ];
 
     public static function keyExists(string $key): bool

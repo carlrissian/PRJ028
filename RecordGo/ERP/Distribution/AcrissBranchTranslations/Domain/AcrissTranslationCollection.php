@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\AcrissBranchTranslations\Domain;
 
 use Shared\Domain\Collection;
 
-class AcrissTranslationCollection extends Collection
+final class AcrissTranslationCollection extends Collection
 {
     /**
      * @return string
@@ -14,5 +12,20 @@ class AcrissTranslationCollection extends Collection
     protected function type(): string
     {
         return AcrissTranslation::class;
+    }
+
+    /**
+     * @param array|null $acrissTranslationsArray
+     * @return AcrissTranslationCollection
+     */
+    public static function createFromArray(?array $acrissTranslationsArray): self
+    {
+        $collection = new self([]);
+        if (is_array($acrissTranslationsArray)) {
+            foreach ($acrissTranslationsArray as $translationArray) {
+                $collection->add(AcrissTranslation::createFromArray($translationArray));
+            }
+        }
+        return $collection;
     }
 }

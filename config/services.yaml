@@ -41,7 +41,7 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepository: '@Distribution\AcrissBranchTranslations\Infrastructure\AcrissBranchTranslationsRepositorySap'
+    Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepositoryInterface: '@Distribution\AcrissBranchTranslations\Infrastructure\AcrissBranchTranslationsRepositorySap'
     Distribution\AcrissImageLine\Domain\AcrissImageLineRepository: '@Distribution\AcrissImageLine\Infrastructure\AcrissImageLineRepositorySap'
     Distribution\AcrissTranslations\Domain\AcrissTranslationsRepository: '@Distribution\AcrissTranslations\Infrastructure\AcrissTranslationsRepositorySap'
     Distribution\AcrissType\Domain\AcrissTypeRepository: '@Distribution\AcrissType\Infrastructure\AcrissTypeRepositorySap'

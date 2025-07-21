@@ -29,6 +29,6 @@ class SelectListGearBoxQueryHandler
     public function handle(): SelectListGearBoxResponse
     {
         $gearBoxCollection = $this->gearBoxRepository->getBy(new GearBoxCriteria())->getCollection();
-        return new SelectListGearBoxResponse(Utils::createSelectWithFormattedName($gearBoxCollection, 'id', 'name', 'acrissLetter', [], 'name'));
+        return new SelectListGearBoxResponse(Utils::createCustomSelectList($gearBoxCollection, 'id', 'name', 'acrissLetter'));
     }
 }

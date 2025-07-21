@@ -162,6 +162,10 @@ vehicleType:
     resource: "./routes/vehicleType/vehicleType.yaml"
     prefix: "vehicle.type"
 
+vehicleSeats:
+    resource: "./routes/vehicleSeats/vehicleSeats.yaml"
+    prefix: "vehicleSeats"
+
 vehicleStatus:
     resource: "./routes/vehicleStatus/vehicleStatus.yaml"
     prefix: "vehicle.status"

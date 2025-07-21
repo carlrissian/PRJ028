@@ -10,6 +10,7 @@ use Distribution\Acriss\Domain\GearBox;
 use Distribution\Acriss\Domain\CarClass;
 use Distribution\Acriss\Domain\AcrissType;
 use Shared\Domain\Criteria\FilterOperator;
+use Distribution\Acriss\Domain\VehicleSeats;
 use Shared\Domain\Criteria\FilterCollection;
 use Distribution\Acriss\Domain\AcrissCriteria;
 use Shared\Domain\ValueObject\DateValueObject;
@@ -54,7 +55,7 @@ class StoreAcrissCommandHandler
         $commercialVehicle = $command->getCommercialVehicle();
         $mediumTerm = $command->getMediumTerm();
         $numberSuitcase = $command->getNumberOfSuitcases();
-        $numberSeats = $command->getNumberOfSeats();
+        $vehicleSeatsId = $command->getVehicleSeatsId();
         $numberDoors = $command->getNumberOfDoors();
 
         $minAge = $command->getMinAge();
@@ -76,7 +77,7 @@ class StoreAcrissCommandHandler
             throw new AcrissException('ACRISS exists', Response::HTTP_BAD_REQUEST);
         }
 
-        $acriss = new Acriss(
+        $acriss = Acriss::create(
             null,
             $command->getAcrissCode(),
             new CarClass($carClassId),
@@ -88,7 +89,7 @@ class StoreAcrissCommandHandler
             null,
             true,
             $numberSuitcase,
-            $numberSeats,
+            $vehicleSeatsId ? new VehicleSeats($vehicleSeatsId) : null,
             $numberDoors,
             $commercialVehicle,
             $mediumTerm,

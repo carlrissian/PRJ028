@@ -382,14 +382,14 @@
         />
 
         <single-select-picker
-            name="cleanVehicle"
-            id="cleanVehicle"
+            name="vehicleClean"
+            id="vehicleClean"
             div-class="col-md-3 form-group"
-            :label="txt.fields.cleanVehicle"
+            :label="txt.fields.vehicleClean"
             :options="[
-                { id: '', name: 'Todos' },
-                { id: '1', name: 'Sí' },
-                { id: '0', name: 'No' }
+                { id: null, name: 'Todos' },
+                { id: true, name: 'Sí' },
+                { id: false, name: 'No' }
             ]"
         />
         <!-- <multiple-select-picker
@@ -460,7 +460,7 @@ export default {
                 actualLoadDateTo: null,
                 actualUnloadDateFrom: null,
                 actualUnloadDateTo: null,
-                cleanVehicle: 'all',
+                vehicleClean: 'all',
                 columns: null,
             },
         };

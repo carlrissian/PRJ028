@@ -42,7 +42,7 @@ class StoreAcrissController extends AbstractController
                 filter_var($request->get('commercialVehicle'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
                 filter_var($request->get('mediumTerm'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
                 is_numeric($request->get('numberOfSuitcases')) ? intval($request->get('numberOfSuitcases')) : null,
-                is_numeric($request->get('numberOfSeats')) ? intval($request->get('numberOfSeats')) : null,
+                is_numeric($request->get('vehicleSeatsId')) ? intval($request->get('vehicleSeatsId')) : null,
                 is_numeric($request->get('numberOfDoors')) ? intval($request->get('numberOfDoors')) : null,
                 is_numeric($request->get('minAge')) ? intval($request->get('minAge')) : null,
                 is_numeric($request->get('maxAge')) ? intval($request->get('maxAge')) : null,

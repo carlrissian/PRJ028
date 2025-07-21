@@ -152,7 +152,7 @@ class EditStopSaleQueryHandler
 
             $acrissList[] = [
                 'id' => $acriss->getId(),
-                'name' => $acriss->getAcrissName(),
+                'name' => $acriss->getName(),
                 'carGroupId' => $acriss->getCarGroup() ? $acriss->getCarGroup()->getId() : null
             ];
         }

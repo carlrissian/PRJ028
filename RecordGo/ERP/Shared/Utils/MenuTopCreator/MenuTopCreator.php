@@ -36,6 +36,12 @@ class MenuTopCreator
                 'name' => 'Pre-production'
             ];
 
+        if( $_ENV['APP_ENV'] === 'testing' )
+            return  [
+                'class' => 'badge-warning',
+                'name' => 'Testing'
+            ];
+
         return null;
     }
     

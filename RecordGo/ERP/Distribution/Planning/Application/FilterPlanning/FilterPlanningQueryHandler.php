@@ -162,7 +162,7 @@ class FilterPlanningQueryHandler
                      if($planningLine->getAcriss()){
                          $acrissList = [
                              'id' => $planningLine->getAcriss()->getId(),
-                             'name' => $planningLine->getAcriss()->getAcrissName(),
+                             'name' => $planningLine->getAcriss()->getName(),
                          ];
                      }
                      $carGroupList = [];

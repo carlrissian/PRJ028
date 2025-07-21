@@ -47,7 +47,7 @@ class FilterVehicleController extends AbstractController
                     [intval($request->get('locationId'))]
                     : json_decode($request->get('locationId', '[]'))
                 ) : null;
-
+                
             $providerIn = $request->get('providerId') ?
                 (is_numeric($request->get('providerId')) ?
                     [intval($request->get('providerId'))]
@@ -113,10 +113,10 @@ class FilterVehicleController extends AbstractController
                     [intval($request->get('connectedVehicle'))]
                     : json_decode($request->get('connectedVehicle', '[]'))
                 ) : null;
-
-            $columns = $request->get('columns', null);
-
-            $cleanVehicle = $request->get('cleanVehicle', null); // string|null
+            
+            $columns = $request->get('columns', null); 
+            
+            $cleanVehicle = $request->get('vehicleClean', null); // string|null
 
             $sortOptions = VehicleColumns::getSortOptions();
             $sortOptions['default'] = 'CREATIONDATE';

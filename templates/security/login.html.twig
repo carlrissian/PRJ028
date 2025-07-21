@@ -29,6 +29,8 @@
 						background-image: url(../img/fondo_login-pre.jpg);
 				{% elseif app.request.server.get('APP_ENV') == 'dev' %}
 						background-image: url(../img/fondo_login-dev.jpg);
+				{% elseif app.request.server.get('APP_ENV') == 'testing' %}
+						background-image: url(../img/fondo_login-test.jpg);
 				{% else %}
 						background-image: url(../img/fondo_login-local.jpg);
         		{% endif %}">
@@ -42,6 +44,8 @@
 										<img width="100%" src="{{ asset('img/logoMosy-pre.png') }}" alt="Logo">
 									{% elseif app.request.server.get('APP_ENV') == 'dev' %}
 										<img width="100%" src="{{ asset('img/logoMosy-dev.png') }}" alt="Logo">
+									{% elseif app.request.server.get('APP_ENV') == 'testing' %}
+										<img width="100%" src="{{ asset('img/logoMosy-test.png') }}" alt="Logo">
 									{% else %}
 										<img width="100%" src="{{ asset('img/logoMosy-local.png') }}" alt="Logo">
 									{% endif %}

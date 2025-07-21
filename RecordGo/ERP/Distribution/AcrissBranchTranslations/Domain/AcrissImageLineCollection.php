@@ -1,12 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\AcrissBranchTranslations\Domain;
 
 use Shared\Domain\Collection;
 
-class AcrissImageLineCollection extends Collection
+final class AcrissImageLineCollection extends Collection
 {
     /**
      * @return string
@@ -14,5 +12,20 @@ class AcrissImageLineCollection extends Collection
     protected function type(): string
     {
         return AcrissImageLine::class;
+    }
+
+    /**
+     * @param array|null $acrissImageLinesArray
+     * @return self
+     */
+    public static function createFromArray(?array $acrissImageLinesArray): self
+    {
+        $collection = new self([]);
+        if (is_array($acrissImageLinesArray)) {
+            foreach ($acrissImageLinesArray as $imageLineArray) {
+                $collection->add(AcrissImageLine::createFromArray($imageLineArray));
+            }
+        }
+        return $collection;
     }
 }

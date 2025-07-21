@@ -44,7 +44,7 @@ class AssociateAcrissCommandHandler
                 }
                 $acrissToAssociate->setAcrissParentId($parentId);
                 $this->acrissRepository->update($acrissToAssociate);
-                $acrissInferiorCollection->add(new AcrissInferior($acrissToAssociate->getId(), $acrissToAssociate->getAcrissName()->__toString()));
+                $acrissInferiorCollection->add(new AcrissInferior($acrissToAssociate->getId(), $acrissToAssociate->getName()->__toString()));
             }
             $acriss->setAcrissInferiorCollection($acrissInferiorCollection);
 

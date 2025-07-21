@@ -1,11 +1,18 @@
 <template>
     <div :class="divClass">
         <label :class="labelClass" :for="id" v-text="label"></label>
+        <!-- Vue Multiselect Doc oficial: https://vue-multiselect.js.org/#sub-getting-started -->
         <multiselect
-            @input="onInputChange"
-            :name="name"
+            @update:modelValue="(selection = $event), $emit('updated', computedSelection)"
+            @select="onSelect"
+            @remove="onRemove"
+            @open="$emit('opened', $event)"
+            @close="$emit('closed', $event)"
             :ref="reference"
+            :name="name"
             :id="id"
+            :disabled="readonly ? readonly : disabled"
+            :required="required"
             v-model="selection"
             :options="options"
             multiple
@@ -21,9 +28,10 @@
             group-select
             group-label="allOptions"
             group-values="data"
-            :selectGroupLabel="$t('selectAll')"
-            :deselectGroupLabel="$t('pressEnterToDeselect')"
+            :select-group-label="$t('selectAll')"
+            :deselect-group-label="$t('pressEnterToDeselect')"
             :limit="displayOptionsLimit"
+            :limit-text="(count) => $t('andXMore', { count })"
         >
         </multiselect>
     </div>
@@ -60,17 +68,14 @@ export default {
             type: Boolean,
             default: false,
         },
+        // INFO Sólo disponible en V3.1.0 (https://vue-multiselect.js.org/#sub-props)
         required: {
             type: Boolean,
             default: false,
         },
         searchable: {
             type: Boolean,
-            default: false,
-        },
-        dataSize: {
-            type: Number,
-            default: 0,
+            default: true,
         },
         divClass: {
             type: String,
@@ -82,66 +87,102 @@ export default {
         },
         displayOptionsLimit: {
             type: Number,
-            default: 1,
+            default: 3,
         },
         returnObject: {
             type: Boolean,
             default: false,
         },
-        url: String,
+        url: {
+            type: String,
+            required: false,
+            default: null,
+        },
+        manualOptions: {
+            type: Array,
+            required: false,
+            default: null,
+        },
     },
     data() {
         return {
-            element: null,
-            selection: this.value,
-            options: [
-                {
-                    allOptions: this.$t("allOptions"),
-                    data: [],
-                },
-            ],
+            selection: null,
+            options: [],
         };
     },
     created() {
-        this.fetchOptions();
+        if (this.url) this.fetchOptions();
+    },
+    computed: {
+        computedSelection: function () {
+            return this.selection?.map((item) => item.value);
+        },
     },
     methods: {
-        onInputChange(e) {
-            this.$emit("onInputChangeMultiselect", e);
+        onSelect(selectedOption, id) {
+            this.$emit("selected", selectedOption, id);
+            this.$emit("updated", this.computedSelection);
         },
-        onChange(e) {
-            this.$emit("onChangeMultiselect", e);
-            this.$emit("updatedMultiselect", this.selection);
+        onRemove(removedOption, id) {
+            this.$emit("removed", removedOption, id);
+            this.$emit("updated", this.computedSelection);
         },
         async fetchOptions() {
+            this.selection = null;
+
             this.$axios
                 .get(this.url)
                 .then((response) => {
                     console.log(`Fetch ${this.url} options: `, response);
-                    this.options[0].data = [];
-                    // if (response.data?.length > 0) {
-                    //     response.data.map((option) => {
-                    //         this.returnObject
-                    //             ? this.options[0].data.push({ text: option.name, value: option })
-                    //             : this.options[0].data.push({ text: option.name, value: option.id });
-                    //     });
-                    // }
-                    if (response.data.data?.length > 0) {
-                        response.data.data.map((option) => {
-                            this.returnObject
-                                ? this.options[0].data.push({ text: option.name, value: option })
-                                : this.options[0].data.push({ text: option.name, value: option.id });
-                        });
-                    }
+                    this.fillOptions(response.data);
                 })
-                .catch((e) => {
-                    console.error(e);
+                .catch((error) => {
+                    console.error(error);
+                    this.options[0].data = [];
                 });
+        },
+        fillOptions(data) {
+            this.options = [];
+            if (data?.group === true) {
+                this.options = data.options.map((group) => ({
+                    allOptions: group.name,
+                    data: group.items.map((item) => ({
+                        text: item.name,
+                        value: this.returnObject ? item : item.id,
+                    })),
+                }));
+            }
+            if (data?.length > 0) {
+                this.options = [
+                    {
+                        allOptions: this.$t("allOptions"),
+                        data: [],
+                    },
+                ];
+                data.map((option) => {
+                    this.returnObject
+                        ? this.options[0].data.push({ text: option.name, value: option })
+                        : this.options[0].data.push({ text: option.name, value: option.id });
+                });
+            }
+
+            if (this.value) {
+                // Buscar en las options los valores seleccionados
+                const allOptions = this.options.flatMap((group) => group.data);
+                this.selection = allOptions.filter((option) => {
+                    return this.returnObject
+                        ? this.value.some((val) => val.id === option.value.id)
+                        : this.value.includes(option.value);
+                });
+            }
         },
     },
     watch: {
-        value: function (value) {
-            this.selection = value;
+        manualOptions: {
+            handler: function (value) {
+                this.fillOptions(value);
+            },
+            immediate: true,
         },
     },
 };

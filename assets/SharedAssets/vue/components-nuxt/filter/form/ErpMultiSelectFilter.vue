@@ -3,13 +3,15 @@
         <label :class="labelClass" :for="id" v-text="label"></label>
         <!-- Vue Multiselect Doc oficial: https://vue-multiselect.js.org/#sub-getting-started -->
         <multiselect
-            @input="onInputChange"
-            @change="onChange"
+            @update:modelValue="(selection = $event), $emit('updated', computedSelection)"
+            @select="onSelect"
+            @remove="onRemove"
+            @open="$emit('opened', $event)"
+            @close="$emit('closed', $event)"
             ref="multiselect"
             :name="name"
             :id="id"
-            :readonly="readonly"
-            :disabled="disabled"
+            :disabled="readonly ? readonly : disabled"
             :required="required"
             v-model="selection"
             :options="options"
@@ -26,9 +28,10 @@
             group-select
             group-label="allOptions"
             group-values="data"
-            :selectGroupLabel="$t('selectAll')"
-            :deselectGroupLabel="$t('pressEnterToDeselect')"
+            :select-group-label="$t('selectAll')"
+            :deselect-group-label="$t('pressEnterToDeselect')"
             :limit="displayOptionsLimit"
+            :limit-text="(count) => $t('andXMore', { count })"
         >
         </multiselect>
     </div>
@@ -46,14 +49,6 @@ export default {
         name: String,
         id: String,
         value: [Number, String, Array, Object],
-        displayOptionsLimit: {
-            type: Number,
-            default: 1,
-        },
-        returnObject: {
-            type: Boolean,
-            default: false,
-        },
         label: String,
         placeholder: {
             type: String,
@@ -69,6 +64,7 @@ export default {
             type: Boolean,
             default: false,
         },
+        // INFO Sólo disponible en V3.1.0 (https://vue-multiselect.js.org/#sub-props)
         required: {
             type: Boolean,
             default: false,
@@ -76,6 +72,22 @@ export default {
         searchable: {
             type: Boolean,
             default: true,
+        },
+        divClass: {
+            type: String,
+            default: null,
+        },
+        labelClass: {
+            type: String,
+            default: "control-label",
+        },
+        displayOptionsLimit: {
+            type: Number,
+            default: 3,
+        },
+        returnObject: {
+            type: Boolean,
+            default: false,
         },
         url: {
             type: String,
@@ -87,50 +99,29 @@ export default {
             required: false,
             default: null,
         },
-        dataSize: {
-            type: Number,
-            default: 10,
-        },
-        divClass: {
-            type: String,
-            default: null,
-        },
-        labelClass: {
-            type: String,
-            default: "control-label",
-        },
     },
     data() {
         return {
             selection: null,
-            options: [
-                {
-                    allOptions: this.$t("allOptions"),
-                    data: [],
-                },
-            ],
+            options: [],
         };
     },
     created() {
-        if (this.url) {
-            this.fetchOptions();
-        } else {
-            this.options[0].data = this.manualOptions;
-        }
+        if (this.url) this.fetchOptions();
     },
     computed: {
-        dataSizeComputed() {
-            return this.dataSize + 1 || this.optionsArray.length + 1;
+        computedSelection: function () {
+            return this.selection?.map((item) => item.value);
         },
     },
     methods: {
-        onInputChange(e) {
-            this.$emit("onInputChangeMultiselect", e);
-            this.$emit("updatedMultiselect", this.selection);
+        onSelect(selectedOption, id) {
+            this.$emit("selected", selectedOption, id);
+            this.$emit("updated", this.computedSelection);
         },
-        onChange(e) {
-            this.$emit("onChangeMultiselect", e);
-            this.$emit("updatedMultiselect", this.selection);
+        onRemove(removedOption, id) {
+            this.$emit("removed", removedOption, id);
+            this.$emit("updated", this.computedSelection);
         },
         async fetchOptions() {
             this.selection = null;
@@ -139,27 +130,58 @@ export default {
                 .get(this.url)
                 .then((response) => {
                     console.log(`Fetch ${this.url} options: `, response);
-                    this.options[0].data = [];
-                    if (response.data.length > 0) {
-                        response.data.map((option) => {
-                            this.returnObject
-                                ? this.options[0].data.push({ text: option.name, value: option })
-                                : this.options[0].data.push({ text: option.name, value: option.id });
-                        });
-                    }
+                    this.fillOptions(response.data);
                 })
-                .catch((e) => {
-                    console.error(e);
+                .catch((error) => {
+                    console.error(error);
                     this.options[0].data = [];
                 });
+        },
+        fillOptions(data) {
+            this.options = [];
+            if (data?.group === true) {
+                this.options = data.options.map((group) => ({
+                    allOptions: group.name,
+                    data: group.items.map((item) => ({
+                        text: item.name,
+                        value: this.returnObject ? item : item.id,
+                    })),
+                }));
+            }
+            if (data?.length > 0) {
+                this.options = [
+                    {
+                        allOptions: this.$t("allOptions"),
+                        data: [],
+                    },
+                ];
+                data.map((option) => {
+                    this.returnObject
+                        ? this.options[0].data.push({ text: option.name, value: option })
+                        : this.options[0].data.push({ text: option.name, value: option.id });
+                });
+            }
+
+            if (this.value) {
+                // Buscar en las options los valores seleccionados
+                const allOptions = this.options.flatMap((group) => group.data);
+                this.selection = allOptions.filter((option) => {
+                    return this.returnObject
+                        ? this.value.some((val) => val.id === option.value.id)
+                        : this.value.includes(option.value);
+                });
+            }
         },
     },
     watch: {
         value: function (value) {
             this.selection = value;
         },
-        manualOptions: function (value) {
-            this.options[0].data = value;
+        manualOptions: {
+            handler: function (value) {
+                this.fillOptions(value);
+            },
+            immediate: true,
         },
     },
 };

@@ -8,11 +8,12 @@ use Shared\Domain\Criteria\Filter;
 use Shared\Domain\Criteria\FilterOperator;
 use Shared\Domain\Criteria\FilterCollection;
 use Distribution\Acriss\Domain\AcrissRepository;
+use Distribution\Acriss\Domain\Exception\AcrissNotFoundException;
 use Distribution\AcrissBranchTranslations\Domain\AcrissImageLine;
 use Distribution\AcrissBranchTranslations\Domain\AcrissTranslation;
 use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslation;
 use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsCriteria;
-use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepository;
+use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepositoryInterface;
 
 /**
  * Class ShowAcrissCommandHandler
@@ -25,17 +26,17 @@ class ShowAcrissQueryHandler
      */
     private AcrissRepository $acrissRepository;
     /**
-     * @var AcrissBranchTranslationsRepository
+     * @var AcrissBranchTranslationsRepositoryInterface
      */
-    private AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository;
+    private AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository;
 
     /**
      * @param AcrissRepository $acrissRepository
-     * @param AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository
+     * @param AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository
      */
     public function __construct(
         AcrissRepository $acrissRepository,
-        AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository
+        AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository
     ) {
         $this->acrissRepository = $acrissRepository;
         $this->acrissBranchTranslationsRepository = $acrissBranchTranslationsRepository;
@@ -49,6 +50,10 @@ class ShowAcrissQueryHandler
     {
         $acrissId = $query->getId();
         $acriss = $this->acrissRepository->getById($acrissId);
+
+        if (empty($acriss)) {
+            throw new AcrissNotFoundException("No se encontró un ACRISS con el ID: {$acrissId}");
+        }
 
         // Obtener listado de delegaciones y traducciones
         $acrissBranchTranslationsResponse = $this->acrissBranchTranslationsRepository->getBy(
@@ -77,7 +82,7 @@ class ShowAcrissQueryHandler
                     'default' => $acrissTranslation->isByDefault(),
                     'language' => [
                         'id' => $acrissTranslation->getLanguage()->getId(),
-                        'iso' => $acrissTranslation->getLanguage()->getCode(),
+                        'iso' => $acrissTranslation->getLanguage()->getISO(),
                         'name' => $acrissTranslation->getLanguage()->getName(),
                     ],
                 ];
@@ -111,7 +116,7 @@ class ShowAcrissQueryHandler
         }
 
 
-        $acrissName = str_split($acriss->getAcrissName());
+        $acrissName = str_split($acriss->getName());
 
         $acrissArray = [
             'id' => $acriss->getId(),
@@ -126,17 +131,17 @@ class ShowAcrissQueryHandler
             'motorizationType' => $acriss->getMotorizationType()->getName(),
             'numberSuitcase' => $acriss->getNumberOfSuitcases(),
             'numberDoors' => $acriss->getNumberOfDoors(),
-            'numberSeats' => $acriss->getNumberOfSeats(),
+            'vehicleSeats' => $acriss->getVehicleSeats() ? [
+                'id' => $acriss->getVehicleSeats()->getId(),
+                'value' => $acriss->getVehicleSeats()->getValue(),
+                'description' => $acriss->getVehicleSeats()->getDescription(),
+            ] : null,
             'commercialVehicle' => $acriss->getCommercialVehicle(),
             'mediumTerm' => $acriss->getMediumTerm(),
             'startDate' => $acriss->getStartDate() ? $acriss->getStartDate()->__toString() : null,
             'endDate' => $acriss->getEndDate() ? $acriss->getEndDate()->__toString() : null,
             'minAge' => $acriss->getMinAge(),
             'maxAge' => $acriss->getMaxAge(),
-            'driverLicenseClassB' => $acriss->isDriverLicenseClassB(),
-            'driverLicenseClassA' => $acriss->isDriverLicenseClassA(),
-            'driverLicenseClassA1' => $acriss->isDriverLicenseClassA1(),
-            'driverLicenseClassA2' => $acriss->isDriverLicenseClassA2(),
             'minAgeExperienceClassB' => $acriss->getMinAgeExperienceDriverLicenseClassB(),
             'minAgeExperienceClassA' => $acriss->getMinAgeExperienceDriverLicenseClassA(),
             'minAgeExperienceClassA1' => $acriss->getMinAgeExperienceDriverLicenseClassA1(),

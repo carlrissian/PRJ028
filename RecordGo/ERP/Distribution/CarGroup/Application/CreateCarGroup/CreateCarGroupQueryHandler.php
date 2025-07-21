@@ -54,7 +54,7 @@ class CreateCarGroupQueryHandler
                 if($item->getAcrissParentId()!==null) {
                     continue;
                 }
-                $name = $item->getAcrissName();
+                $name = $item->getName();
                 $acrissAdded[] = $item->getId();
 
                 $result[] = [

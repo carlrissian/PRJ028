@@ -7,21 +7,21 @@ namespace Distribution\AcrissBranchTranslations\Application\StoreAcrissBranch;
 use Distribution\AcrissBranchTranslations\Domain\Branch;
 use Distribution\AcrissBranchTranslations\Domain\BranchTranslations;
 use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslation;
-use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepository;
+use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepositoryInterface;
 
 class StoreAcrissBranchCommandHandler
 {
     /**
-     * @var AcrissBranchTranslationsRepository
+     * @var AcrissBranchTranslationsRepositoryInterface
      */
-    private AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository;
+    private AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository;
 
     /**
      * constructor
      *
-     * @param AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository
+     * @param AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository
      */
-    public function __construct(AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository)
+    public function __construct(AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository)
     {
         $this->acrissBranchTranslationsRepository = $acrissBranchTranslationsRepository;
     }
@@ -41,9 +41,9 @@ class StoreAcrissBranchCommandHandler
 
         // $branch = new BranchTranslations(null, $acrissId, new Branch($branchId), $commercialName, $default, null, $creationUserId);
 
-        $translation = new AcrissBranchTranslation(
+        $translation = AcrissBranchTranslation::create(
             null,
-            new Branch($command->getBranchId()),
+            Branch::create($command->getBranchId()),
             $command->isByDefault()
         );
 

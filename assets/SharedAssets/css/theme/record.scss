@@ -252,3 +252,13 @@ input[type='checkbox']:focus ~ span, input[type=checkbox] {
   outline: none !important; /* Remove default outline */
 
 }
+
+.bg-record {
+  background-color: $redRecord !important;
+  color: $secondColor !important;
+
+  > * {
+    background-color: $redRecord !important;
+    color: $secondColor !important;
+  }
+}

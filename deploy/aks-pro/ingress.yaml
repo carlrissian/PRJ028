@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: __KubernetesNamespace__
+  namespace: __KubernetesNamespace__
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-path: "/"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - __domainIngress__
+      secretName: tls-secret-csi
+  rules:
+    - host: __domainIngress__
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: __KubernetesNamespace__
+                port:
+                  number: 80

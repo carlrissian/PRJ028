@@ -69,9 +69,9 @@ class Acriss
     private ?int $numberOfSuitcases;
 
     /**
-     * @var int|null
+     * @var VehicleSeats|null
      */
-    private ?int $numberOfSeats;
+    private ?VehicleSeats $vehicleSeats;
 
     /**
      * @var int|null
@@ -191,6 +191,8 @@ class Acriss
     // TODO FALTAN CAMPOS PARA FUNCIÓN REPOSITORIO GETBYID Y SHOWACRISS
 
     /**
+     * Acriss constructor.
+     * 
      * @param int|null $id
      * @param string|null $name
      * @param CarClass $carClass
@@ -202,7 +204,7 @@ class Acriss
      * @param AcrissInferiorCollection|null $acrissInferiorCollection
      * @param bool $enabled
      * @param int|null $numberOfSuitcases
-     * @param int|null $numberOfSeats
+     * @param VehicleSeats|null $vehicleSeats
      * @param int|null $numberOfDoors
      * @param bool|null $commercialVehicle
      * @param bool|null $mediumTerm
@@ -227,42 +229,42 @@ class Acriss
      * @param int|null $fromTareWeight
      * @param int|null $toTareWeight
      */
-    public function __construct(
+    private function __construct(
         ?int $id,
         ?string $name,
         CarClass $carClass,
         AcrissType $acrissType,
         GearBox $gearBox,
         MotorizationType $motorizationType,
-        ?CarGroup $carGroup = null,
-        ?int $acrissParentId = null,
-        ?AcrissInferiorCollection $acrissInferiorCollection = null,
-        ?bool $enabled = null,
-        ?int $numberOfSuitcases = null,
-        ?int $numberOfSeats = null,
-        ?int $numberOfDoors = null,
-        ?bool $commercialVehicle = null,
-        ?bool $mediumTerm = null,
-        ?DateValueObject $startDate = null,
-        ?DateValueObject $endDate = null,
-        ?bool $isDriverLicenseClassB = null,
-        ?bool $isDriverLicenseClassA = null,
-        ?bool $isDriverLicenseClassA1 = null,
-        ?bool $isDriverLicenseClassA2 = null,
-        ?int $minAgeExperienceDriverLicenseClassB = null,
-        ?int $minAgeExperienceDriverLicenseClassA = null,
-        ?int $minAgeExperienceDriverLicenseClassA1 = null,
-        ?int $minAgeExperienceDriverLicenseClassA2 = null,
-        ?int $minAge = null,
-        ?int $maxAge = null,
-        ?int $fromHeight = null,
-        ?int $toHeight = null,
-        ?int $fromLength = null,
-        ?int $toLength = null,
-        ?int $fromWidth = null,
-        ?int $toWidth = null,
-        ?int $fromTareWeight = null,
-        ?int $toTareWeight = null
+        ?CarGroup $carGroup,
+        ?int $acrissParentId,
+        ?AcrissInferiorCollection $acrissInferiorCollection,
+        ?bool $enabled,
+        ?int $numberOfSuitcases,
+        ?VehicleSeats $vehicleSeats,
+        ?int $numberOfDoors,
+        ?bool $commercialVehicle,
+        ?bool $mediumTerm,
+        ?DateValueObject $startDate,
+        ?DateValueObject $endDate,
+        ?bool $isDriverLicenseClassB,
+        ?bool $isDriverLicenseClassA,
+        ?bool $isDriverLicenseClassA1,
+        ?bool $isDriverLicenseClassA2,
+        ?int $minAgeExperienceDriverLicenseClassB,
+        ?int $minAgeExperienceDriverLicenseClassA,
+        ?int $minAgeExperienceDriverLicenseClassA1,
+        ?int $minAgeExperienceDriverLicenseClassA2,
+        ?int $minAge,
+        ?int $maxAge,
+        ?int $fromHeight,
+        ?int $toHeight,
+        ?int $fromLength,
+        ?int $toLength,
+        ?int $fromWidth,
+        ?int $toWidth,
+        ?int $fromTareWeight,
+        ?int $toTareWeight
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -275,7 +277,7 @@ class Acriss
         $this->acrissInferiorCollection = $acrissInferiorCollection;
         $this->enabled = $enabled;
         $this->numberOfSuitcases = $numberOfSuitcases;
-        $this->numberOfSeats = $numberOfSeats;
+        $this->vehicleSeats = $vehicleSeats;
         $this->numberOfDoors = $numberOfDoors;
         $this->commercialVehicle = $commercialVehicle;
         $this->mediumTerm = $mediumTerm;
@@ -318,28 +320,11 @@ class Acriss
     }
 
     /**
-     * @param string|null $name
-     */
-    public function setName(?string $name): void
-    {
-        $this->name = $name;
-    }
-
-
-    /**
      * @return CarClass
      */
     final public function getCarClass(): CarClass
     {
         return $this->carClass;
-    }
-
-    /**
-     * @param CarClass $carClass
-     */
-    public function setCarClass(CarClass $carClass): void
-    {
-        $this->carClass = $carClass;
     }
 
     /**
@@ -351,27 +336,11 @@ class Acriss
     }
 
     /**
-     * @param AcrissType $acrissType
-     */
-    public function setAcrissType(AcrissType $acrissType): void
-    {
-        $this->acrissType = $acrissType;
-    }
-
-    /**
      * @return GearBox
      */
     final public function getGearBox(): GearBox
     {
         return $this->gearBox;
-    }
-
-    /**
-     * @param GearBox $gearBox
-     */
-    public function setGearBox(GearBox $gearBox): void
-    {
-        $this->gearBox = $gearBox;
     }
 
     /**
@@ -383,27 +352,11 @@ class Acriss
     }
 
     /**
-     * @param MotorizationType $motorizationType
-     */
-    public function setMotorizationType(MotorizationType $motorizationType): void
-    {
-        $this->motorizationType = $motorizationType;
-    }
-
-    /**
      * @return CarGroup|null
      */
     final public function getCarGroup(): ?CarGroup
     {
         return $this->carGroup;
-    }
-
-    /**
-     * @param CarGroup|null $carGroup
-     */
-    public function setCarGroup(?CarGroup $carGroup): void
-    {
-        $this->carGroup = $carGroup;
     }
 
     /**
@@ -415,27 +368,11 @@ class Acriss
     }
 
     /**
-     * @param int|null $acrissParentId
-     */
-    public function setAcrissParentId(?int $acrissParentId): void
-    {
-        $this->acrissParentId = $acrissParentId;
-    }
-
-    /**
      * @return AcrissInferiorCollection|null
      */
     final public function getAcrissInferiorCollection(): ?AcrissInferiorCollection
     {
         return $this->acrissInferiorCollection;
-    }
-
-    /**
-     * @param AcrissInferiorCollection|null $acrissInferiorCollection
-     */
-    public function setAcrissInferiorCollection(?AcrissInferiorCollection $acrissInferiorCollection): void
-    {
-        $this->acrissInferiorCollection = $acrissInferiorCollection;
     }
 
     /**
@@ -447,14 +384,6 @@ class Acriss
     }
 
     /**
-     * @param bool|null $enabled
-     */
-    public function setEnabled(?bool $enabled): void
-    {
-        $this->enabled = $enabled;
-    }
-
-    /**
      * @return int|null
      */
     final public function getNumberOfSuitcases(): ?int
@@ -463,27 +392,11 @@ class Acriss
     }
 
     /**
-     * @param int|null $numberOfSuitcases
+     * @return VehicleSeats|null
      */
-    public function setNumberOfSuitcases(?int $numberOfSuitcases): void
+    final public function getVehicleSeats(): ?VehicleSeats
     {
-        $this->numberOfSuitcases = $numberOfSuitcases;
-    }
-
-    /**
-     * @return int|null
-     */
-    final public function getNumberOfSeats(): ?int
-    {
-        return $this->numberOfSeats;
-    }
-
-    /**
-     * @param int|null $numberOfSeats
-     */
-    public function setNumberOfSeats(?int $numberOfSeats): void
-    {
-        $this->numberOfSeats = $numberOfSeats;
+        return $this->vehicleSeats;
     }
 
     /**
@@ -495,27 +408,11 @@ class Acriss
     }
 
     /**
-     * @param int|null $numberOfDoors
-     */
-    public function setNumberOfDoors(?int $numberOfDoors): void
-    {
-        $this->numberOfDoors = $numberOfDoors;
-    }
-
-    /**
      * @return bool|null
      */
     final public function getCommercialVehicle(): ?bool
     {
         return $this->commercialVehicle;
-    }
-
-    /**
-     * @param bool|null $commercialVehicle
-     */
-    public function setCommercialVehicle(?bool $commercialVehicle): void
-    {
-        $this->commercialVehicle = $commercialVehicle;
     }
 
     /**
@@ -527,27 +424,11 @@ class Acriss
     }
 
     /**
-     * @param bool|null $mediumTerm
-     */
-    public function setMediumTerm(?bool $mediumTerm): void
-    {
-        $this->mediumTerm = $mediumTerm;
-    }
-
-    /**
      * @return DateValueObject|null
      */
     final public function getStartDate(): ?DateValueObject
     {
         return $this->startDate;
-    }
-
-    /**
-     * @param DateValueObject|null $startDate
-     */
-    public function setStartDate(?DateValueObject $startDate): void
-    {
-        $this->startDate = $startDate;
     }
 
     /**
@@ -559,27 +440,11 @@ class Acriss
     }
 
     /**
-     * @param DateValueObject|null $endDate
-     */
-    public function setEndDate(?DateValueObject $endDate): void
-    {
-        $this->endDate = $endDate;
-    }
-
-    /**
      * @return bool|null
      */
     final public function isDriverLicenseClassB(): ?bool
     {
         return $this->isDriverLicenseClassB;
-    }
-
-    /**
-     * @param bool|null $isDriverLicenseClassB
-     */
-    public function setIsDriverLicenseClassB(?bool $isDriverLicenseClassB): void
-    {
-        $this->isDriverLicenseClassB = $isDriverLicenseClassB;
     }
 
     /**
@@ -591,27 +456,11 @@ class Acriss
     }
 
     /**
-     * @param bool|null $isDriverLicenseClassA
-     */
-    public function setIsDriverLicenseClassA(?bool $isDriverLicenseClassA): void
-    {
-        $this->isDriverLicenseClassA = $isDriverLicenseClassA;
-    }
-
-    /**
      * @return bool|null
      */
     final public function isDriverLicenseClassA1(): ?bool
     {
         return $this->isDriverLicenseClassA1;
-    }
-
-    /**
-     * @param bool|null $isDriverLicenseClassA1
-     */
-    public function setIsDriverLicenseClassA1(?bool $isDriverLicenseClassA1): void
-    {
-        $this->isDriverLicenseClassA1 = $isDriverLicenseClassA1;
     }
 
     /**
@@ -623,27 +472,11 @@ class Acriss
     }
 
     /**
-     * @param bool|null $isDriverLicenseClassA2
-     */
-    public function setIsDriverLicenseClassA2(?bool $isDriverLicenseClassA2): void
-    {
-        $this->isDriverLicenseClassA2 = $isDriverLicenseClassA2;
-    }
-
-    /**
      * @return int|null
      */
     final public function getMinAgeExperienceDriverLicenseClassB(): ?int
     {
         return $this->minAgeExperienceDriverLicenseClassB;
-    }
-
-    /**
-     * @param int|null $minAgeExperienceDriverLicenseClassB
-     */
-    public function setMinAgeExperienceDriverLicenseClassB(?int $minAgeExperienceDriverLicenseClassB): void
-    {
-        $this->minAgeExperienceDriverLicenseClassB = $minAgeExperienceDriverLicenseClassB;
     }
 
     /**
@@ -655,27 +488,11 @@ class Acriss
     }
 
     /**
-     * @param int|null $minAgeExperienceDriverLicenseClassA
-     */
-    public function setMinAgeExperienceDriverLicenseClassA(?int $minAgeExperienceDriverLicenseClassA): void
-    {
-        $this->minAgeExperienceDriverLicenseClassA = $minAgeExperienceDriverLicenseClassA;
-    }
-
-    /**
      * @return int|null
      */
     final public function getMinAgeExperienceDriverLicenseClassA1(): ?int
     {
         return $this->minAgeExperienceDriverLicenseClassA1;
-    }
-
-    /**
-     * @param int|null $minAgeExperienceDriverLicenseClassA1
-     */
-    public function setMinAgeExperienceDriverLicenseClassA1(?int $minAgeExperienceDriverLicenseClassA1): void
-    {
-        $this->minAgeExperienceDriverLicenseClassA1 = $minAgeExperienceDriverLicenseClassA1;
     }
 
     /**
@@ -687,14 +504,6 @@ class Acriss
     }
 
     /**
-     * @param int|null $minAgeExperienceDriverLicenseClassA2
-     */
-    public function setMinAgeExperienceDriverLicenseClassA2(?int $minAgeExperienceDriverLicenseClassA2): void
-    {
-        $this->minAgeExperienceDriverLicenseClassA2 = $minAgeExperienceDriverLicenseClassA2;
-    }
-
-    /**
      * @return int|null
      */
     final public function getMinAge(): ?int
@@ -703,27 +512,11 @@ class Acriss
     }
 
     /**
-     * @param int|null $minAge
-     */
-    public function setMinAge(?int $minAge): void
-    {
-        $this->minAge = $minAge;
-    }
-
-    /**
      * @return int|null
      */
     final public function getMaxAge(): ?int
     {
         return $this->maxAge;
-    }
-
-    /**
-     * @param int|null $maxAge
-     */
-    public function setMaxAge(?int $maxAge): void
-    {
-        $this->maxAge = $maxAge;
     }
 
     /**
@@ -743,35 +536,11 @@ class Acriss
     }
 
     /**
-     * @param int|null $toHeight
-     */
-    public function setToHeight(?int $toHeight): void
-    {
-        $this->toHeight = $toHeight;
-    }
-
-    /**
      * @return int|null
      */
     final public function getFromLength(): ?int
     {
         return $this->fromLength;
-    }
-
-    /**
-     * @param int|null $fromLength
-     */
-    public function setFromLength(?int $fromLength): void
-    {
-        $this->fromLength = $fromLength;
-    }
-
-    /**
-     * @param int|null $fromHeight
-     */
-    public function setFromHeight(?int $fromHeight): void
-    {
-        $this->fromHeight = $fromHeight;
     }
 
     /**
@@ -783,27 +552,11 @@ class Acriss
     }
 
     /**
-     * @param int|null $toLength
-     */
-    public function setToLength(?int $toLength): void
-    {
-        $this->toLength = $toLength;
-    }
-
-    /**
      * @return int|null
      */
     final public function getFromWidth(): ?int
     {
         return $this->fromWidth;
-    }
-
-    /**
-     * @param int|null $fromWidth
-     */
-    public function setFromWidth(?int $fromWidth): void
-    {
-        $this->fromWidth = $fromWidth;
     }
 
     /**
@@ -815,27 +568,11 @@ class Acriss
     }
 
     /**
-     * @param int|null $toWidth
-     */
-    public function setToWidth(?int $toWidth): void
-    {
-        $this->toWidth = $toWidth;
-    }
-
-    /**
      * @return int|null
      */
     final public function getFromTareWeight(): ?int
     {
         return $this->fromTareWeight;
-    }
-
-    /**
-     * @param int|null $fromTareWeight
-     */
-    public function setFromTareWeight(?int $fromTareWeight): void
-    {
-        $this->fromTareWeight = $fromTareWeight;
     }
 
     /**
@@ -846,14 +583,119 @@ class Acriss
         return $this->toTareWeight;
     }
 
+
     /**
+     * @param int|null $id
+     * @param string|null $name
+     * @param CarClass $carClass
+     * @param AcrissType $acrissType
+     * @param GearBox $gearBox
+     * @param MotorizationType|null $motorizationType
+     * @param CarGroup|null $carGroup
+     * @param int|null $acrissParentId
+     * @param AcrissInferiorCollection|null $acrissInferiorCollection
+     * @param bool $enabled
+     * @param int|null $numberOfSuitcases
+     * @param VehicleSeats|null $vehicleSeats
+     * @param int|null $numberOfDoors
+     * @param bool|null $commercialVehicle
+     * @param bool|null $mediumTerm
+     * @param DateValueObject|null $startDate
+     * @param DateValueObject|null $endDate
+     * @param bool|null $isDriverLicenseClassB
+     * @param bool|null $isDriverLicenseClassA
+     * @param bool|null $isDriverLicenseClassA1
+     * @param bool|null $isDriverLicenseClassA2
+     * @param int|null $minAgeExperienceDriverLicenseClassB
+     * @param int|null $minAgeExperienceDriverLicenseClassA
+     * @param int|null $minAgeExperienceDriverLicenseClassA1
+     * @param int|null $minAgeExperienceDriverLicenseClassA2
+     * @param int|null $minAge
+     * @param int|null $maxAge
+     * @param int|null $fromHeight
+     * @param int|null $toHeight
+     * @param int|null $fromLength
+     * @param int|null $toLength
+     * @param int|null $fromWidth
+     * @param int|null $toWidth
+     * @param int|null $fromTareWeight
      * @param int|null $toTareWeight
      */
-    public function setToTareWeight(?int $toTareWeight): void
-    {
-        $this->toTareWeight = $toTareWeight;
+    public static function create(
+        ?int $id,
+        ?string $name,
+        CarClass $carClass,
+        AcrissType $acrissType,
+        GearBox $gearBox,
+        MotorizationType $motorizationType,
+        ?CarGroup $carGroup = null,
+        ?int $acrissParentId = null,
+        ?AcrissInferiorCollection $acrissInferiorCollection = null,
+        ?bool $enabled = null,
+        ?int $numberOfSuitcases = null,
+        ?VehicleSeats $vehicleSeats = null,
+        ?int $numberOfDoors = null,
+        ?bool $commercialVehicle = null,
+        ?bool $mediumTerm = null,
+        ?DateValueObject $startDate = null,
+        ?DateValueObject $endDate = null,
+        ?bool $isDriverLicenseClassB = null,
+        ?bool $isDriverLicenseClassA = null,
+        ?bool $isDriverLicenseClassA1 = null,
+        ?bool $isDriverLicenseClassA2 = null,
+        ?int $minAgeExperienceDriverLicenseClassB = null,
+        ?int $minAgeExperienceDriverLicenseClassA = null,
+        ?int $minAgeExperienceDriverLicenseClassA1 = null,
+        ?int $minAgeExperienceDriverLicenseClassA2 = null,
+        ?int $minAge = null,
+        ?int $maxAge = null,
+        ?int $fromHeight = null,
+        ?int $toHeight = null,
+        ?int $fromLength = null,
+        ?int $toLength = null,
+        ?int $fromWidth = null,
+        ?int $toWidth = null,
+        ?int $fromTareWeight = null,
+        ?int $toTareWeight = null
+    ) {
+        return new self(
+            $id,
+            $name,
+            $carClass,
+            $acrissType,
+            $gearBox,
+            $motorizationType,
+            $carGroup,
+            $acrissParentId,
+            $acrissInferiorCollection,
+            $enabled,
+            $numberOfSuitcases,
+            $vehicleSeats,
+            $numberOfDoors,
+            $commercialVehicle,
+            $mediumTerm,
+            $startDate,
+            $endDate,
+            $isDriverLicenseClassB,
+            $isDriverLicenseClassA,
+            $isDriverLicenseClassA1,
+            $isDriverLicenseClassA2,
+            $minAgeExperienceDriverLicenseClassB,
+            $minAgeExperienceDriverLicenseClassA,
+            $minAgeExperienceDriverLicenseClassA1,
+            $minAgeExperienceDriverLicenseClassA2,
+            $minAge,
+            $maxAge,
+            $fromHeight,
+            $toHeight,
+            $fromLength,
+            $toLength,
+            $fromWidth,
+            $toWidth,
+            $fromTareWeight,
+            $toTareWeight
+        );
     }
-
 
     /**
      * @param array|null $acrissArray
@@ -861,7 +703,7 @@ class Acriss
      */
     final public static function createFromArray(?array $acrissArray): self
     {
-        return new self(
+        return self::create(
             intval($acrissArray['ID']),
             $acrissArray['ACRISSCODE'] ?? null,
             (isset($acrissArray['CARCLASS'])) ? CarClass::createFromArray($acrissArray['CARCLASS']) : null,
@@ -874,7 +716,7 @@ class Acriss
             null,
             (isset($acrissArray['ACRISSSTATUS'])) ? boolval($acrissArray['ACRISSSTATUS']) : null,
             (isset($acrissArray['ACRISSSUITCASE'])) ? intval($acrissArray['ACRISSSUITCASE']) : null,
-            (isset($acrissArray['ACRISSSEATSID'])) ? intval($acrissArray['ACRISSSEATSID']) : null,
+            (isset($acrissArray['VEHICLESEATS'])) ? VehicleSeats::createFromArray($acrissArray['VEHICLESEATS']) : null,
             (isset($acrissArray['ACRISSDOORS'])) ? intval($acrissArray['ACRISSDOORS']) : null,
             (isset($acrissArray['LOGISTICSVEHICLE'])) ? boolval($acrissArray['LOGISTICSVEHICLE']) : null,
             (isset($acrissArray['MEDIUMTERM'])) ? boolval($acrissArray['MEDIUMTERM']) : null,
@@ -915,7 +757,7 @@ class Acriss
             'VEHICLEGROUPID' => ($this->getCarGroup()) ? $this->getCarGroup()->getId() : null,
             'ACRISSSTATUS' => ($this->isEnabled() !== null) ? ($this->isEnabled() ? 1 : 0) : null,
             'ACRISSSUITCASE' => $this->getNumberOfSuitcases(),
-            'ACRISSSEATSID' => $this->getNumberOfSeats(),
+            'ACRISSSEATSID' => $this->getVehicleSeats() ? $this->getVehicleSeats()->getId() : null,
             'ACRISSDOORS' => $this->getNumberOfDoors(),
             'LOGISTICSVEHICLE' => ($this->getCommercialVehicle() !== null) ? ($this->getCommercialVehicle() ? 1 : 0) : null,
             'MEDIUMTERM' => ($this->getMediumTerm() !== null) ? ($this->getMediumTerm() ? 1 : 0) : null,
@@ -931,7 +773,6 @@ class Acriss
             'DRIVERMAXAGE' => $this->getMaxAge(),
             'STARTDATE' => $this->getStartDate() ? Utils::formatStringDateTimeToOdataDate($this->getStartDate()->__toString()) : null,
             'ENDDATE' => $this->getEndDate() ? Utils::formatDateToLastMinuteDateTime($this->getEndDate()->__toString()) : null,
-            // 'ACRISSBRANCHES' => [],
         ];
     }
 }

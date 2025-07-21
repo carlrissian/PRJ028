@@ -4,7 +4,7 @@ namespace Distribution\Acriss\Application\Details;
 
 use Distribution\Acriss\Domain\AcrissRepository;
 use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsCriteria;
-use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepository;
+use Distribution\AcrissBranchTranslations\Domain\AcrissBranchTranslationsRepositoryInterface;
 use Shared\Domain\Criteria\Filter;
 use Shared\Domain\Criteria\FilterCollection;
 use Shared\Domain\Criteria\FilterOperator;
@@ -17,17 +17,17 @@ class DetailsAcrissQueryHandler
     private AcrissRepository $acrissRepository;
 
     /**
-     * @var AcrissBranchTranslationsRepository
+     * @var AcrissBranchTranslationsRepositoryInterface
      */
-    private AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository;
+    private AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository;
 
     /**
      * @param AcrissRepository $acrissRepository
-     * @param AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository
+     * @param AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository
      */
     public function __construct(
         AcrissRepository $acrissRepository,
-        AcrissBranchTranslationsRepository $acrissBranchTranslationsRepository
+        AcrissBranchTranslationsRepositoryInterface $acrissBranchTranslationsRepository
     ) {
         $this->acrissRepository = $acrissRepository;
         $this->acrissBranchTranslationsRepository = $acrissBranchTranslationsRepository;
@@ -50,3 +50,4 @@ class DetailsAcrissQueryHandler
         return new DetailsAcrissResponse($acriss, $branchTranslationsGetByResponse->getCollection()->toArray());
     }
 }
+

@@ -1,0 +1,6 @@
+vehicleSeats.selectList:
+    path: /selectlist
+    controller: App\Controller\VehicleSeats\SelectListVehicleSeatsController
+    methods: [GET]
+    options:
+        expose: true

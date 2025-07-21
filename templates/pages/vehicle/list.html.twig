@@ -37,7 +37,7 @@
                 firstRegistrationDate: '{{ 'F. alta' | trans }}',
                 intDeliveryDate: '{{ 'F. Recepción' | trans }}',
                 registrationDate: '{{ 'F. Matriculación' | trans }}',
-                deliveryDate: '{{ 'F. Pick up' | trans }}',
+                deliveryDate: '{{ 'F. Entrega' | trans }}',
                 returnDate: '{{ 'F. Drop off' | trans }}',
                 firstRentDate: '{{ 'F. Inicio alquiler' | trans }}',
                 rentingEndDate: '{{ 'F. Fin alquiler' | trans }}',
@@ -60,7 +60,7 @@
                 // Filter
                 actualKmsFrom: '{{ 'Km actuales desde' | trans }}',
                 actualKmsTo: '{{ 'Km actuales hasta' | trans }}',
-                deliveryDateFrom: '{{ 'F. Pick up' | trans }}',
+                deliveryDateFrom: '{{ 'F. Entrega' | trans }}',
                 intDeliveryDateFrom: '{{ 'F. Recepción' | trans }} ',
                 firstRentDateFrom: '{{ 'F. Inicio alquiler' | trans }}',
                 rentingEndDateFrom: '{{ 'F. Fin alquiler' | trans }}',
@@ -76,7 +76,7 @@
                 actualUnloadDateFrom: '{{ 'F. descarga real desde' | trans }}',
                 actualUnloadDateTo: '{{ 'F. descarga real hasta' | trans }}',
                 cols: '{{ 'Columnas' | trans }}',
-
+                vehicleClean: '{{ 'Vehículo limpio' | trans }}',
             },
             form: {
                 actions: '{{ 'Acciones' | trans }}',
@@ -115,7 +115,7 @@
             firstRegistrationDate: '{{ 'F. alta' | trans | e('js') }}',
             intDeliveryDate: '{{ 'F. Recepción' | trans | e('js') }}',
             registrationDate: '{{ 'F. Matriculación' | trans | e('js') }}',
-            deliveryDate: '{{ 'F. Pick up' | trans | e('js') }}',
+            deliveryDate: '{{ 'F. Entrega' | trans | e('js') }}',
             returnDate: '{{ 'F. Drop off' | trans | e('js') }}',
             firstRentDate: '{{ 'F. Inicio alquiler' | trans | e('js') }}',
             rentingEndDate: '{{ 'F. Fin alquiler' | trans | e('js') }}',
@@ -138,8 +138,8 @@
             // Filter
             actualKmsFrom: '{{ 'Km actuales desde' | trans | e('js') }}',
             actualKmsTo: '{{ 'Km actuales hasta' | trans | e('js') }}',
-            deliveryDateFrom: '{{ 'F. Pick up desde' | trans | e('js') }}',
-            deliveryDateTo: '{{ 'F. Pick up hasta' | trans | e('js') }}',
+            deliveryDateFrom: '{{ 'F. Entrega desde' | trans | e('js') }}',
+            deliveryDateTo: '{{ 'F. Entrega hasta' | trans | e('js') }}',
             intDeliveryDateFrom: '{{ 'F. Recepción desde' | trans | e('js') }} ',
             intDeliveryDateTo: '{{ 'F. Recepción hasta' | trans | e('js') }} ',
             firstRentDateFrom: '{{ 'F. Inicio alquiler desde' | trans | e('js') }}',
@@ -159,7 +159,7 @@
             actualUnloadDateFrom: '{{ 'F. descarga real desde' | trans | e('js') }}',
             actualUnloadDateTo: '{{ 'F. descarga real hasta' | trans | e('js') }}',
             cols: '{{ 'Columnas' | trans | e('js') }}',
-            cleanVehicle: '{{ 'Vehículo limpio' | trans | e('js') }}',
+            vehicleClean: '{{ 'Vehículo limpio' | trans | e('js') }}',
         };
     </script>
 {% endblock javascripts %}

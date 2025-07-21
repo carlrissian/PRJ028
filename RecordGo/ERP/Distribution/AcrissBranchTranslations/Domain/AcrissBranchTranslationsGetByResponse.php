@@ -1,15 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\AcrissBranchTranslations\Domain;
 
 use Shared\Domain\GetByResponse;
 
-class AcrissBranchTranslationsGetByResponse extends GetByResponse
+final class AcrissBranchTranslationsGetByResponse extends GetByResponse
 {
     /**
-     * ImageLineGetByResponse constructor.
+     * AcrissBranchTranslationsGetByResponse constructor.
      * @param AcrissBranchTranslationCollection $collection
      * @param int $totalRows
      */

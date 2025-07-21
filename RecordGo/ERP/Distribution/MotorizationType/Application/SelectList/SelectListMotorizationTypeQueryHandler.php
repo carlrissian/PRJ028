@@ -29,6 +29,6 @@ class SelectListMotorizationTypeQueryHandler
     public function handle(): SelectListMotorizationTypeResponse
     {
         $motorizationTypeCollection = $this->motorizationTypeRepository->getBy(new MotorizationTypeCriteria())->getCollection();
-        return new SelectListMotorizationTypeResponse(Utils::createSelectWithFormattedName($motorizationTypeCollection, 'id', 'name', 'acrissLetter', [], 'name'));
+        return new SelectListMotorizationTypeResponse(Utils::createCustomSelectList($motorizationTypeCollection, 'id', 'name', 'acrissLetter'));
     }
 }

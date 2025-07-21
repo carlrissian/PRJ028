@@ -63,6 +63,14 @@
         </style>
     {% endif %}
 
+    {% if app.request.server.get('APP_ENV') == 'testing' %}
+        <style>
+            .kt-aside, .kt-aside__brand, .kt-aside-menu, .kt-header-mobile {
+                background-color: #dcba36 !important;
+            }
+        </style>
+    {% endif %}
+
     {% block stylesheets %}{% endblock %}
 
     {% block javascripts %}{% endblock %}

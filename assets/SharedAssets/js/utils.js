@@ -25,15 +25,32 @@ export function capitalize(string, lowerRest = true, allWords = false) {
 
 /**
  * 
+ * @param {*} any
+ * @returns query string
+ */
+export function generateQueryString(obj) {
+    return obj ? Object.keys(obj).map(key => {
+        const value = obj[key];
+        if (Array.isArray(value)) {
+            return value.map(item => `${encodeURIComponent(key)}[]=${encodeURIComponent(item)}`).join('&');
+        }
+        return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+    }).join('&') : '';
+}
+
+/**
+ * 
  * @param {*} document context
  * @param {*} file blob file
  * @param {*} fileName name of the file
+ * @param {*} newTab if true, opens the file in a new tab
  */
-export function downloadBlobFileButtonAction(document, file, fileName) {
+export function downloadBlobFileButtonAction(document, file, fileName, newTab = false) {
     let link = document.createElement("a");
     link.href = URL.createObjectURL(file);
-    link.target = "_blank";
-    link.download = fileName;
+    link.style.display = "none";
+    link.setAttribute("target", newTab ? "_blank" : "_self");
+    link.setAttribute("download", fileName);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

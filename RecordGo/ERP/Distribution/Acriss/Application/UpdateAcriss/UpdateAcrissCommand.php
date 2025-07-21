@@ -64,7 +64,7 @@ class UpdateAcrissCommand
     /**
      * @var int|null
      */
-    private ?int $numberOfSeats;
+    private ?int $vehicleSeatsId;
 
     /**
      * @var int|null
@@ -140,7 +140,7 @@ class UpdateAcrissCommand
      * @param boolean|null $commercialVehicle
      * @param boolean|null $mediumTerm
      * @param integer|null $numberOfSuitcases
-     * @param integer|null $numberOfSeats
+     * @param integer|null $vehicleSeatsId
      * @param integer|null $numberOfDoors
      * @param integer|null $minAge
      * @param integer|null $maxAge
@@ -166,7 +166,7 @@ class UpdateAcrissCommand
         ?bool $commercialVehicle = null,
         ?bool $mediumTerm = null,
         ?int $numberOfSuitcases = null,
-        ?int $numberOfSeats = null,
+        ?int $vehicleSeatsId = null,
         ?int $numberOfDoors = null,
         ?int $minAge = null,
         ?int $maxAge = null,
@@ -191,7 +191,7 @@ class UpdateAcrissCommand
         $this->commercialVehicle = $commercialVehicle;
         $this->mediumTerm = $mediumTerm;
         $this->numberOfSuitcases = $numberOfSuitcases;
-        $this->numberOfSeats = $numberOfSeats;
+        $this->vehicleSeatsId = $vehicleSeatsId;
         $this->numberOfDoors = $numberOfDoors;
         $this->minAge = $minAge;
         $this->maxAge = $maxAge;
@@ -297,9 +297,9 @@ class UpdateAcrissCommand
     /**
      * @return int|null
      */
-    public function getNumberOfSeats(): ?int
+    public function getVehicleSeatsId(): ?int
     {
-        return $this->numberOfSeats;
+        return $this->vehicleSeatsId;
     }
 
     /**

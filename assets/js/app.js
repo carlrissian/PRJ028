@@ -62,10 +62,11 @@ new Vue({
     el: '#app',
     store,
     components: {
-        'AcrissCreatePage': () => import('./pages/acriss/create/AcrissCreatePage'),
-        'AcrissEditPage': () => import('./pages/acriss/edit/AcrissEditPage'),
-        'AcrissListPage': () => import('./pages/acriss/list/AcrissListPage'),
-        'AcrissShowPage': () => import('./pages/acriss/show/AcrissShowPage'),
+        AcrissCreatePage: () => import('./pages/acriss/AcrissCreatePage'),
+        AcrissEditPage: () => import('./pages/acriss/AcrissEditPage'),
+        AcrissListPage: () => import('./pages/acriss/AcrissListPage'),
+        AcrissShowPage: () => import('./pages/acriss/AcrissShowPage'),
+
         'AssociateFleetClassificationPage': () => import('./pages/fleetClassification/associate/AssociateFleetClassificationPage'),
         'CarGroupPage': () => import('./pages/carGroup/create/CarGroupPage'),
         'CommercialGroupPage': () => import('./pages/commercialGroup/create/CommercialGroupPage'),

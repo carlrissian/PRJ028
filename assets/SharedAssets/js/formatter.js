@@ -50,18 +50,22 @@ class Formatter {
      * FIXME usando formateo con Intl, al hacer new Date() sólo acepta cadenas de fechas con formato yyyy-mm-dd.
      * TODO probar a obtener formato creando un Date mediante el timestamp
     */
-    formatDate(date, locale = "es", returnText = '-') {
+    formatDate(date, format = "DD/MM/YYYY", locale = "es", returnText = '-') {
         return !["", null, undefined].includes(date) ?
-            (moment ? moment(date, "DD/MM/YYYY").format("DD/MM/YYYY") : new Intl.DateTimeFormat(locale, { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(date)))
+            (moment ? moment(date, format).format(format) : new Intl.DateTimeFormat(locale, { year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(date)))
             : returnText;
     }
     /**
      * FIXME usando formateo con Intl, al hacer new Date() sólo acepta cadenas de fechas con formato yyyy-mm-dd.
      * TODO probar a obtener formato creando un Date mediante el timestamp
     */
-    formatDateTime(date, locale = "es", returnText = '-') {
+    formatDateTime(date, format = "DD/MM/YYYY HH:mm:ss", locale = "es", returnText = '-') {
+        const intlFormats = {
+            "DD/MM/YYYY HH:mm:ss": { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' },
+            "DD/MM/YYYY HH:mm": { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }
+        };
         return !["", null, undefined].includes(date) ?
-            (moment ? moment(date, "DD/MM/YYYY HH:mm:ss").format("DD/MM/YYYY HH:mm:ss") : new Intl.DateTimeFormat(locale, { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(new Date(date.replace(" ", "T"))))
+            (moment ? moment(date, format).format(format) : new Intl.DateTimeFormat(locale, intlFormats[format]).format(new Date(date.replace(" ", "T"))))
             : returnText;
     }
 
