@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Domain;
 
-class StopSaleType
+final class StopSaleType
 {
     /**
      * @var int
@@ -22,7 +20,7 @@ class StopSaleType
      * @param int $id
      * @param string|null $name
      */
-    public function __construct(int $id, ?string $name = null)
+    private function __construct(int $id, ?string $name)
     {
         $this->id = $id;
         $this->name = $name;
@@ -46,12 +44,21 @@ class StopSaleType
 
 
     /**
+     * @param int $id
+     * @param string|null $name
+     */
+    public static function create(int $id, ?string $name = null): self
+    {
+        return new self($id, $name);
+    }
+
+    /**
      * @param array|null $stopSaleTypeArray
      * @return self
      */
-    final public static function createFromArray(?array $stopSaleTypeArray): self
+    public static function createFromArray(?array $stopSaleTypeArray): self
     {
-        return new self(
+        return self::create(
             intval($stopSaleTypeArray['ID']),
             $stopSaleTypeArray['NAME'] ?? null
         );

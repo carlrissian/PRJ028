@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Application\CreateStopSale;
 
 use Shared\Utils\Utils;
@@ -27,7 +25,7 @@ use Distribution\SellCode\Domain\SellCodeRepository;
 use Distribution\StopSaleType\Domain\StopSaleTypeCriteria;
 use Distribution\StopSaleType\Domain\StopSaleTypeRepository;
 
-class CreateStopSaleQueryHandler
+final class CreateStopSaleQueryHandler
 {
     /**
      * @var CarGroupRepository
@@ -113,7 +111,7 @@ class CreateStopSaleQueryHandler
      * @param CreateStopSaleQuery $query
      * @return CreateStopSaleResponse
      */
-    final public function handle(CreateStopSaleQuery $query): CreateStopSaleResponse
+    public function handle(CreateStopSaleQuery $query): CreateStopSaleResponse
     {
         $carGroupCollection = $this->carGroupRepository->getBy(new CarGroupCriteria())->getCollection();
         $acrissCollection = $this->acrissRepository->getBy(new AcrissCriteria())->getCollection();
@@ -126,7 +124,8 @@ class CreateStopSaleQueryHandler
         $productCollection = $this->productRepository->getBy(new ProductCriteria())->getCollection();
 
         $carGroupList = Utils::createSelect($carGroupCollection);
-        
+        $carGroupList = Utils::orderSelectList($carGroupList);
+
         // $acrissList = Utils::createCustomSelectList($acrissCollection, 'id', 'name', 'carGroup.id');
         $acrissList = [];
         /**
@@ -143,13 +142,26 @@ class CreateStopSaleQueryHandler
                 'carGroupId' => $acriss->getCarGroup() ? $acriss->getCarGroup()->getId() : null
             ];
         }
+        $acrissList = Utils::orderSelectList($acrissList);
 
         $regionList = Utils::createSelect($regionCollection);
-        $areaList = Utils::createSelect($areaCollection);
-        $branchList = Utils::createSelect($branchCollection);
+        $regionList = Utils::orderSelectList($regionList);
+
+        $areaList = Utils::createCustomSelectList($areaCollection, 'id', 'name', 'region.id');
+        $areaList = Utils::orderSelectList($areaList);
+
+        $branchList = Utils::createCustomSelectList($branchCollection, 'id', 'name', 'area.id');
+        $branchList = Utils::orderSelectList($branchList);
+
         $stopSaleTypeList = Utils::createSelect($stopSaleTypeCollection);
+        $stopSaleTypeList = Utils::orderSelectList($stopSaleTypeList);
+
         $partnerList = Utils::createSelect($partnerCollection);
+        $partnerList = Utils::orderSelectList($partnerList);
+
         $sellCodeList = Utils::createSelect($sellCodeCollection);
+        $sellCodeList = Utils::orderSelectList($sellCodeList);
+
         // $productList = Utils::createCustomSelectList($productCollection, 'id', 'code', 'name', 'version');
         $productList = [];
         /**
@@ -163,6 +175,7 @@ class CreateStopSaleQueryHandler
                 'version' => $product->getVersion(),
             ];
         }
+        $productList = Utils::orderSelectList($productList);
 
         $connectedVehicleList = [
             ['id' => ConnectedVehicleConstants::CONNECTED_VEHICLE_YES, 'name' => 'Sí'],
@@ -194,7 +207,7 @@ class CreateStopSaleQueryHandler
     /**
      * @return array
      */
-    final private function createWeekDaySelect(): array
+    private function createWeekDaySelect(): array
     {
         $daysList = [];
 

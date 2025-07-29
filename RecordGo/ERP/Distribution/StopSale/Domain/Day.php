@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Domain;
 
-class Day
+final class Day
 {
     /**
      * @var int
@@ -16,13 +14,14 @@ class Day
      */
     private ?string $name;
 
+
     /**
      * Day constructor.
      * 
      * @param int $id
      * @param string|null $name
      */
-    public function __construct(int $id, ?string $name = null)
+    private function __construct(int $id, ?string $name)
     {
         $this->id = $id;
         $this->name = $name;
@@ -46,12 +45,21 @@ class Day
 
 
     /**
+     * @param int $id
+     * @param string|null $name
+     */
+    public static function create(int $id, ?string $name = null): self
+    {
+        return new self($id, $name);
+    }
+
+    /**
      * @param array|null $dayArray
      * @return self
      */
-    final public static function createFromArray(?array $dayArray): self
+    public static function createFromArray(?array $dayArray): self
     {
-        return new self(
+        return self::create(
             intval($dayArray['WEEKDAYID']),
             $dayArray['SCHEDULEWEEKDAYNAME'] ?? null
         );

@@ -2,15 +2,16 @@
 
 namespace App\Controller\StopSale;
 
+use App\Constants\ConnectedVehicleConstants;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Distribution\StopSale\Domain\StopSaleException;
+use Distribution\StopSale\Domain\Exception\StopSaleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Distribution\StopSale\Application\FilterStopSale\FilterStopSaleQuery;
 use Distribution\StopSale\Application\FilterStopSale\FilterStopSaleQueryHandler;
 
-class FilterStopSaleController extends AbstractController
+final class FilterStopSaleController extends AbstractController
 {
     /**
      * @var FilterStopSaleQueryHandler
@@ -40,7 +41,7 @@ class FilterStopSaleController extends AbstractController
                 $sort = 'CREATIONDATE';
                 $order = 'DESC';
             }
-           
+
             $query = new FilterStopSaleQuery(
                 $sort,
                 $order,
@@ -62,14 +63,25 @@ class FilterStopSaleController extends AbstractController
                 $request->get('productsId') ? json_decode($request->get('productsId')) : null,
                 $request->get('stopSaleTypeId') ? json_decode($request->get('stopSaleTypeId')) : null,
                 is_numeric($request->get('stopSaleStatusId')) ? intval($request->get('stopSaleStatusId')) : null,
-                filter_var($request->get('connectedVehicle'), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+                $request->get('connectedVehicle') !== null
+                    ? (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_YES
+                        ? true
+                        : (intval($request->get('connectedVehicle')) === ConnectedVehicleConstants::CONNECTED_VEHICLE_NO
+                            ? false
+                            : null))
+                    : null,
                 $request->get('creationDateFrom'),
                 $request->get('creationDateTo')
             );
 
             $response = $this->handler->handle($query);
 
-            return $this->json($response->getStopSaleResponse());
+            return $this->json(
+                [
+                    'total' => $response->getTotalRows(),
+                    'rows' => $response->getRows(),
+                ]
+            );
         } catch (\Exception $e) {
             return $this->json(['message' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
         }

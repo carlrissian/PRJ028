@@ -1,11 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Domain;
 
-class Department
+final class Department
 {
+    // FIXME sustituir por constantes BBDD
     const PRICING = 1;
     const DISTRIBUTION = 2;
 
@@ -25,7 +24,7 @@ class Department
      * @param integer $id
      * @param string|null $name
      */
-    public function __construct(int $id, ?string $name = null)
+    private function __construct(int $id, ?string $name)
     {
         $this->id = $id;
         $this->name = $name;
@@ -49,12 +48,21 @@ class Department
 
 
     /**
+     * @param integer $id
+     * @param string|null $name
+     */
+    public static function create(int $id, ?string $name = null): self
+    {
+        return new self($id, $name);
+    }
+
+    /**
      * @param array|null $departmentArray
      * @return self
      */
-    final public static function createFromArray(?array $departmentArray): self
+    public static function createFromArray(?array $departmentArray): self
     {
-        return new self(
+        return self::create(
             intval($departmentArray['ID']),
             $departmentArray['NAME'] ?? null
         );

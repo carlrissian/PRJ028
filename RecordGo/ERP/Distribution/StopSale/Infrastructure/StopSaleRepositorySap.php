@@ -1,98 +1,101 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Infrastructure;
 
-use Shared\Repository\RepositoryHelper;
+use Shared\Utils\Utils;
 use Distribution\StopSale\Domain\StopSale;
+use Shared\Domain\RequestHelper\SapRequestHelper;
 use Distribution\StopSale\Domain\StopSaleCriteria;
 use Distribution\StopSale\Domain\StopSaleCollection;
 use Distribution\StopSale\Domain\StopSaleRepository;
 use Distribution\StopSale\Domain\StopSaleGetByResponse;
+use Distribution\StopSale\Domain\Exception\StopSaleException;
 
-class StopSaleRepositorySap extends RepositoryHelper implements StopSaleRepository
+final class StopSaleRepositorySap implements StopSaleRepository
 {
     private const PREFIX_FUNCTION_NAME = 'StopSale/StopSaleRepository';
 
     /**
-     * @inheritDoc
-     * @throws Exception
+     * @var SapRequestHelper $sapRequestHelper
      */
-    final public function getBy(StopSaleCriteria $criteria): StopSaleGetByResponse
+    private SapRequestHelper $sapRequestHelper;
+
+    public function __construct(SapRequestHelper $sapRequestHelper)
     {
-        $functionName = self::PREFIX_FUNCTION_NAME . '_' . __FUNCTION__;
-        $collection = new StopSaleCollection([]);
-
-        try {
-            $body = json_encode(parent::createCriteria($criteria));
-
-            $response  = $this->sapRequestHelper->request('GET', $functionName, $body);
-
-            if ($response === false) {
-                throw new \Exception(sprintf("The %s request hasn't returned a response", __FUNCTION__));
-            }
-            $responseArray = json_decode($response, true);
-            $this->errorHandling($responseArray, $response, 'TStopSaleResponse');
-
-            foreach ($responseArray['TStopSaleResponse'] as $itemArray) {
-                $collection->add($this->arrayToStopSale($itemArray));
-            }
-            $totalRows = (isset($responseArray['TotalRows'])) ? $responseArray['TotalRows'] : $collection->count();
-        } catch (\Exception $exception) {
-            throw new \Exception($exception->getMessage(), $exception->getCode());
-        }
-
-        return new StopSaleGetByResponse($collection, $totalRows ?? 0);
+        $this->sapRequestHelper = $sapRequestHelper;
     }
 
     /**
      * @inheritDoc
      * @throws Exception
      */
-    final public function getStopSaleHistoryById(int $stopSaleId): StopSaleGetByResponse
+    public function getBy(StopSaleCriteria $criteria): StopSaleGetByResponse
+    {
+        $functionName = sprintf('%s_%s', self::PREFIX_FUNCTION_NAME, __FUNCTION__);
+        $collection = new StopSaleCollection([]);
+
+        try {
+            $body = json_encode(Utils::createCriteria($criteria));
+
+            $response  = $this->sapRequestHelper->request('GET', $functionName, $body);
+            if (empty($response)) {
+                throw new StopSaleException(sprintf("The %s request hasn't returned a response", __FUNCTION__));
+            }
+            $responseArray = json_decode($response, true);
+
+            foreach ($responseArray['TStopSaleResponse'] as $itemArray) {
+                $collection->add($this->arrayToStopSale($itemArray));
+            }
+            $totalRows = (isset($responseArray['TotalRows'])) ? $responseArray['TotalRows'] : $collection->count();
+
+            return new StopSaleGetByResponse($collection, $totalRows ?? 0);
+        } catch (\Exception $exception) {
+            throw new \Exception($exception->getMessage(), $exception->getCode());
+        }
+    }
+
+    /**
+     * @inheritDoc
+     * @throws Exception
+     */
+    public function getStopSaleHistoryById(int $stopSaleId): StopSaleGetByResponse
     {
         $functionName = self::PREFIX_FUNCTION_NAME . '_history/' . $stopSaleId;
         $collection = new StopSaleCollection([]);
 
         try {
             $response  = $this->sapRequestHelper->request('GET', $functionName, '');
-
-            if ($response === false) {
-                throw new \Exception(sprintf("The %s request hasn't returned a response", __FUNCTION__));
+            if (empty($response)) {
+                throw new StopSaleException(sprintf("The %s request hasn't returned a response", __FUNCTION__));
             }
             $responseArray = json_decode($response, true);
-            $this->errorHandling($responseArray, $response, 'TStopSaleResponse');
 
             foreach ($responseArray['TStopSaleResponse'] as $itemArray) {
                 $collection->add($this->arrayToStopSale($itemArray));
             }
             $totalRows = (isset($responseArray['TotalRows'])) ? $responseArray['TotalRows'] : $collection->count();
+
+            return new StopSaleGetByResponse($collection, $totalRows ?? 0);
         } catch (\Exception $exception) {
             throw new \Exception($exception->getMessage(), $exception->getCode());
         }
-
-        return new StopSaleGetByResponse($collection, $totalRows ?? 0);
     }
 
     /**
      * @inheritDoc
      * @throws Exception
      */
-    final public function getById(int $id): ?StopSale
+    public function getById(int $id): ?StopSale
     {
-        $functionName = self::PREFIX_FUNCTION_NAME . '_' . __FUNCTION__ . '/' . $id;
+        $functionName = sprintf('%s_%s/%d', self::PREFIX_FUNCTION_NAME, __FUNCTION__, $id);
 
         try {
             $response  = $this->sapRequestHelper->request('GET', $functionName, '');
-
-            if ($response === false) {
-                throw new \Exception(sprintf("The %s request hasn't returned a response", __FUNCTION__));
-            }
             $responseArray = json_decode($response, true);
-            $this->errorHandling($responseArray, $response, 'TStopSaleResponse');
 
-            return count($responseArray['TStopSaleResponse']) > 0 ? $this->arrayToStopSale($responseArray['TStopSaleResponse'][0]) : null;
+            return isset($responseArray['TStopSaleResponse']) && count($responseArray['TStopSaleResponse']) > 0
+                ? $this->arrayToStopSale($responseArray['TStopSaleResponse'][0])
+                : null;
         } catch (\Exception $exception) {
             throw new \Exception($exception->getMessage(), $exception->getCode());
         }
@@ -102,9 +105,9 @@ class StopSaleRepositorySap extends RepositoryHelper implements StopSaleReposito
      * @inheritDoc
      * @throws Exception
      */
-    final public function store(StopSale $stopSale): int
+    public function store(StopSale $stopSale): int
     {
-        $functionName = self::PREFIX_FUNCTION_NAME . '_' . __FUNCTION__;
+        $functionName = sprintf('%s_%s', self::PREFIX_FUNCTION_NAME, __FUNCTION__);
 
         try {
             $body = json_encode($stopSale->toArray());
@@ -122,7 +125,7 @@ class StopSaleRepositorySap extends RepositoryHelper implements StopSaleReposito
      * @inheritDoc
      * @throws Exception
      */
-    final public function update(StopSale $stopSale): int
+    public function update(StopSale $stopSale): int
     {
         $functionName = self::PREFIX_FUNCTION_NAME . '_' . __FUNCTION__ . '/' . $stopSale->getId();
 
@@ -143,7 +146,7 @@ class StopSaleRepositorySap extends RepositoryHelper implements StopSaleReposito
      * @param array $stopSaleArray
      * @return StopSale
      */
-    final public function arrayToStopSale(array $stopSaleArray): StopSale
+    public function arrayToStopSale(array $stopSaleArray): StopSale
     {
         return StopSale::createFromArray($stopSaleArray);
     }

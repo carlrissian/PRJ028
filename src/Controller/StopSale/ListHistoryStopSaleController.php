@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Distribution\StopSale\Application\ListHistoryStopSale\ListHistoryStopSaleQuery;
 use Distribution\StopSale\Application\ListHistoryStopSale\ListHistoryStopSaleQueryHandler;
 
-class ListHistoryStopSaleController extends Controller
+final class ListHistoryStopSaleController extends Controller
 {
     /**
      * @var ListHistoryStopSaleQueryHandler
@@ -29,7 +29,11 @@ class ListHistoryStopSaleController extends Controller
     public function __invoke(int $id): Response
     {
         $response = $this->handler->handle(new ListHistoryStopSaleQuery($id));
-
-        return $this->json(['stopSale' => $response->getStopSaleHistoryResponse()]);
+        return $this->json(
+            [
+                'total' => $response->getTotalRows(),
+                'rows' => $response->getRows(),
+            ]
+        );
     }
 }

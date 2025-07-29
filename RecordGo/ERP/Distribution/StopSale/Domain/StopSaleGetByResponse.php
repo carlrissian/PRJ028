@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace Distribution\StopSale\Domain;
 
@@ -9,10 +8,8 @@ use Shared\Domain\GetByResponse;
  * Class StopSaleGetByResponse
  * @method StopSaleGetByResponse getCollection()
  */
-class StopSaleGetByResponse extends GetByResponse
+final class StopSaleGetByResponse extends GetByResponse
 {
-
-
     /**
      * StopSaleGetByResponse constructor.
      * @param StopSaleCollection $collection

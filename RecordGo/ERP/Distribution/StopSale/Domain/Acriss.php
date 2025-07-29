@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Domain;
 
 /**
  * Class Acriss
  * @package Distribution\StopSale\Domain
  */
-class Acriss
+final class Acriss
 {
     /**
      * @var integer
@@ -30,10 +28,10 @@ class Acriss
      * @param int|null $id
      * @param string|null $name
      */
-    public function __construct(
+    private function __construct(
         int $id,
-        ?string $name = null,
-        ?CarGroup $carGroup = null
+        ?string $name,
+        ?CarGroup $carGroup
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -67,12 +65,24 @@ class Acriss
 
 
     /**
+     * @param int|null $id
+     * @param string|null $name
+     */
+    public static function create(
+        int $id,
+        ?string $name = null,
+        ?CarGroup $carGroup = null
+    ): self {
+        return new self($id, $name, $carGroup);
+    }
+
+    /**
      * @param array|null $acrissArray
      * @return self
      */
-    final public static function createFromArray(?array $acrissArray): self
+    public static function createFromArray(?array $acrissArray): self
     {
-        return new self(
+        return self::create(
             intval($acrissArray['ID']),
             $acrissArray['ACRISSCODE'] ?? null,
             isset($acrissArray['carGroup']) ? CarGroup::createFromArray($acrissArray['carGroup']) : null

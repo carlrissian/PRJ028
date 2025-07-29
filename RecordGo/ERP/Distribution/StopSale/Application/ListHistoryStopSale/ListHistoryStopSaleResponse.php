@@ -1,33 +1,44 @@
 <?php
-declare(strict_types=1);
-
 
 namespace Distribution\StopSale\Application\ListHistoryStopSale;
 
-
-class ListHistoryStopSaleResponse
+final class ListHistoryStopSaleResponse
 {
     /**
-     * @var array
+     * @var array $rows
      */
-    private array $stopSaleHistoryResponse;
+    private $rows;
+
+    /**
+     * @var int $totalRows
+     */
+    private $totalRows;
 
     /**
      * ListHistoryStopSaleResponse constructor.
-     * @param array $stopSaleHistoryResponse
+     * 
+     * @param array $rows
+     * @param int $totalRows
      */
-    public function __construct(array $stopSaleHistoryResponse)
+    public function __construct(array $rows, int $totalRows)
     {
-        $this->stopSaleHistoryResponse = $stopSaleHistoryResponse;
+        $this->rows = $rows;
+        $this->totalRows = $totalRows;
     }
 
     /**
      * @return array
      */
-    public function getStopSaleHistoryResponse(): array
+    public function getRows(): array
     {
-        return $this->stopSaleHistoryResponse;
+        return $this->rows;
     }
 
-
+    /**
+     * @return int
+     */
+    public function getTotalRows(): int
+    {
+        return $this->totalRows;
+    }
 }

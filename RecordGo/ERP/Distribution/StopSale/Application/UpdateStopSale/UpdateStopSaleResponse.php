@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Application\UpdateStopSale;
 
-class UpdateStopSaleResponse
+final class UpdateStopSaleResponse
 {
     /**
      * @var integer

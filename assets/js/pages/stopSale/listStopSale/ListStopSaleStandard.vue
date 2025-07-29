@@ -19,10 +19,10 @@
 
 <script>
 import moment from "moment";
-import Loading from "../../../../assets/js/utilities";
-import Formatter from "../../../../SharedAssets/js/formatter";
-import ErpAjaxTable from "../../../../SharedAssets/vue/components/table/ErpAjaxTable";
-import ModalHistoryStopSale from "../Modals/ModalHistoryStopSale";
+import Loading from "../../../../assets/js/utilities.js";
+import Formatter from "../../../../SharedAssets/js/formatter.js";
+import ErpAjaxTable from "../../../../SharedAssets/vue/components/table/ErpAjaxTable.vue";
+import ModalHistoryStopSale from "../Modals/ModalHistoryStopSale.vue";
 
 export default {
     name: "ListStopSaleStandard",
@@ -76,35 +76,37 @@ export default {
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 // {
-                //     field: "regionPickUp",
+                //     field: "pickUpRegion",
                 //     title: txtTrans.fields.regions,
                 //     sortable: true,
                 //     formatter: (value) => Formatter.trimArray(value),
                 // },
                 // {
-                //     field: "areaPickUp",
+                //     field: "pickUpArea",
                 //     title: txtTrans.fields.areas,
                 //     sortable: true,
                 //     formatter: (value) => Formatter.trimArray(value),
                 // },
                 {
-                    field: "branchPickUp",
+                    field: "pickUpBranch",
                     title: txtTrans.fields.branches,
                     sortable: true,
-                    formatter: (value) => Formatter.trimArray(value, 1, ', ', '-', 'branchIATA'),
+                    formatter: (value) => Formatter.trimArray(value, 1, ", ", "-", "branchIATA"),
                 },
                 // {
                 //     field: "connectedVehicle",
                 //     title: txtTrans.fields.connectedVehicle,
                 //     sortable: true,
-                //     formatter: (value) => Formatter.formatterBoolean(value),
+                //     formatter: (value) => {
+                //         let formattedValue = Formatter.formatBoolean(value);
+                //         return formattedValue != "-" ? txtTrans.form[formattedValue] : txtTrans.form.all;
+                //     },
                 // },
                 {
                     field: "carGroups",
                     title: txtTrans.fields.carGroups,
                     sortable: false,
-                    // formatter: (value) => Formatter.trimArray(value),
-                    formatter: (value) => Formatter.trimArray(value,3),
+                    formatter: (value) => Formatter.trimArray(value, 3),
                 },
                 {
                     field: "acriss",
@@ -172,8 +174,7 @@ export default {
                     sortable: true,
                     formatter: (value) => {
                         let formattedValue = Formatter.formatBoolean(value);
-                        // return formattedValue != "-" ? txtTrans.form[formattedValue] : formattedValue;
-                        return formattedValue != "-" ? txtTrans.form[formattedValue] : txtTrans.form.all;
+                        return formattedValue != "-" ? txtTrans.form[formattedValue] : formattedValue;
                     },
                 },
                 {
@@ -189,10 +190,12 @@ export default {
             ],
             options: {
                 pagination: true,
+                pageSize: 25,
+                pageList: [25, 50, 100],
                 locale: "es-ES",
                 scrollX: true,
-                pageSize: 25,
-                rowStyle: this.getRowStyle, 
+                fixedScroll: true,
+                rowStyle: this.getRowStyle,
             },
             stopSaleId: null,
         };
@@ -203,7 +206,7 @@ export default {
     methods: {
         getRowStyle(row, index) {
             if (row.active === false) {
-                return { classes: 'selected' };
+                return { classes: "selected" };
             }
             return {};
         },
@@ -233,7 +236,8 @@ export default {
                         let url = this.routing.generate("stopsale.cancel");
                         let formData = new FormData();
                         formData.set("id", row.id);
-                        this.axios.post(url, formData)
+                        this.axios
+                            .post(url, formData)
                             .then((response) => {
                                 Loading.endLoading();
                                 // console.log("Cancel Stop Sale: ", response);

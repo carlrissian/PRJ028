@@ -1,15 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Application\ListHistoryStopSale;
 
-use Distribution\StopSale\Domain\Acriss;
 use Exception;
+use Distribution\StopSale\Domain\Acriss;
 use Distribution\StopSale\Domain\StopSale;
 use Distribution\StopSale\Domain\StopSaleRepository;
 
-class ListHistoryStopSaleQueryHandler
+final class ListHistoryStopSaleQueryHandler
 {
     /**
      * @var StopSaleRepository
@@ -59,12 +57,12 @@ class ListHistoryStopSaleQueryHandler
                 'initDate' => $stopSaleHistory->getInitDate(),
                 'endDate' => $stopSaleHistory->getEndDate(),
                 'connectedVehicle' => $stopSaleHistory->isConnectedVehicle(),
-                'regionPickUp' => $stopSaleHistory->getRegionPickUp(),
-                'areaPickUp' => $stopSaleHistory->getAreaPickUp(),
-                'branchPickUp' => $stopSaleHistory->getBranchPickUp(),
-                'regionDropOff' => $stopSaleHistory->getRegionDropOff(),
-                'areaDropOff' => $stopSaleHistory->getAreaDropOff(),
-                'branchDropOff' => $stopSaleHistory->getBranchDropOff(),
+                'pickUpRegion' => $stopSaleHistory->getPickUpRegion() ? $stopSaleHistory->getPickUpRegion()->toArray() : null,
+                'pickUpArea' => $stopSaleHistory->getPickUpArea() ? $stopSaleHistory->getPickUpArea()->toArray() : null,
+                'pickUpBranch' => $stopSaleHistory->getPickUpBranch() ? $stopSaleHistory->getPickUpBranch()->toArray() : null,
+                'dropOffRegion' => $stopSaleHistory->getDropOffRegion() ? $stopSaleHistory->getDropOffRegion()->toArray() : null,
+                'dropOffArea' => $stopSaleHistory->getDropOffArea() ? $stopSaleHistory->getDropOffArea()->toArray() : null,
+                'dropOffBranch' => $stopSaleHistory->getDropOffBranch() ? $stopSaleHistory->getDropOffBranch()->toArray() : null,
                 'partners' => $stopSaleHistory->getPartners(),
                 'sellCodes' => $stopSaleHistory->getSellCodes(),
                 'products' => $stopSaleHistory->getProducts(),
@@ -82,9 +80,6 @@ class ListHistoryStopSaleQueryHandler
             ];
         }
 
-        $stopSaleHistoryResponse['total'] = $totalRows;
-        $stopSaleHistoryResponse['rows'] = $stopSaleHistoryList;
-
-        return new ListHistoryStopSaleResponse($stopSaleHistoryResponse);
+        return new ListHistoryStopSaleResponse($stopSaleHistoryList, $totalRows);
     }
 }

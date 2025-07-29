@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Application\StoreStopSale;
 
-class StoreStopSaleCommand
+final class StoreStopSaleCommand
 {
     /**
      * @var int
@@ -34,32 +32,32 @@ class StoreStopSaleCommand
     /**
      * @var array|null
      */
-    private $regionPickUpId;
+    private $pickUpRegionId;
 
     /**
      * @var array|null
      */
-    private $regionDropOffId;
+    private $pickUpAreaId;
 
     /**
      * @var array|null
      */
-    private $areaPickUpId;
+    private $pickUpBranchId;
 
     /**
      * @var array|null
      */
-    private $areaDropOffId;
+    private $dropOffRegionId;
 
     /**
      * @var array|null
      */
-    private $branchPickUpId;
+    private $dropOffAreaId;
 
     /**
      * @var array|null
      */
-    private $branchDropOffId;
+    private $dropOffBranchId;
 
     /**
      * @var array|null
@@ -124,12 +122,12 @@ class StoreStopSaleCommand
      * @param string|null $initDate
      * @param string|null $endDate
      * @param array|null $acrissId
-     * @param array|null $regionPickUpId
-     * @param array|null $regionDropOffId
-     * @param array|null $areaPickUpId
-     * @param array|null $areaDropOffId
-     * @param array|null $branchPickUpId
-     * @param array|null $branchDropOffId
+     * @param array|null $pickUpRegionId
+     * @param array|null $pickUpAreaId
+     * @param array|null $pickUpBranchId
+     * @param array|null $dropOffRegionId
+     * @param array|null $dropOffAreaId
+     * @param array|null $dropOffBranchId
      * @param array|null $partnersId
      * @param array|null $sellCodesId
      * @param array|null $productsId
@@ -148,12 +146,12 @@ class StoreStopSaleCommand
         ?string $initDate,
         ?string $endDate,
         ?array $acrissId,
-        ?array $regionPickUpId,
-        ?array $regionDropOffId,
-        ?array $areaPickUpId,
-        ?array $areaDropOffId,
-        ?array $branchPickUpId,
-        ?array $branchDropOffId,
+        ?array $pickUpRegionId,
+        ?array $pickUpAreaId,
+        ?array $pickUpBranchId,
+        ?array $dropOffRegionId,
+        ?array $dropOffAreaId,
+        ?array $dropOffBranchId,
         ?array $partnersId,
         ?array $sellCodesId,
         ?array $productsId,
@@ -171,12 +169,12 @@ class StoreStopSaleCommand
         $this->initDate = $initDate;
         $this->endDate = $endDate;
         $this->acrissId = $acrissId;
-        $this->regionPickUpId = $regionPickUpId;
-        $this->regionDropOffId = $regionDropOffId;
-        $this->areaPickUpId = $areaPickUpId;
-        $this->areaDropOffId = $areaDropOffId;
-        $this->branchPickUpId = $branchPickUpId;
-        $this->branchDropOffId = $branchDropOffId;
+        $this->pickUpRegionId = $pickUpRegionId;
+        $this->pickUpAreaId = $pickUpAreaId;
+        $this->pickUpBranchId = $pickUpBranchId;
+        $this->dropOffRegionId = $dropOffRegionId;
+        $this->dropOffAreaId = $dropOffAreaId;
+        $this->dropOffBranchId = $dropOffBranchId;
         $this->partnersId = $partnersId;
         $this->sellCodesId = $sellCodesId;
         $this->productsId = $productsId;
@@ -233,49 +231,49 @@ class StoreStopSaleCommand
     /**
      * @return array|null
      */
-    public function getRegionPickUpId(): ?array
+    public function getPickUpRegionId(): ?array
     {
-        return $this->regionPickUpId;
+        return $this->pickUpRegionId;
     }
 
     /**
      * @return array|null
      */
-    public function getRegionDropOffId(): ?array
+    public function getPickUpAreaId(): ?array
     {
-        return $this->regionDropOffId;
+        return $this->pickUpAreaId;
     }
 
     /**
      * @return array|null
      */
-    public function getAreaPickUpId(): ?array
+    public function getPickUpBranchId(): ?array
     {
-        return $this->areaPickUpId;
+        return $this->pickUpBranchId;
     }
 
     /**
      * @return array|null
      */
-    public function getAreaDropOffId(): ?array
+    public function getDropOffRegionId(): ?array
     {
-        return $this->areaDropOffId;
+        return $this->dropOffRegionId;
     }
 
     /**
      * @return array|null
      */
-    public function getBranchPickUpId(): ?array
+    public function getDropOffAreaId(): ?array
     {
-        return $this->branchPickUpId;
+        return $this->dropOffAreaId;
     }
 
     /**
      * @return array|null
      */
-    public function getBranchDropOffId(): ?array
+    public function getDropOffBranchId(): ?array
     {
-        return $this->branchDropOffId;
+        return $this->dropOffBranchId;
     }
 
     /**

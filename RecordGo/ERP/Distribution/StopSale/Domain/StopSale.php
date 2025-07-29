@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Domain;
 
-use Shared\Domain\User;
+use Shared\Domain\User as SharedUser;
 use Shared\Utils\Utils;
 use Shared\Domain\ValueObject\DateValueObject;
 use Shared\Domain\ValueObject\TimeValueObject;
@@ -45,32 +43,32 @@ class StopSale
     /**
      * @var RegionCollection|null
      */
-    private ?RegionCollection $regionPickUp;
+    private ?RegionCollection $pickUpRegion;
+
+    /**
+     * @var AreaCollection|null
+     */
+    private ?AreaCollection $pickUpArea;
+
+    /**
+     * @var BranchCollection|null
+     */
+    private ?BranchCollection $pickUpBranch;
 
     /**
      * @var RegionCollection|null
      */
-    private ?RegionCollection $regionDropOff;
+    private ?RegionCollection $dropOffRegion;
 
     /**
      * @var AreaCollection|null
      */
-    private ?AreaCollection $areaPickUp;
-
-    /**
-     * @var AreaCollection|null
-     */
-    private ?AreaCollection $areaDropOff;
+    private ?AreaCollection $dropOffArea;
 
     /**
      * @var BranchCollection|null
      */
-    private ?BranchCollection $branchPickUp;
-
-    /**
-     * @var BranchCollection|null
-     */
-    private ?BranchCollection $branchDropOff;
+    private ?BranchCollection $dropOffBranch;
 
     /**
      * @var PartnerCollection|null
@@ -133,9 +131,9 @@ class StopSale
     private ?bool $cancelled;
 
     /**
-     * @var User|null
+     * @var SharedUser|null
      */
-    private ?User $cancellationUser;
+    private ?SharedUser $cancellationUser;
 
     /**
      * @var DateTimeValueObject|null
@@ -143,9 +141,9 @@ class StopSale
     private ?DateTimeValueObject $cancellationDate;
 
     /**
-     * @var User|null
+     * @var SharedUser|null
      */
-    private ?User $creationUser;
+    private ?SharedUser $creationUser;
 
     /**
      * @var DateTimeValueObject|null
@@ -153,9 +151,9 @@ class StopSale
     private ?DateTimeValueObject $creationDate;
 
     /**
-     * @var User|null
+     * @var SharedUser|null
      */
-    private ?User $edtionUser;
+    private ?SharedUser $editionUser;
 
     /**
      * @var DateTimeValueObject|null
@@ -171,12 +169,12 @@ class StopSale
      * @param DateValueObject|null $initDate
      * @param DateValueObject|null $endDate
      * @param AcrissCollection|null $acriss
-     * @param RegionCollection|null $regionPickUp
-     * @param RegionCollection|null $regionDropOff
-     * @param AreaCollection|null $areaPickUp
-     * @param AreaCollection|null $areaDropOff
-     * @param BranchCollection|null $branchPickUp
-     * @param BranchCollection|null $branchDropOff
+     * @param RegionCollection|null $pickUpRegion
+     * @param AreaCollection|null $pickUpArea
+     * @param BranchCollection|null $pickUpBranch
+     * @param RegionCollection|null $dropOffRegion
+     * @param AreaCollection|null $dropOffArea
+     * @param BranchCollection|null $dropOffBranch
      * @param PartnerCollection|null $partners
      * @param SellCodeCollection|null $sellCodes
      * @param ProductCollection|null $products
@@ -189,26 +187,26 @@ class StopSale
      * @param boolean|null $connectedVehicle
      * @param string|null $notes
      * @param boolean|null $cancelled
-     * @param User|null $cancellationUser
+     * @param SharedUser|null $cancellationUser
      * @param DateTimeValueObject|null $cancellationDate
-     * @param User|null $creationUser
+     * @param SharedUser|null $creationUser
      * @param DateTimeValueObject|null $creationDate
-     * @param User|null $edtionUser
+     * @param SharedUser|null $editionUser
      * @param DateTimeValueObject|null $editionDate
      */
-    public function __construct(
+    private function __construct(
         ?int $id,
         ?Department $department,
         ?StopSaleCategory $category,
         ?DateValueObject $initDate,
         ?DateValueObject $endDate,
         ?AcrissCollection $acriss,
-        ?RegionCollection $regionPickUp,
-        ?RegionCollection $regionDropOff,
-        ?AreaCollection $areaPickUp,
-        ?AreaCollection $areaDropOff,
-        ?BranchCollection $branchPickUp,
-        ?BranchCollection $branchDropOff,
+        ?RegionCollection $pickUpRegion,
+        ?AreaCollection $pickUpArea,
+        ?BranchCollection $pickUpBranch,
+        ?RegionCollection $dropOffRegion,
+        ?AreaCollection $dropOffArea,
+        ?BranchCollection $dropOffBranch,
         ?PartnerCollection $partners,
         ?SellCodeCollection $sellCodes,
         ?ProductCollection $products,
@@ -220,13 +218,13 @@ class StopSale
         ?int $maxDaysRent,
         ?bool $connectedVehicle,
         ?string $notes,
-        ?bool $cancelled = null,
-        ?User $cancellationUser = null,
-        ?DateTimeValueObject $cancellationDate = null,
-        ?User $creationUser = null,
-        ?DateTimeValueObject $creationDate = null,
-        ?User $edtionUser = null,
-        ?DateTimeValueObject $editionDate = null
+        ?bool $cancelled,
+        ?SharedUser $cancellationUser,
+        ?DateTimeValueObject $cancellationDate,
+        ?SharedUser $creationUser,
+        ?DateTimeValueObject $creationDate,
+        ?SharedUser $editionUser,
+        ?DateTimeValueObject $editionDate
     ) {
         $this->id = $id;
         $this->department = $department;
@@ -234,12 +232,12 @@ class StopSale
         $this->initDate = $initDate;
         $this->endDate = $endDate;
         $this->acriss = $acriss;
-        $this->regionPickUp = $regionPickUp;
-        $this->regionDropOff = $regionDropOff;
-        $this->areaPickUp = $areaPickUp;
-        $this->areaDropOff = $areaDropOff;
-        $this->branchPickUp = $branchPickUp;
-        $this->branchDropOff = $branchDropOff;
+        $this->pickUpRegion = $pickUpRegion;
+        $this->pickUpArea = $pickUpArea;
+        $this->pickUpBranch = $pickUpBranch;
+        $this->dropOffRegion = $dropOffRegion;
+        $this->dropOffArea = $dropOffArea;
+        $this->dropOffBranch = $dropOffBranch;
         $this->stopSaleType = $stopSaleType;
         $this->partners = $partners;
         $this->sellCodes = $sellCodes;
@@ -256,7 +254,7 @@ class StopSale
         $this->cancellationDate = $cancellationDate;
         $this->creationUser = $creationUser;
         $this->creationDate = $creationDate;
-        $this->edtionUser = $edtionUser;
+        $this->editionUser = $editionUser;
         $this->editionDate = $editionDate;
     }
 
@@ -277,27 +275,11 @@ class StopSale
     }
 
     /**
-     * @param Department|null $department
-     */
-    public function setDepartment($department): void
-    {
-        $this->department = $department;
-    }
-
-    /**
      * @return StopSaleCategory
      */
     public function getCategory(): StopSaleCategory
     {
         return $this->category;
-    }
-
-    /**
-     * @param StopSaleCategory $category
-     */
-    public function setCategory(StopSaleCategory $category): void
-    {
-        $this->category = $category;
     }
 
     /**
@@ -309,27 +291,11 @@ class StopSale
     }
 
     /**
-     * @param DateValueObject|null $initDate
-     */
-    public function setInitDate($initDate): void
-    {
-        $this->initDate = $initDate;
-    }
-
-    /**
      * @return DateValueObject|null
      */
     public function getEndDate(): ?DateValueObject
     {
         return $this->endDate;
-    }
-
-    /**
-     * @param DateValueObject|null $endDate
-     */
-    public function setEndDate($endDate): void
-    {
-        $this->endDate = $endDate;
     }
 
     /**
@@ -341,107 +307,51 @@ class StopSale
     }
 
     /**
-     * @param AcrissCollection|null $acriss
-     */
-    public function setAcriss($acriss): void
-    {
-        $this->acriss = $acriss;
-    }
-
-    /**
      * @return RegionCollection|null
      */
-    public function getRegionPickUp(): ?RegionCollection
+    public function getPickUpRegion(): ?RegionCollection
     {
-        return $this->regionPickUp;
-    }
-
-    /**
-     * @param RegionCollection|null $regionPickUp
-     */
-    public function setRegionPickUp($regionPickUp): void
-    {
-        $this->regionPickUp = $regionPickUp;
-    }
-
-    /**
-     * @return RegionCollection|null
-     */
-    public function getRegionDropOff(): ?RegionCollection
-    {
-        return $this->regionDropOff;
-    }
-
-    /**
-     * @param RegionCollection|null $regionDropOff
-     */
-    public function setRegionDropOff($regionDropOff): void
-    {
-        $this->regionDropOff = $regionDropOff;
+        return $this->pickUpRegion;
     }
 
     /**
      * @return AreaCollection|null
      */
-    public function getAreaPickUp(): ?AreaCollection
+    public function getPickUpArea(): ?AreaCollection
     {
-        return $this->areaPickUp;
+        return $this->pickUpArea;
     }
 
     /**
-     * @param AreaCollection|null $areaPickUp
+     * @return BranchCollection|null
      */
-    public function setAreaPickUp($areaPickUp): void
+    public function getPickUpBranch(): ?BranchCollection
     {
-        $this->areaPickUp = $areaPickUp;
+        return $this->pickUpBranch;
+    }
+
+    /**
+     * @return RegionCollection|null
+     */
+    public function getDropOffRegion(): ?RegionCollection
+    {
+        return $this->dropOffRegion;
     }
 
     /**
      * @return AreaCollection|null
      */
-    public function getAreaDropOff(): ?AreaCollection
+    public function getDropOffArea(): ?AreaCollection
     {
-        return $this->areaDropOff;
-    }
-
-    /**
-     * @param AreaCollection|null $areaDropOff
-     */
-    public function setAreaDropOff($areaDropOff): void
-    {
-        $this->areaDropOff = $areaDropOff;
+        return $this->dropOffArea;
     }
 
     /**
      * @return BranchCollection|null
      */
-    public function getBranchPickUp(): ?BranchCollection
+    public function getDropOffBranch(): ?BranchCollection
     {
-        return $this->branchPickUp;
-    }
-
-    /**
-     * @param BranchCollection|null $branchPickUp
-     */
-    public function setBranchPickUp($branchPickUp): void
-    {
-        $this->branchPickUp = $branchPickUp;
-    }
-
-    /**
-     * @return BranchCollection|null
-     */
-    public function getBranchDropOff(): ?BranchCollection
-    {
-        return $this->branchDropOff;
-    }
-
-    /**
-     * @param BranchCollection|null $branchDropOff
-     */
-    public function setBranchDropOff($branchDropOff): void
-    {
-        $this->branchDropOff = $branchDropOff;
+        return $this->dropOffBranch;
     }
 
     /**
@@ -453,27 +363,11 @@ class StopSale
     }
 
     /**
-     * @param PartnerCollection|null $partners
-     */
-    public function setPartners($partners): void
-    {
-        $this->partners = $partners;
-    }
-
-    /**
      * @return SellCodeCollection|null
      */
     public function getSellCodes(): ?SellCodeCollection
     {
         return $this->sellCodes;
-    }
-
-    /**
-     * @param SellCodeCollection|null $sellCodes
-     */
-    public function setSellCodes($sellCodes): void
-    {
-        $this->sellCodes = $sellCodes;
     }
 
     /**
@@ -485,27 +379,11 @@ class StopSale
     }
 
     /**
-     * @param ProductCollection|null $products
-     */
-    public function setProducts($products): void
-    {
-        $this->products = $products;
-    }
-
-    /**
      * @return StopSaleType|null
      */
     public function getStopSaleType(): ?StopSaleType
     {
         return $this->stopSaleType;
-    }
-
-    /**
-     * @param StopSaleType|null $stopSaleType
-     */
-    public function setStopSaleType($stopSaleType): void
-    {
-        $this->stopSaleType = $stopSaleType;
     }
 
     /**
@@ -517,27 +395,11 @@ class StopSale
     }
 
     /**
-     * @param TimeValueObject|null $startTime
-     */
-    public function setStartTime($startTime): void
-    {
-        $this->startTime = $startTime;
-    }
-
-    /**
      * @return TimeValueObject|null
      */
     public function getEndTime(): ?TimeValueObject
     {
         return $this->endTime;
-    }
-
-    /**
-     * @param TimeValueObject|null $endTime
-     */
-    public function setEndTime($endTime): void
-    {
-        $this->endTime = $endTime;
     }
 
     /**
@@ -549,27 +411,11 @@ class StopSale
     }
 
     /**
-     * @param DayCollection|null $recurrence
-     */
-    public function setRecurrence($recurrence): void
-    {
-        $this->recurrence = $recurrence;
-    }
-
-    /**
      * @return int|null
      */
     public function getMinDaysRent(): ?int
     {
         return $this->minDaysRent;
-    }
-
-    /**
-     * @param int|null $minDaysRent
-     */
-    public function setMinDaysRent($minDaysRent): void
-    {
-        $this->minDaysRent = $minDaysRent;
     }
 
     /**
@@ -581,27 +427,11 @@ class StopSale
     }
 
     /**
-     * @param int|null $maxDaysRent
-     */
-    public function setMaxDaysRent($maxDaysRent): void
-    {
-        $this->maxDaysRent = $maxDaysRent;
-    }
-
-    /**
      * @return bool|null
      */
     public function isConnectedVehicle(): ?bool
     {
         return $this->connectedVehicle;
-    }
-
-    /**
-     * @param bool|null $connectedVehicle
-     */
-    public function setConnectedVehicle($connectedVehicle): void
-    {
-        $this->connectedVehicle = $connectedVehicle;
     }
 
     /**
@@ -613,14 +443,6 @@ class StopSale
     }
 
     /**
-     * @param string|null $notes
-     */
-    public function setNotes($notes): void
-    {
-        $this->notes = $notes;
-    }
-
-    /**
      * @return bool|null
      */
     public function isCancelled(): ?bool
@@ -629,17 +451,9 @@ class StopSale
     }
 
     /**
-     * Set the value of cancelled always to true
+     * @return SharedUser|null
      */
-    public function setCancelled(): void
-    {
-        $this->cancelled = true;
-    }
-
-    /**
-     * @return User|null
-     */
-    public function getCancellationUser(): ?User
+    public function getCancellationUser(): ?SharedUser
     {
         return $this->cancellationUser;
     }
@@ -653,9 +467,9 @@ class StopSale
     }
 
     /**
-     * @return User|null
+     * @return SharedUser|null
      */
-    public function getCreationUser(): ?User
+    public function getCreationUser(): ?SharedUser
     {
         return $this->creationUser;
     }
@@ -669,11 +483,11 @@ class StopSale
     }
 
     /**
-     * @return User|null
+     * @return SharedUser|null
      */
-    public function getEdtionUser(): ?User
+    public function getEditionUser(): ?SharedUser
     {
-        return $this->edtionUser;
+        return $this->editionUser;
     }
 
     /**
@@ -685,100 +499,141 @@ class StopSale
     }
 
 
+
+    /**
+     * @param integer|null $id
+     * @param Department|null $department
+     * @param StopSaleCategory|null $category
+     * @param DateValueObject|null $initDate
+     * @param DateValueObject|null $endDate
+     * @param AcrissCollection|null $acriss
+     * @param AreaCollection|null $pickUpRegion
+     * @param AreaCollection|null $pickUpArea
+     * @param BranchCollection|null $pickUpBranch
+     * @param AreaCollection|null $dropOffRegion
+     * @param AreaCollection|null $dropOffArea
+     * @param BranchCollection|null $dropOffBranch
+     * @param PartnerCollection|null $partners
+     * @param SellCodeCollection|null $sellCodes
+     * @param ProductCollection|null $products
+     * @param StopSaleType|null $stopSaleType
+     * @param TimeValueObject|null $startTime
+     * @param TimeValueObject|null $endTime
+     * @param DayCollection|null $recurrence
+     * @param integer|null $minDaysRent
+     * @param integer|null $maxDaysRent
+     * @param boolean|null $connectedVehicle
+     * @param string|null $notes
+     * @param boolean|null $cancelled
+     * @param SharedUser|null $cancellationUser
+     * @param DateTimeValueObject|null $cancellationDate
+     * @param SharedUser|null $creationUser
+     * @param DateTimeValueObject|null $creationDate
+     * @param SharedUser|null $editionUser
+     * @param DateTimeValueObject|null $editionDate
+     */
+    public static function create(
+        ?int $id,
+        ?Department $department,
+        ?StopSaleCategory $category,
+        ?DateValueObject $initDate,
+        ?DateValueObject $endDate,
+        ?AcrissCollection $acriss,
+        ?RegionCollection $pickUpRegion,
+        ?AreaCollection $pickUpArea,
+        ?BranchCollection $pickUpBranch,
+        ?RegionCollection $dropOffRegion,
+        ?AreaCollection $dropOffArea,
+        ?BranchCollection $dropOffBranch,
+        ?PartnerCollection $partners,
+        ?SellCodeCollection $sellCodes,
+        ?ProductCollection $products,
+        ?StopSaleType $stopSaleType,
+        ?TimeValueObject $startTime,
+        ?TimeValueObject $endTime,
+        ?DayCollection $recurrence,
+        ?int $minDaysRent,
+        ?int $maxDaysRent,
+        ?bool $connectedVehicle,
+        ?string $notes,
+        ?bool $cancelled = null,
+        ?SharedUser $cancellationUser = null,
+        ?DateTimeValueObject $cancellationDate = null,
+        ?SharedUser $creationUser = null,
+        ?DateTimeValueObject $creationDate = null,
+        ?SharedUser $editionUser = null,
+        ?DateTimeValueObject $editionDate = null
+    ) {
+        return new self(
+            $id,
+            $department,
+            $category,
+            $initDate,
+            $endDate,
+            $acriss,
+            $pickUpRegion,
+            $pickUpArea,
+            $pickUpBranch,
+            $dropOffRegion,
+            $dropOffArea,
+            $dropOffBranch,
+            $partners,
+            $sellCodes,
+            $products,
+            $stopSaleType,
+            $startTime,
+            $endTime,
+            $recurrence,
+            $minDaysRent,
+            $maxDaysRent,
+            $connectedVehicle,
+            $notes,
+            $cancelled,
+            $cancellationUser,
+            $cancellationDate,
+            $creationUser,
+            $creationDate,
+            $editionUser,
+            $editionDate
+        );
+    }
+
     /**
      * @param array|null $stopSaleArray
      * @return self
      */
     final public static function createFromArray(?array $stopSaleArray): self
     {
-        $acrissCollection = new AcrissCollection([]);
-        if (isset($stopSaleArray['AcrissArray'])) {
-            foreach ($stopSaleArray['AcrissArray'] as $acrissArray) {
-                $acrissCollection->add(Acriss::createFromArray($acrissArray));
-            }
-        }
-
-        // TODO pendiente de crear carga para RegionPick, RegionDrop, AreaPick y AreaDrop
-        $regionPickUpCollection = new RegionCollection([]);
-        $regionDropOffCollection = new RegionCollection([]);
-        $areaPickUpCollection = new AreaCollection([]);
-        $areaDropOffCollection = new AreaCollection([]);
-
-        $branchPickUpCollection = new BranchCollection([]);
-        if (isset($stopSaleArray['pickUpBranchArray'])) {
-            foreach ($stopSaleArray['pickUpBranchArray'] as $branchArray) {
-                $branchPickUpCollection->add(Branch::createFromArray($branchArray));
-            }
-        }
-
-        $branchDropOffCollection = new BranchCollection([]);
-        if (isset($stopSaleArray['dropOffBranchArray'])) {
-            foreach ($stopSaleArray['dropOffBranchArray'] as $branchArray) {
-                $branchDropOffCollection->add(Branch::createFromArray($branchArray));
-            }
-        }
-
-        $partnerCollection = new PartnerCollection([]);
-        if (isset($stopSaleArray['partnerArray'])) {
-            foreach ($stopSaleArray['partnerArray'] as $partnerArray) {
-                $partnerCollection->add(Partner::createFromArray($partnerArray));
-            }
-        }
-
-        $sellCodeCollection = new SellCodeCollection([]);
-        if (isset($stopSaleArray['SellCodeArray'])) {
-            foreach ($stopSaleArray['SellCodeArray'] as $sellCodeArray) {
-                $sellCodeCollection->add(SellCode::createFromArray($sellCodeArray));
-            }
-        }
-
-        $productCollection = new ProductCollection([]);
-        if (isset($stopSaleArray['ProductArray'])) {
-            foreach ($stopSaleArray['ProductArray'] as $productArray) {
-                $productCollection->add(Product::createFromArray($productArray));
-            }
-        }
-
-        $recurrenceCollection = new DayCollection([]);
-        if (isset($stopSaleArray['Recurrence'])) {
-            foreach ($stopSaleArray['Recurrence'] as $recurrenceArray) {
-                $recurrenceCollection->add(Day::createFromArray($recurrenceArray));
-            }
-        }
-
-
-        return new self(
+        return self::create(
             intval($stopSaleArray['ID']),
             (isset($stopSaleArray['department'])) ? Department::createFromArray($stopSaleArray['department']) : null,
             (isset($stopSaleArray['StopSalesCategory'])) ? StopSaleCategory::createFromArray($stopSaleArray['StopSalesCategory']) : null,
             (isset($stopSaleArray['INITDATE'])) ? new DateValueObject(Utils::convertOdataDateToDateTime($stopSaleArray['INITDATE'])) : null,
             (isset($stopSaleArray['ENDDATE'])) ? new DateValueObject(Utils::convertOdataDateToDateTime($stopSaleArray['ENDDATE'])) : null,
-            $acrissCollection,
-            $regionPickUpCollection,
-            $regionDropOffCollection,
-            $areaPickUpCollection,
-            $areaDropOffCollection,
-            $branchPickUpCollection,
-            $branchDropOffCollection,
-            $partnerCollection,
-            $sellCodeCollection,
-            $productCollection,
+            isset($stopSaleArray['AcrissArray']) ? AcrissCollection::createFromArray($stopSaleArray['AcrissArray']) : null,
+            isset($stopSaleArray['pickUpRegionArray']) ? RegionCollection::createFromArray($stopSaleArray['pickUpRegionArray']) : null,
+            isset($stopSaleArray['pickUpAreaArray']) ? AreaCollection::createFromArray($stopSaleArray['pickUpAreaArray']) : null,
+            isset($stopSaleArray['pickUpBranchArray']) ? BranchCollection::createFromArray($stopSaleArray['pickUpBranchArray']) : null,
+            isset($stopSaleArray['dropOffRegionArray']) ? RegionCollection::createFromArray($stopSaleArray['dropOffRegionArray']) : null,
+            isset($stopSaleArray['dropOffAreaArray']) ? AreaCollection::createFromArray($stopSaleArray['dropOffAreaArray']) : null,
+            isset($stopSaleArray['dropOffBranchArray']) ? BranchCollection::createFromArray($stopSaleArray['dropOffBranchArray']) : null,
+            isset($stopSaleArray['partnerArray']) ? PartnerCollection::createFromArray($stopSaleArray['partnerArray']) : null,
+            isset($stopSaleArray['SellCodeArray']) ? SellCodeCollection::createFromArray($stopSaleArray['SellCodeArray']) : null,
+            isset($stopSaleArray['ProductArray']) ? ProductCollection::createFromArray($stopSaleArray['ProductArray']) : null,
             (isset($stopSaleArray['StopSaleType'])) ? StopSaleType::createFromArray($stopSaleArray['StopSaleType']) : null,
             (isset($stopSaleArray['INITTIME'])) ? new TimeValueObject(Utils::convertOdataTimeToMinutes($stopSaleArray['INITTIME'])) : null,
             (isset($stopSaleArray['ENDTIME'])) ? new TimeValueObject(Utils::convertOdataTimeToMinutes($stopSaleArray['ENDTIME'])) : null,
-            $recurrenceCollection,
+            isset($stopSaleArray['Recurrence']) ? DayCollection::createFromArray($stopSaleArray['Recurrence']) : null,
             isset($stopSaleArray['MINDAYSRENT']) ? intval($stopSaleArray['MINDAYSRENT']) : null,
             isset($stopSaleArray['MAXDAYSRENT']) ? intval($stopSaleArray['MAXDAYSRENT']) : null,
-            isset($stopSaleArray['CONNECTEDVEHICLE']) ? boolval($stopSaleArray['CONNECTEDVEHICLE']) : null,
-            // filter_var($stopSaleArray['CONNECTEDVEHICLE'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+            isset($stopSaleArray['CONNECTEDVEHICLE']) ? filter_var($stopSaleArray['CONNECTEDVEHICLE'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : null,
             $stopSaleArray['DESCRIPTION'] ?? null,
-            // isset($stopSaleArray['CANCEL']) ? boolval($stopSaleArray['CANCEL']) : null,
-            filter_var($stopSaleArray['CANCEL'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
-            (isset($stopSaleArray['CancelationUser'])) ? User::createFromArray($stopSaleArray['CancelationUser']) : null,
+            isset($stopSaleArray['CANCEL']) ? filter_var($stopSaleArray['CANCEL'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : null,
+            (isset($stopSaleArray['CancelationUser'])) ? SharedUser::createFromArray($stopSaleArray['CancelationUser']) : null,
             (isset($stopSaleArray['CANCELDATE'])) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($stopSaleArray['CANCELDATE'])) : null,
-            (isset($stopSaleArray['CREATIONUSER'])) ? User::createFromArray($stopSaleArray['CREATIONUSER']) : null,
+            (isset($stopSaleArray['CREATIONUSER'])) ? SharedUser::createFromArray($stopSaleArray['CREATIONUSER']) : null,
             (isset($stopSaleArray['CREATIONDATE'])) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($stopSaleArray['CREATIONDATE'])) : null,
-            (isset($stopSaleArray['EDITIONUSER'])) ? User::createFromArray($stopSaleArray['EDITIONUSER']) : null,
+            (isset($stopSaleArray['EDITIONUSER'])) ? SharedUser::createFromArray($stopSaleArray['EDITIONUSER']) : null,
             (isset($stopSaleArray['EDITIONDATE'])) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($stopSaleArray['EDITIONDATE'])) : null
         );
     }
@@ -788,133 +643,22 @@ class StopSale
      */
     public function toArray(): array
     {
-        $acrissArray = [];
-        if (!empty($this->getAcriss())) {
-            /**
-             * @var Acriss $acriss
-             */
-            foreach ($this->getAcriss() as $acriss) {
-                $acrissArray[] = $acriss->toArray();
-            }
-        }
-
-        $regionPickUpArray = [];
-        if (!empty($this->getRegionPickUp())) {
-            /**
-             * @var Region $region
-             */
-            foreach ($this->getRegionPickUp() as $region) {
-                $regionPickUpArray[] = $region->toArray();
-            }
-        }
-
-        $regionDropOffArray = [];
-        if (!empty($this->getRegionDropOff())) {
-            /**
-             * @var Region $region
-             */
-            foreach ($this->getRegionDropOff() as $region) {
-                $regionDropOffArray[] = $region->toArray();
-            }
-        }
-
-        $areaPickUpArray = [];
-        if (!empty($this->getAreaPickUp())) {
-            /**
-             * @var Area $area
-             */
-            foreach ($this->getAreaPickUp() as $area) {
-                $areaPickUpArray[] = $area->toArray();
-            }
-        }
-
-        $areaDropOffArray = [];
-        if (!empty($this->getAreaDropOff())) {
-            /**
-             * @var Area $area
-             */
-            foreach ($this->getAreaDropOff() as $area) {
-                $areaDropOffArray[] = $area->toArray();
-            }
-        }
-
-        $branchPickUpArray = [];
-        if (!empty($this->getBranchPickUp())) {
-            /**
-             * @var Branch $branch
-             */
-            foreach ($this->getBranchPickUp() as $branch) {
-                $branchPickUpArray[] = $branch->toArray();
-            }
-        }
-
-        $branchDropOffArray = [];
-        if (!empty($this->getBranchDropOff())) {
-            /**
-             * @var Branch $branch
-             */
-            foreach ($this->getBranchDropOff() as $branch) {
-                $branchDropOffArray[] = $branch->toArray();
-            }
-        }
-
-        $partnerArray = [];
-        if (!empty($this->getPartners())) {
-            /**
-             * @var Partner $partner
-             */
-            foreach ($this->getPartners() as $partner) {
-                $partnerArray[] = $partner->toArray();
-            }
-        }
-
-        $sellCodeArray = [];
-        if (!empty($this->getSellCodes())) {
-            /**
-             * @var SellCode $sellCode
-             */
-            foreach ($this->getSellCodes() as $sellCode) {
-                $sellCodeArray[] = $sellCode->toArray();
-            }
-        }
-
-        $productArray = [];
-        if (!empty($this->getProducts())) {
-            /**
-             * @var Product $product
-             */
-            foreach ($this->getProducts() as $product) {
-                $productArray[] = $product->toArray();
-            }
-        }
-
-        $recurrenceArray = [];
-        if (!empty($this->getRecurrence())) {
-            /**
-             * @var Day $day
-             */
-            foreach ($this->getRecurrence() as $day) {
-                $recurrenceArray[] = $day->toArray();
-            }
-        }
-
-
         return [
             'ID' => $this->getId(),
             'DEPARTMENTID' => $this->getDepartment() ? $this->getDepartment()->getId() : null,
             'STOPSALECATID' => $this->getCategory()->getId(),
             'INITDATE' => $this->getInitDate() ? Utils::formatDateToFirstMinuteDateTime($this->getInitDate()->__toString()) : null,
             'ENDDATE' => $this->getEndDate() ? Utils::formatDateToLastMinuteDateTime($this->getEndDate()->__toString()) : null,
-            'AcrissArray' => $acrissArray,
-            'PickUpBranchIds' => $branchPickUpArray,
-            'DropOffBranchIds' => $branchDropOffArray,
-            'PartnerArray' => $partnerArray,
-            'SellCodeArray' => $sellCodeArray,
-            'ProductArray' => $productArray,
+            'AcrissArray' => $this->getAcriss() ? $this->getAcriss()->toArraySAP() : null,
+            'PickUpBranchIds' => $this->getPickUpBranch() ? $this->getPickUpBranch()->toArraySAP() : null,
+            'DropOffBranchIds' => $this->getDropOffBranch() ? $this->getDropOffBranch()->toArraySAP() : null,
+            'PartnerArray' => $this->getPartners() ? $this->getPartners()->toArraySAP() : null,
+            'SellCodeArray' => $this->getSellCodes() ? $this->getSellCodes()->toArraySAP() : null,
+            'ProductArray' => $this->getProducts() ? $this->getProducts()->toArraySAP() : null,
             'STOPSALETYPEID' => $this->getStopSaleType() ? $this->getStopSaleType()->getId() : null,
             'INITTIME' => $this->getStartTime() ? $this->getStartTime()->getTime() : null,
             'ENDTIME' => $this->getEndTime() ? $this->getEndTime()->getTime() : null,
-            'Recurrence' => $recurrenceArray,
+            'Recurrence' => $this->getRecurrence() ? $this->getRecurrence()->toArraySAP() : null,
             'MINDAYSRENT' => $this->getMinDaysRent(),
             'MAXDAYSRENT' => $this->getMaxDaysRent(),
             'CONECTEDVEHICLE' => ($this->isConnectedVehicle() !== null) ? ($this->isConnectedVehicle() ? 1 : 0) : null,

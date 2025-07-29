@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Application\ListHistoryStopSale;
 
-class ListHistoryStopSaleQuery
+final class ListHistoryStopSaleQuery
 {
     /**
      * @var int

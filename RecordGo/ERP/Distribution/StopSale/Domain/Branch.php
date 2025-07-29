@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Domain;
 
 final class Branch
@@ -28,10 +26,10 @@ final class Branch
      * @param string|null $name
      * @param string|null $branchIATA
      */
-    public function __construct(
+    private function __construct(
         int $id,
-        ?string $name = null,
-        ?string $branchIATA = null
+        ?string $name,
+        ?string $branchIATA
     ) {
         $this->id = $id;
         $this->name = $name;
@@ -39,43 +37,50 @@ final class Branch
     }
 
     /**
-     * Get the value of id
-     *
-     * @return  integer
+     * @return integer
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * Get the value of name
-     *
-     * @return  string|null
+     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
     /**
-     * Get the value of branchIATA
-     *
-     * @return  string|null
+     * @return string|null
      */
-    public function getBranchIATA()
+    public function getBranchIATA(): ?string
     {
         return $this->branchIATA;
     }
 
 
     /**
+     * @param integer $id
+     * @param string|null $name
+     * @param string|null $branchIATA
+     */
+    public static function create(
+        int $id,
+        ?string $name = null,
+        ?string $branchIATA = null
+    ): self {
+        return new self($id, $name, $branchIATA);
+    }
+
+    /**
      * @param array|null $branchArray
      * @return self
      */
-    final public static function createFromArray(?array $branchArray): self
+    public static function createFromArray(?array $branchArray): self
     {
-        return new self(
+        return self::create(
             intval($branchArray['ID']),
             $branchArray['BRANCHINTNAME'] ?? null,
             $branchArray['BRANCHIATA'] ?? null

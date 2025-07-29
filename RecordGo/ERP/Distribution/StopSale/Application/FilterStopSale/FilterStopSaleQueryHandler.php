@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Application\FilterStopSale;
 
 use Exception;
@@ -17,9 +15,8 @@ use Shared\Domain\Criteria\FilterCollection;
 use Shared\Domain\Pagination\SortCollection;
 use Distribution\StopSale\Domain\StopSaleCriteria;
 use Distribution\StopSale\Domain\StopSaleRepository;
-use Shared\Constants\Infrastructure\ConstantsJsonFile;
 
-class FilterStopSaleQueryHandler
+final class FilterStopSaleQueryHandler
 {
     /**
      * @var StopSaleRepository
@@ -50,11 +47,6 @@ class FilterStopSaleQueryHandler
          */
         foreach ($stopSaleCollection as $stopSale) {
             $stopSaleCategory = $stopSale->getCategory() ? $stopSale->getCategory()->getId() : null;
-
-            // $partners = [];
-            // if ($stopSaleCategory === intval(ConstantsJsonFile::getValue('STOPSALECAT_ONEWAY'))) {
-            //     $partners = $stopSale->getPartners()->toArray();
-            // }
 
             $carGroupIds = [];
             $carGroupList = [];
@@ -114,18 +106,17 @@ class FilterStopSaleQueryHandler
                 'endDate' => $stopSale->getEndDate(),
                 'acriss' => $acrissList,
                 'carGroups' => $carGroupList,
-                'regionPickUp' => $stopSale->getRegionPickUp(),
-                'areaPickUp' => $stopSale->getAreaPickUp(),
-                'branchPickUp' => $stopSale->getBranchPickUp(),
-                'regionDropOff' => $stopSale->getRegionDropOff(),
-                'areaDropOff' => $stopSale->getAreaDropOff(),
-                'branchDropOff' => $stopSale->getBranchDropOff(),
-                // 'partners' => $partners,
+                'pickUpRegion' => $stopSale->getPickUpRegion() ? $stopSale->getPickUpRegion()->toArray() : null,
+                'pickUpArea' => $stopSale->getPickUpArea() ? $stopSale->getPickUpArea()->toArray() : null,
+                'pickUpBranch' => $stopSale->getPickUpBranch() ? $stopSale->getPickUpBranch()->toArray() : null,
+                'dropOffRegion' => $stopSale->getDropOffRegion() ? $stopSale->getDropOffRegion()->toArray() : null,
+                'dropOffArea' => $stopSale->getDropOffArea() ? $stopSale->getDropOffArea()->toArray() : null,
+                'dropOffBranch' => $stopSale->getDropOffBranch() ? $stopSale->getDropOffBranch()->toArray() : null,
                 'partners' => $stopSale->getPartners(),
                 'sellCodes' => $sellCodeList,
                 'products' => $productList,
-                'startTime' => ($stopSale->getStartTime() != null) ? $stopSale->getStartTime()->getTime() : null,
-                'endTime' => ($stopSale->getEndTime()) ? $stopSale->getEndTime()->getTime() : null,
+                'startTime' => $stopSale->getStartTime() ? $stopSale->getStartTime()->getTime() : null,
+                'endTime' => $stopSale->getEndTime() ? $stopSale->getEndTime()->getTime() : null,
                 'recurrence' => $stopSale->getRecurrence(),
                 'minDaysRent' => $stopSale->getMinDaysRent(),
                 'maxDaysRent' => $stopSale->getMaxDaysRent(),
@@ -142,10 +133,7 @@ class FilterStopSaleQueryHandler
             ];
         }
 
-        $stopSaleResponse['total'] = $totalRows;
-        $stopSaleResponse['rows'] = $stopSaleList;
-
-        return new FilterStopSaleResponse($stopSaleResponse);
+        return new FilterStopSaleResponse($stopSaleList, $totalRows);
     }
 
 

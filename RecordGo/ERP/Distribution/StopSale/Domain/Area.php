@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Domain;
 
-class Area
+final class Area
 {
     /**
      * @var int
@@ -21,7 +19,7 @@ class Area
      * @param int $id
      * @param string|null $name
      */
-    public function __construct(
+    private function __construct(
         int $id,
         ?string $name = null
     ) {
@@ -45,6 +43,29 @@ class Area
         return $this->name;
     }
 
+
+    /**
+     * @param int $id
+     * @param string|null $name
+     */
+    public static function create(
+        int $id,
+        ?string $name = null
+    ): self {
+        return new self($id, $name);
+    }
+
+    /**
+     * @param array|null $areaArray
+     * @return self
+     */
+    public static function createFromArray(?array $areaArray): self
+    {
+        return self::create(
+            intval($areaArray['ID']),
+            $areaArray['AREANAME'] ?? null
+        );
+    }
 
     /**
      * @return array

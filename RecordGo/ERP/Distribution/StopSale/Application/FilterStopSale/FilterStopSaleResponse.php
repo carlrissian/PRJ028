@@ -1,32 +1,44 @@
 <?php
-declare(strict_types=1);
-
 
 namespace Distribution\StopSale\Application\FilterStopSale;
 
-
-class FilterStopSaleResponse
+final class FilterStopSaleResponse
 {
     /**
-     * @var array
+     * @var array $rows
      */
-    private array $stopSaleResponse;
+    private $rows;
+
+    /**
+     * @var int $totalRows
+     */
+    private $totalRows;
 
     /**
      * FilterStopSaleResponse constructor.
-     * @param array $stopSaleResponse
+     * 
+     * @param array $rows
+     * @param int $totalRows
      */
-    public function __construct(array $stopSaleResponse)
+    public function __construct(array $rows, int $totalRows)
     {
-        $this->stopSaleResponse = $stopSaleResponse;
+        $this->rows = $rows;
+        $this->totalRows = $totalRows;
     }
 
     /**
      * @return array
      */
-    public function getStopSaleResponse(): array
+    public function getRows(): array
     {
-        return $this->stopSaleResponse;
+        return $this->rows;
     }
 
+    /**
+     * @return int
+     */
+    public function getTotalRows(): int
+    {
+        return $this->totalRows;
+    }
 }

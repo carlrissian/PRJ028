@@ -560,23 +560,23 @@ class ProcessFileAssignVehicleMovementCommandHandler
                 }
             }
 
-                // Si las fechas de inicio/fin de bloqueo del vehículo están dentro del rango de fechas del movimiento, no se puede asignar.
-                if ($vehicle->getInitBlockageDate() && $vehicle->getEndBlockageDate()) {
-                    if (
-                        $vehicle->getInitBlockageDate()->getValue()->getTimestamp() >= $this->movement->getExpectedLoadDate()->getValue()->getTimestamp()
-                        && $vehicle->getEndBlockageDate()->getValue()->getTimestamp() <= $this->movement->getExpectedLoadDate()->getValue()->getTimestamp()
-                    ) {
-                        array_push(
-                            $errorMessageReasons,
-                            sprintf(
-                                "El vehículo no se puede asignar al movimiento porque las fechas de inicio/fin de bloqueo del vehículo están dentro del rango de fechas del movimiento.<br>Fecha de inicio de bloqueo: '%s'<br>Fecha de fin de bloqueo: '%s'<br>Fecha de carga prevista: '%s'",
-                                $vehicle->getInitBlockageDate()->__toString(),
-                                $vehicle->getEndBlockageDate()->__toString(),
-                                $this->movement->getExpectedLoadDate()->__toString()
-                            )
-                        );
-                    }
+            // Si las fechas de inicio/fin de bloqueo del vehículo están dentro del rango de fechas del movimiento, no se puede asignar.
+            if ($vehicle->getInitBlockageDate() && $vehicle->getEndBlockageDate()) {
+                if (
+                    $vehicle->getInitBlockageDate()->getValue()->getTimestamp() >= $this->movement->getExpectedLoadDate()->getValue()->getTimestamp()
+                    && $vehicle->getEndBlockageDate()->getValue()->getTimestamp() <= $this->movement->getExpectedLoadDate()->getValue()->getTimestamp()
+                ) {
+                    array_push(
+                        $errorMessageReasons,
+                        sprintf(
+                            "El vehículo no se puede asignar al movimiento porque las fechas de inicio/fin de bloqueo del vehículo están dentro del rango de fechas del movimiento.<br>Fecha de inicio de bloqueo: '%s'<br>Fecha de fin de bloqueo: '%s'<br>Fecha de carga prevista: '%s'",
+                            $vehicle->getInitBlockageDate()->__toString(),
+                            $vehicle->getEndBlockageDate()->__toString(),
+                            $this->movement->getExpectedLoadDate()->__toString()
+                        )
+                    );
                 }
+            }
 
             // Si el artículo es distribución y su fecha de fin de alquiler es inferior a la fecha de carga prevista del movimiento, no se puede asignar.
             if (
@@ -591,6 +591,18 @@ class ProcessFileAssignVehicleMovementCommandHandler
                         "El vehículo no se puede asignar al movimiento porque el artículo de unidad de negocio es '%s' y la fecha de fin de alquiler del vehículo es inferior a la fecha de carga prevista del movimiento.<br>Fecha fin de alquiler: '%s'<br>Fecha de carga prevista: '%s'",
                         $businessunitArticleName,
                         $vehicle->getRentingEndDate()->__toString(),
+                        $this->movement->getExpectedLoadDate()->__toString()
+                    )
+                );
+            }
+
+            // Si el vehículo está alquilado y su fecha de fin de contrato prevista es superior a la fecha de carga prevista del movimiento, no se puede asignar.
+            if ($vehicle->getStatus()->getId() === intval(ConstantsJsonFile::getValue('CARSTATUS_ON_RENT')) && $vehicle->getRentalAgreementDropOffDate() && $vehicle->getRentalAgreementDropOffDate()->getValue()->getTimestamp() > $this->movement->getExpectedLoadDate()->getValue()->getTimestamp()) {
+                array_push(
+                    $errorMessageReasons,
+                    sprintf(
+                        "El vehículo no se puede asignar al movimiento porque está alquilado y tiene una fecha de fin de contrato prevista superior a la fecha de carga prevista del movimiento.<br>Fecha fin de contrato prevista: '%s'<br>Fecha de carga prevista: '%s'",
+                        $vehicle->getRentalAgreementDropOffDate()->__toString(),
                         $this->movement->getExpectedLoadDate()->__toString()
                     )
                 );

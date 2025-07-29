@@ -20,9 +20,9 @@
 </template>
 
 <script>
-import Loading from "../../../../assets/js/utilities";
-import Formatter from "../../../../SharedAssets/js/formatter";
-import ErpModal from "../../../../SharedAssets/vue/components/modal/ErpModal";
+import Loading from "../../../../assets/js/utilities.js";
+import Formatter from "../../../../SharedAssets/js/formatter.js";
+import ErpModal from "../../../../SharedAssets/vue/components/modal/ErpModal.vue";
 import { MODAL_SIZE } from "../../../helpers/constants";
 
 export default {
@@ -71,7 +71,7 @@ export default {
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
-                    field: "branchPickUp",
+                    field: "pickUpBranch",
                     title: txtTrans.fields.branches,
                     sortable: true,
                     formatter: (value) => Formatter.trimArray(value),
@@ -199,37 +199,37 @@ export default {
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
-                    field: "regionPickUp",
+                    field: "pickUpRegion",
                     title: txtTrans.fields.regionPickUp,
                     sortable: true,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
-                    field: "areaPickUp",
+                    field: "pickUpArea",
                     title: txtTrans.fields.areaPickUp,
                     sortable: true,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
-                    field: "branchPickUp",
+                    field: "pickUpBranch",
                     title: txtTrans.fields.branchPickUp,
                     sortable: true,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
-                    field: "regionDropOff",
+                    field: "dropOffRegion",
                     title: txtTrans.fields.regionDropOff,
                     sortable: true,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
-                    field: "areaDropOff",
+                    field: "dropOffArea",
                     title: txtTrans.fields.areaDropOff,
                     sortable: true,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
-                    field: "branchDropOff",
+                    field: "dropOffBranch",
                     title: txtTrans.fields.branchDropOff,
                     sortable: true,
                     formatter: (value) => Formatter.trimArray(value),
@@ -284,7 +284,7 @@ export default {
                 .get(this.routing.generate("stopsale.history", { id: this.stopSaleId }))
                 .then((response) => {
                     Loading.endLoading();
-                    this.stopSale = response.data.stopSale;
+                    this.stopSale = response.data;
                 })
                 .catch((error) => {
                     console.error(error.response);

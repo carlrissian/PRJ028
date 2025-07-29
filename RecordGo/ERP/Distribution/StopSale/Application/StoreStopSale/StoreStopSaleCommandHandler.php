@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Application\StoreStopSale;
 
 use Distribution\StopSale\Domain\Day;
@@ -9,6 +7,9 @@ use Distribution\StopSale\Domain\Area;
 use Distribution\StopSale\Domain\Acriss;
 use Distribution\StopSale\Domain\Branch;
 use Distribution\StopSale\Domain\Region;
+use Distribution\StopSale\Domain\Partner;
+use Distribution\StopSale\Domain\Product;
+use Distribution\StopSale\Domain\SellCode;
 use Distribution\StopSale\Domain\StopSale;
 use Distribution\StopSale\Domain\Department;
 use Distribution\StopSale\Domain\StopSaleType;
@@ -18,19 +19,15 @@ use Distribution\StopSale\Domain\DayCollection;
 use Distribution\StopSale\Domain\AreaCollection;
 use Distribution\StopSale\Domain\AcrissCollection;
 use Distribution\StopSale\Domain\BranchCollection;
-use Distribution\StopSale\Domain\Partner;
-use Distribution\StopSale\Domain\PartnerCollection;
-use Distribution\StopSale\Domain\Product;
-use Distribution\StopSale\Domain\ProductCollection;
 use Distribution\StopSale\Domain\RegionCollection;
-use Distribution\StopSale\Domain\SellCode;
-use Distribution\StopSale\Domain\SellCodeCollection;
 use Distribution\StopSale\Domain\StopSaleCategory;
+use Distribution\StopSale\Domain\PartnerCollection;
+use Distribution\StopSale\Domain\ProductCollection;
+use Distribution\StopSale\Domain\SellCodeCollection;
 use Distribution\StopSale\Domain\StopSaleRepository;
 use Shared\Constants\Infrastructure\ConstantsJsonFile;
-use Svg\Tag\Stop;
 
-class StoreStopSaleCommandHandler
+final class StoreStopSaleCommandHandler
 {
     /**
      * @var StopSaleRepository
@@ -55,12 +52,12 @@ class StoreStopSaleCommandHandler
     {
         [
             $acrissCollection,
-            $regionPickUpCollection,
-            $regionDropOffCollection,
-            $areaPickUpCollection,
-            $areaDropOffCollection,
-            $branchPickUpCollection,
-            $branchDropOffCollection,
+            $pickUpRegionCollection,
+            $pickUpAreaCollection,
+            $pickUpBranchCollection,
+            $dropOffRegionCollection,
+            $dropOffAreaCollection,
+            $dropOffBranchCollection,
             $partnerCollection,
             $sellCodeCollection,
             $productCollection,
@@ -69,48 +66,48 @@ class StoreStopSaleCommandHandler
         if ($command->getAcrissId()) {
             $acrissCollection = new AcrissCollection([]);
             foreach ($command->getAcrissId() as $acrissId) {
-                $acrissCollection->add(new Acriss($acrissId));
+                $acrissCollection->add(Acriss::create($acrissId));
             }
         }
 
-        if ($command->getRegionPickUpId()) {
-            $regionPickUpCollection = new RegionCollection([]);
-            foreach ($command->getRegionPickUpId() as $regionId) {
-                $regionPickUpCollection->add(new Region($regionId));
+        if ($command->getPickUpRegionId()) {
+            $pickUpRegionCollection = new RegionCollection([]);
+            foreach ($command->getPickUpRegionId() as $regionId) {
+                $pickUpRegionCollection->add(Region::create($regionId));
             }
         }
-        if ($command->getAreaPickUpId()) {
-            $areaPickUpCollection = new AreaCollection([]);
-            foreach ($command->getAreaPickUpId() as $areaId) {
-                $areaPickUpCollection->add(new Area($areaId));
+        if ($command->getPickUpAreaId()) {
+            $pickUpAreaCollection = new AreaCollection([]);
+            foreach ($command->getPickUpAreaId() as $areaId) {
+                $pickUpAreaCollection->add(Area::create($areaId));
             }
         }
 
-        if ($command->getBranchPickUpId()) {
-            $branchPickUpCollection = new BranchCollection([]);
-            foreach ($command->getBranchPickUpId() as $branchId) {
-                $branchPickUpCollection->add(new Branch($branchId));
+        if ($command->getPickUpBranchId()) {
+            $pickUpBranchCollection = new BranchCollection([]);
+            foreach ($command->getPickUpBranchId() as $branchId) {
+                $pickUpBranchCollection->add(Branch::create($branchId));
             }
         }
 
         if ($command->getPartnersId()) {
             $partnerCollection = new PartnerCollection([]);
             foreach ($command->getPartnersId() as $partnerId) {
-                $partnerCollection->add(new Partner($partnerId));
+                $partnerCollection->add(Partner::create($partnerId));
             }
         }
 
         if ($command->getSellCodesId()) {
             $sellCodeCollection = new SellCodeCollection([]);
             foreach ($command->getSellCodesId() as $sellCodeId) {
-                $sellCodeCollection->add(new SellCode($sellCodeId));
+                $sellCodeCollection->add(SellCode::create($sellCodeId));
             }
         }
 
         if ($command->getProductsId()) {
             $productCollection = new ProductCollection([]);
             foreach ($command->getProductsId() as $productId) {
-                $productCollection->add(new Product($productId));
+                $productCollection->add(Product::create($productId));
             }
         }
 
@@ -121,7 +118,7 @@ class StoreStopSaleCommandHandler
          */
         if ($command->getCategoryId() === intval(ConstantsJsonFile::getValue('STOPSALECAT_STANDAR')) && $command->getRecurrencesId()) {
             foreach ($command->getRecurrencesId() as $dayId) {
-                $dayCollection->add(new Day($dayId));
+                $dayCollection->add(Day::create($dayId));
             }
         }
 
@@ -129,46 +126,46 @@ class StoreStopSaleCommandHandler
          * ONE WAY
          */
         if ($command->getCategoryId() === intval(ConstantsJsonFile::getValue('STOPSALECAT_ONEWAY'))) {
-            if ($command->getRegionDropOffId()) {
-                $regionDropOffCollection = new RegionCollection([]);
-                foreach ($command->getRegionDropOffId() as $regionId) {
-                    $regionDropOffCollection->add(new Region(intval($regionId)));
+            if ($command->getDropOffRegionId()) {
+                $dropOffRegionCollection = new RegionCollection([]);
+                foreach ($command->getDropOffRegionId() as $regionId) {
+                    $dropOffRegionCollection->add(Region::create($regionId));
                 }
             }
 
-            if ($command->getAreaDropOffId()) {
-                $areaDropOffCollection = new AreaCollection([]);
-                foreach ($command->getAreaDropOffId() as $areaId) {
-                    $areaDropOffCollection->add(new Area(intval($areaId)));
+            if ($command->getDropOffAreaId()) {
+                $dropOffAreaCollection = new AreaCollection([]);
+                foreach ($command->getDropOffAreaId() as $areaId) {
+                    $dropOffAreaCollection->add(Area::create($areaId));
                 }
             }
 
-            if ($command->getBranchDropOffId()) {
-                $branchDropOffCollection = new BranchCollection([]);
-                foreach ($command->getBranchDropOffId() as $branchId) {
-                    $branchDropOffCollection->add(new Branch(intval($branchId)));
+            if ($command->getDropOffBranchId()) {
+                $dropOffBranchCollection = new BranchCollection([]);
+                foreach ($command->getDropOffBranchId() as $branchId) {
+                    $dropOffBranchCollection->add(Branch::create($branchId));
                 }
             }
         }
 
 
-        $stopSale = new StopSale(
+        $stopSale = StopSale::create(
             null,
-            new Department($command->getDepartmentId()),
-            new StopSaleCategory($command->getCategoryId()),
+            Department::create($command->getDepartmentId()),
+            StopSaleCategory::create($command->getCategoryId()),
             $command->getInitDate() ? DateValueObject::createFromString($command->getInitDate()) : null,
             $command->getEndDate() ? DateValueObject::createFromString($command->getEndDate()) : null,
             $acrissCollection,
-            $regionPickUpCollection,
-            $regionDropOffCollection,
-            $areaPickUpCollection,
-            $areaDropOffCollection,
-            $branchPickUpCollection,
-            $branchDropOffCollection,
+            $pickUpRegionCollection,
+            $pickUpAreaCollection,
+            $pickUpBranchCollection,
+            $dropOffRegionCollection,
+            $dropOffAreaCollection,
+            $dropOffBranchCollection,
             $partnerCollection,
             $sellCodeCollection,
             $productCollection,
-            new StopSaleType($command->getStopSaleTypeId()),
+            StopSaleType::create($command->getStopSaleTypeId()),
             $command->getStartTime() ? TimeValueObject::createFromString($command->getStartTime()) : TimeValueObject::createFromString('00:00'),
             $command->getEndTime() ? TimeValueObject::createFromString($command->getEndTime()) : TimeValueObject::createFromString('23:59'),
             $dayCollection,
@@ -181,11 +178,61 @@ class StoreStopSaleCommandHandler
 
         // Si tipo es PARTIAL_CHECKOUT_CHECKIN se crean 2 Stopsale, uno tipo PARTIAL_CHECKOUT y otro tipo PARTIAL_CHECKOUT_CHECKIN
         if ($command->getStopSaleTypeId() === intval(ConstantsJsonFile::getValue('STOPSALETYPE_PARCIAL_CHECKOUT_CHECKIN'))) {
-            $stopSale->setStopSaleType(new StopSaleType(intval(ConstantsJsonFile::getValue('STOPSALETYPE_PARCIAL_CHECKIN'))));
-            $this->stopSaleRepository->store($stopSale);
+            $stopSalePartialCheckIn = StopSale::create(
+                null,
+                $stopSale->getDepartment(),
+                $stopSale->getCategory(),
+                $stopSale->getInitDate(),
+                $stopSale->getEndDate(),
+                $stopSale->getAcriss(),
+                $stopSale->getPickUpRegion(),
+                $stopSale->getPickUpArea(),
+                $stopSale->getPickUpBranch(),
+                $stopSale->getDropOffRegion(),
+                $stopSale->getDropOffArea(),
+                $stopSale->getDropOffBranch(),
+                $stopSale->getPartners(),
+                $stopSale->getSellCodes(),
+                $stopSale->getProducts(),
+                StopSaleType::create(intval(ConstantsJsonFile::getValue('STOPSALETYPE_PARCIAL_CHECKIN'))),
+                $stopSale->getStartTime(),
+                $stopSale->getEndTime(),
+                $stopSale->getRecurrence(),
+                $stopSale->getMinDaysRent(),
+                $stopSale->getMaxDaysRent(),
+                $stopSale->isConnectedVehicle(),
+                $stopSale->getNotes(),
+                false
+            );
+            $this->stopSaleRepository->store($stopSalePartialCheckIn);
 
-            $stopSale->setStopSaleType(new StopSaleType(intval(ConstantsJsonFile::getValue('STOPSALETYPE_PARCIAL_CHECKOUT'))));
-            $response = $this->stopSaleRepository->store($stopSale);
+            $stopSalePartialCheckOut = StopSale::create(
+                null,
+                $stopSale->getDepartment(),
+                $stopSale->getCategory(),
+                $stopSale->getInitDate(),
+                $stopSale->getEndDate(),
+                $stopSale->getAcriss(),
+                $stopSale->getPickUpRegion(),
+                $stopSale->getPickUpArea(),
+                $stopSale->getPickUpBranch(),
+                $stopSale->getDropOffRegion(),
+                $stopSale->getDropOffArea(),
+                $stopSale->getDropOffBranch(),
+                $stopSale->getPartners(),
+                $stopSale->getSellCodes(),
+                $stopSale->getProducts(),
+                StopSaleType::create(intval(ConstantsJsonFile::getValue('STOPSALETYPE_PARCIAL_CHECKOUT'))),
+                $stopSale->getStartTime(),
+                $stopSale->getEndTime(),
+                $stopSale->getRecurrence(),
+                $stopSale->getMinDaysRent(),
+                $stopSale->getMaxDaysRent(),
+                $stopSale->isConnectedVehicle(),
+                $stopSale->getNotes(),
+                false
+            );
+            $response = $this->stopSaleRepository->store($stopSalePartialCheckOut);
         } else {
             $response = $this->stopSaleRepository->store($stopSale);
         }

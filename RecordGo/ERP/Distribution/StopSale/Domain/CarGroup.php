@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Domain;
 
 /**
  * Class CarGroup
  * @package Distribution\CarGroup\Domain
  */
-class CarGroup
+final class CarGroup
 {
     /**
      * @var int
@@ -20,17 +18,14 @@ class CarGroup
      */
     private ?string $name;
 
-
     /**
      * CarGroup constructor.
      * 
      * @param int $id
      * @param string|null $name
      */
-    public function __construct(
-        int $id,
-        ?string $name = null
-    ) {
+    private function __construct(int $id, ?string $name)
+    {
         $this->id = $id;
         $this->name = $name;
     }
@@ -53,12 +48,23 @@ class CarGroup
 
 
     /**
+     * @param int $id
+     * @param string|null $name
+     */
+    public static function create(
+        int $id,
+        ?string $name = null
+    ): self {
+        return new self($id, $name);
+    }
+
+    /**
      * @param array|null $carGroupArray
      * @return self
      */
-    final public static function createFromArray(?array $carGroupArray): self
+    public static function createFromArray(?array $carGroupArray): self
     {
-        return new self(
+        return self::create(
             intval($carGroupArray['ID']),
             $carGroupArray['VEHICLEGROUPNAME'] ?? null
         );

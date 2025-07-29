@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Application\FilterStopSale;
 
-class FilterStopSaleQuery
+final class FilterStopSaleQuery
 {
     /**
      * @var string|null

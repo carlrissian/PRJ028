@@ -18,11 +18,10 @@
 </template>
 
 <script>
-import Axios from "axios";
-import moment from "moment";
 import Loading from "../../../../assets/js/utilities";
-import ErpAjaxTable from "../../../../SharedAssets/vue/components/table/ErpAjaxTable";
-import ModalHistoryStopSale from "../Modals/ModalHistoryStopSale";
+import Formatter from "../../../../SharedAssets/js/formatter.js";
+import ErpAjaxTable from "../../../../SharedAssets/vue/components/table/ErpAjaxTable.vue";
+import ModalHistoryStopSale from "../Modals/ModalHistoryStopSale.vue";
 
 export default {
     name: "ListStopSaleOneway",
@@ -37,43 +36,46 @@ export default {
     },
     data() {
         return {
-            txt: {},
+            txt: txtTrans,
             columns: [
                 {
                     field: "initDate",
                     title: txtTrans.fields.initDate,
                     sortable: true,
-                    formatter: this.formatterDate,
+                    formatter: (value) => Formatter.formatDate(value),
                 },
                 {
                     field: "endDate",
                     title: txtTrans.fields.endDate,
                     sortable: true,
-                    formatter: this.formatterDate,
+                    formatter: (value) => Formatter.formatDate(value),
                 },
                 {
                     field: "minDaysRent",
                     title: txtTrans.fields.minDaysRent,
                     sortable: true,
-                    formatter: this.formatter,
+                    formatter: (value) => Formatter.formatField(value),
                 },
                 {
                     field: "maxDaysRent",
                     title: txtTrans.fields.maxDaysRent,
                     sortable: true,
-                    formatter: this.formatter,
+                    formatter: (value) => Formatter.formatField(value),
                 },
                 {
                     field: "connectedVehicle",
                     title: txtTrans.fields.connectedVehicle,
                     sortable: true,
-                    formatter: this.formatterBoolean,
+                    formatter: (value) => {
+                        let formattedValue = Formatter.formatBoolean(value);
+                        return formattedValue != "-" ? txtTrans.form[formattedValue] : formattedValue;
+                    },
                 },
                 {
                     field: "carGroups",
                     title: txtTrans.fields.carGroups,
                     sortable: true,
-                    formatter: this.formatter,
+                    formatter: (value) => Formatter.formatField(value),
                 },
                 {
                     field: "acriss",
@@ -82,25 +84,37 @@ export default {
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
-                    field: "areaPickUp",
+                    field: "pickUpRegion",
+                    title: txtTrans.fields.regionPickUp,
+                    sortable: true,
+                    formatter: (value) => Formatter.trimArray(value),
+                },
+                {
+                    field: "pickUpArea",
                     title: txtTrans.fields.areaPickUp,
                     sortable: true,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
-                    field: "branchPickUp",
+                    field: "pickUpBranch",
                     title: txtTrans.fields.branchPickUp,
                     sortable: true,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
-                    field: "areaDropOff",
+                    field: "dropOffRegion",
+                    title: txtTrans.fields.regionDropOff,
+                    sortable: true,
+                    formatter: (value) => Formatter.trimArray(value),
+                },
+                {
+                    field: "dropOffArea",
                     title: txtTrans.fields.areaDropOff,
                     sortable: true,
                     formatter: (value) => Formatter.trimArray(value),
                 },
                 {
-                    field: "branchDropOff",
+                    field: "dropOffBranch",
                     title: txtTrans.fields.branchDropOff,
                     sortable: true,
                     formatter: (value) => Formatter.trimArray(value),
@@ -109,22 +123,26 @@ export default {
                     field: "creationUser",
                     title: txtTrans.fields.creationUser,
                     sortable: true,
+                    formatter: (value) => Formatter.formatField(value),
                 },
                 {
                     field: "creationDate",
                     title: txtTrans.fields.creationDate,
                     sortable: true,
-                    formatter: this.formatterDate,
+                    formatter: (value) => Formatter.formatDate(value),
                 },
                 {
                     field: "active",
                     title: txtTrans.fields.active,
                     sortable: true,
-                    formatter: this.formatterBoolean,
+                    formatter: (value) => {
+                        let formattedValue = Formatter.formatBoolean(value);
+                        return formattedValue != "-" ? txtTrans.form[formattedValue] : formattedValue;
+                    },
                 },
                 {
                     title: txtTrans.form.actions,
-                    formatter: this.actionsFormatter,
+                    formatter: (value, row) => this.actionsFormatter(row),
                     events: {
                         "click .history": (e, value, row) => this.clickHistoryRow(row),
                         "click .edit": (e, value, row) => this.clickEditRow(row),
@@ -135,14 +153,14 @@ export default {
             ],
             options: {
                 pagination: true,
+                pageSize: 25,
+                pageList: [25, 50, 100],
                 locale: "es-ES",
                 scrollX: true,
+                fixedScroll: true,
             },
             stopSaleId: null,
         };
-    },
-    created() {
-        this.txt = txtTrans;
     },
     methods: {
         clickHistoryRow(row) {
@@ -171,7 +189,8 @@ export default {
                         let url = this.routing.generate("stopsale.cancel");
                         let formData = new FormData();
                         formData.set("id", row.id);
-                        Axios.post(url, formData)
+                        this.axios
+                            .post(url, formData)
                             .then((response) => {
                                 Loading.endLoading();
                                 // console.log("Cancel Stop Sale: ", response);

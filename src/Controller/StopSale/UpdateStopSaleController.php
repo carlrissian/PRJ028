@@ -5,11 +5,12 @@ namespace App\Controller\StopSale;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Distribution\StopSale\Domain\Exception\StopSaleException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Distribution\StopSale\Application\UpdateStopSale\UpdateStopSaleCommand;
 use Distribution\StopSale\Application\UpdateStopSale\UpdateStopSaleCommandHandler;
 
-class UpdateStopSaleController extends AbstractController
+final class UpdateStopSaleController extends AbstractController
 {
     /**
      * @var UpdateStopSaleCommandHandler
@@ -35,7 +36,6 @@ class UpdateStopSaleController extends AbstractController
     {
         try {
             $stopSale = json_decode($request->get('stopSale'), true);
-            $stopSale['stopSaleTypeId'] = $stopSale['stopSaleTypeId'] ?? 1;
 
             $command = new UpdateStopSaleCommand(
                 $id,
@@ -44,12 +44,12 @@ class UpdateStopSaleController extends AbstractController
                 $stopSale['initDate'] ?? null,
                 $stopSale['endDate'] ?? null,
                 $stopSale['acrissId'] ?? null,
-                $stopSale['regionPickUpId'] ?? null,
-                $stopSale['regionDropOffId'] ?? null,
-                $stopSale['areaPickUpId'] ?? null,
-                $stopSale['areaPiDropOffId'] ?? null,
-                $stopSale['branchPickUpId'] ?? null,
-                $stopSale['branchDropOffId'] ?? null,
+                $stopSale['pickUpRegionId'] ?? null,
+                $stopSale['pickUpAreaId'] ?? null,
+                $stopSale['pickUpBranchId'] ?? null,
+                $stopSale['dropOffRegionId'] ?? null,
+                $stopSale['dropOffAreaId'] ?? null,
+                $stopSale['dropOffBranchId'] ?? null,
                 $stopSale['partnersId'] ?? null,
                 $stopSale['sellCodesId'] ?? null,
                 $stopSale['productsId'] ?? null,
@@ -57,9 +57,9 @@ class UpdateStopSaleController extends AbstractController
                 $stopSale['startTime'] ?? null,
                 $stopSale['endTime'] ?? null,
                 $stopSale['recurrencesId'] ?? null,
-                $stopSale['minDaysRent'] !== null ? intval($stopSale['minDaysRent']) : null,
-                $stopSale['maxDaysRent'] !== null ? intval($stopSale['maxDaysRent']) : null,
-                filter_var($stopSale['connectedVehicle'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE),
+                $stopSale['minDaysRent'] ? intval($stopSale['minDaysRent']) : null,
+                $stopSale['maxDaysRent'] ? intval($stopSale['maxDaysRent']) : null,
+                isset($stopSale['connectedVehicle']) ? filter_var($stopSale['connectedVehicle'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) : null,
                 $stopSale['notes']
             );
 

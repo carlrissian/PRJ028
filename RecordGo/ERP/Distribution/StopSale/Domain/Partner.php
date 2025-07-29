@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Distribution\StopSale\Domain;
 
-class Partner
+final class Partner
 {
     /**
      * @var int
@@ -28,11 +26,8 @@ class Partner
      * @param string|null $name
      * @param string|null $commercialName
      */
-    public function __construct(
-        int $id,
-        ?string $name = null,
-        ?string $commercialName = null
-    ) {
+    private function __construct(int $id, ?string $name, ?string $commercialName)
+    {
         $this->id = $id;
         $this->name = $name;
         $this->commercialName = $commercialName;
@@ -64,12 +59,25 @@ class Partner
 
 
     /**
+     * @param int $id
+     * @param string|null $name
+     * @param string|null $commercialName
+     */
+    public static function create(
+        int $id,
+        ?string $name = null,
+        ?string $commercialName = null
+    ): self {
+        return new self($id, $name, $commercialName);
+    }
+
+    /**
      * @param array|null $partnerArray
      * @return self
      */
-    final public static function createFromArray(?array $partnerArray): self
+    public static function createFromArray(?array $partnerArray): self
     {
-        return new self(
+        return self::create(
             intval($partnerArray['ID']),
             $partnerArray['NAMESOCIAL'] ?? null,
             $partnerArray['COMMERCIALNAME'] ?? null
