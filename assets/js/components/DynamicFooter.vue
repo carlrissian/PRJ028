@@ -20,7 +20,7 @@ export default {
             showFooter: false,
         };
     },
-    mounted() {
+    created() {
         this.eventBus.$on("setFooterComponent", (component) => {
             console.log("setFooterComponent", component);
             this.footerComponent = component;

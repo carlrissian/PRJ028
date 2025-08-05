@@ -1,4 +1,4 @@
-d<template>
+<template>
     <div class="kt-portlet kt-portlet--bordered">
         <div class="kt-portlet__head">
             <div class="kt-portlet__head-label">
@@ -21,6 +21,13 @@ d<template>
                 <button id="search-licenseplate" class="btn btn-icon btn-dark">
                     <i class="fas fa-search" :title="`${txt.form.searchBy} ${String(txt.fields.licensePlate).toLowerCase()}`"></i>
                 </button>
+
+                <button
+                    @click.prevent="downloadExcel"
+                    type="button"
+                    class="btn btn-dark kt-label-bg-color-4"
+                    v-text="txt.form.downloadExcel"
+                ></button>
             </div>
 
             <div class="kt-datatable kt-datatable--default kt-datatable--brand kt-datatable--loaded">
@@ -45,24 +52,6 @@ d<template>
                 <!-- <div id="info" class="mt-3">
                     <p v-text="txt.form.selectedTotal + vehiclesSelected + txt.form.of + $store.getters['filter/count']"></p>
                 </div> -->
-            </div>
-        </div>
-
-        <div class="kt-portlet__foot">
-            <div class="kt-align-right">
-                <button
-                    @click.prevent="downloadExcel"
-                    type="button"
-                    class="btn btn-dark kt-label-bg-color-4"
-                    v-text="txt.form.downloadExcel"
-                ></button>
-                <button
-                    @click.prevent="assignVehicles"
-                    type="button"
-                    id="btn-create-modal"
-                    class="btn btn-dark kt-label-bg-color-4"
-                    v-text="txt.form.assign"
-                ></button>
             </div>
         </div>
     </div>
@@ -213,10 +202,7 @@ export default {
             lpFilter: "",
         };
     },
-    mounted() {
-        this.eventBus.$emit("setFooterComponent", MovementAssignVehiclesCart);
-        this.eventBus.$emit("stickyFooter", true);
-
+    created() {
         this.eventBus.$on("itemsAdded", () => {
             this.$refs.vehiclesTable.$refs.table.uncheckAll();
             this.$refs.vehiclesTable.$refs.table.refresh({ silent: true });
@@ -229,6 +215,12 @@ export default {
         });
         this.eventBus.$on("assignVehicles", () => {
             this.assignVehicles();
+        });
+    },
+    mounted() {
+        this.$nextTick(() => {
+            this.eventBus.$emit("setFooterComponent", MovementAssignVehiclesCart);
+            this.eventBus.$emit("stickyFooter", true);
         });
 
         this.createPopoverFilter("search-licenseplate");

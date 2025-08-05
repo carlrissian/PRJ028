@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_paramaterSettingTypeIds=1);
-
 namespace Distribution\ParameterSetting\Application\FilterParameterSettings;
 
 class FilterParameterSettingsQuery

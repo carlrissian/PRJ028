@@ -84,7 +84,7 @@ metadata:
   name: __KubernetesNamespace__-app-local-ini
   namespace: __KubernetesNamespace__
 data:
-  default.conf: |
+  local.ini: |
     upload_max_filesize=40M
     post_max_size=40M
     max_input_vars = 100000

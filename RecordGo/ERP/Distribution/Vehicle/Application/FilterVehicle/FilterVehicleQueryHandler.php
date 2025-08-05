@@ -104,6 +104,7 @@ class FilterVehicleQueryHandler
                 'rentalAgreementPickUpTime' => ($vehicle->getRentalAgreementPickUpDate()) ? $vehicle->getRentalAgreementPickUpDate()->__toString('H:i') : null,
                 'rentalAgreementDropOffDate' => ($vehicle->getRentalAgreementDropOffDate()) ? $vehicle->getRentalAgreementDropOffDate()->__toString('d/m/Y') : null,
                 'rentalAgreementDropOffTime' => ($vehicle->getRentalAgreementDropOffDate()) ? $vehicle->getRentalAgreementDropOffDate()->__toString('H:i') : null,
+                'vehicleClean' => $vehicle->getIsClean() ? 'Sí' : 'No',
             ];
         }
 

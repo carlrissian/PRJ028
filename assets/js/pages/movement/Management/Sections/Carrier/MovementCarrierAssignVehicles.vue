@@ -24,7 +24,7 @@
                 :movementId="movement.id"
                 :sale-method-id="getSaleMethodOfBusinessUnitArticle(movement.businessUnitArticleId)"
             />
-            
+
             <div class="kt-align-right mb-2">
                 <button id="search-licenseplate" class="btn btn-icon btn-dark">
                     <i class="fas fa-search" :title="`${txt.form.searchBy} ${String(txt.fields.licensePlate).toLowerCase()}`"></i>
@@ -203,10 +203,7 @@ export default {
             lpFilter: "",
         };
     },
-    mounted() {
-        this.eventBus.$emit("setFooterComponent", MovementAssignVehiclesCart);
-        this.eventBus.$emit("stickyFooter", true);
-
+    created() {
         this.eventBus.$on("itemsAdded", () => {
             this.$refs.vehiclesTable.$refs.table.uncheckAll();
             this.$refs.vehiclesTable.$refs.table.refresh({ silent: true });
@@ -219,6 +216,12 @@ export default {
         });
         this.eventBus.$on("assignVehicles", () => {
             this.assignVehicles();
+        });
+    },
+    mounted() {
+        this.$nextTick(() => {
+            this.eventBus.$emit("setFooterComponent", MovementAssignVehiclesCart);
+            this.eventBus.$emit("stickyFooter", true);
         });
 
         this.createPopoverFilter("search-licenseplate");

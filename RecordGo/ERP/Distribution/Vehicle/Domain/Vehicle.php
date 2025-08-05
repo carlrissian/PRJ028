@@ -332,6 +332,11 @@ class Vehicle
     private ?DateTimeValueObject $rentalAgreementDropOffDate;
 
     /**
+     * @var bool|null
+     */
+    private ?bool $isClean;
+
+    /**
      * Vehicle constructor
      *
      * @param integer|null $id
@@ -398,6 +403,7 @@ class Vehicle
      * @param integer|null $orderNumber
      * @param DateTimeValueObject|null $rentalAgreementPickUpDate
      * @param DateTimeValueObject|null $rentalAgreementDropOffDate
+     * @param bool|null $isClean
      */
     public function __construct(
         ?int $id,
@@ -463,7 +469,8 @@ class Vehicle
         ?int $movementId,
         ?int $orderNumber,
         ?DateTimeValueObject $rentalAgreementPickUpDate,
-        ?DateTimeValueObject $rentalAgreementDropOffDate
+        ?DateTimeValueObject $rentalAgreementDropOffDate,
+        ?bool $isClean
     ) {
         $this->id = $id;
         $this->licensePlate = $licensePlate;
@@ -529,6 +536,7 @@ class Vehicle
         $this->orderNumber = $orderNumber;
         $this->rentalAgreementPickUpDate = $rentalAgreementPickUpDate;
         $this->rentalAgreementDropOffDate = $rentalAgreementDropOffDate;
+        $this->isClean = $isClean;
     }
 
     /**
@@ -1112,6 +1120,13 @@ class Vehicle
         return $this->rentalAgreementDropOffDate;
     }
 
+    /**
+     * @return bool|null
+     */
+    public function getIsClean(): ?bool
+    {
+        return $this->isClean;
+    }
 
     /**
      * @param array|null $vehicleArray
@@ -1125,6 +1140,8 @@ class Vehicle
                 $vehicleImageCollection->add(VehicleImage::createFromArray($image));
             }
         }
+
+        $vehicleClean = isset($vehicleArray['VEHICLECLEAN']) ? boolval($vehicleArray['VEHICLECLEAN']) : null;
 
         return new self(
             intval($vehicleArray['ID']),
@@ -1190,7 +1207,8 @@ class Vehicle
             (isset($vehicleArray['MOVEMENTID'])) ? intval($vehicleArray['MOVEMENTID']) : null,
             (isset($vehicleArray['SAPPO'])) ? intval($vehicleArray['SAPPO']) : null,
             isset($vehicleArray['RAPICKUPDATE']) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($vehicleArray['RAPICKUPDATE'])) : null,
-            isset($vehicleArray['RADROPOFFDATE']) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($vehicleArray['RADROPOFFDATE'])) : null
+            isset($vehicleArray['RADROPOFFDATE']) ? new DateTimeValueObject(Utils::convertOdataDateToDateTime($vehicleArray['RADROPOFFDATE'])) : null,
+            $vehicleClean
         );
     }
 
